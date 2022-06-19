@@ -131,7 +131,7 @@ class BeneficiariosController extends Controller
         return [
             'id'=>['label'=>'Id','active'=>true,'type'=>'hidden','exibe_busca'=>'d-block','event'=>'','tam'=>'2'],
             'token'=>['label'=>'token','active'=>false,'type'=>'hidden','exibe_busca'=>'d-block','event'=>'','tam'=>'2'],
-            'tipo'=>[
+            /*'tipo'=>[
                 'label'=>'tipo de cadastro*',
                 'active'=>true,
                 'type'=>'select',
@@ -140,11 +140,11 @@ class BeneficiariosController extends Controller
                 'tam'=>'12',
                 'class'=>'',
                 'option_select'=>false,
-            ],
+            ],*/
             'nome'=>['label'=>'Nome da Beneficiario','active'=>true,'placeholder'=>'Ex.: José Jorge','type'=>'text','exibe_busca'=>'d-block','event'=>'','tam'=>'12'],
-            'config[nacionalidade]'=>['label'=>'Nacionalidade','active'=>false,'js'=>true,'type'=>'text','exibe_busca'=>'d-block','event'=>'','tam'=>'4','placeholder'=>'','cp_busca'=>'config][nacionalidade'],
-            'config[rg]'=>['label'=>'RG','active'=>true,'type'=>'tel','tam'=>'4','exibe_busca'=>'d-block','event'=>'','cp_busca'=>'config][rg'],
-            'cpf'=>['label'=>'CPF','active'=>true,'type'=>'tel','exibe_busca'=>'d-block','event'=>'mask-cpf','tam'=>'4'],
+            //'config[nacionalidade]'=>['label'=>'Nacionalidade','active'=>false,'js'=>true,'type'=>'text','exibe_busca'=>'d-block','event'=>'','tam'=>'4','placeholder'=>'','cp_busca'=>'config][nacionalidade'],
+            'config[rg]'=>['label'=>'RG','active'=>true,'type'=>'tel','tam'=>'3','exibe_busca'=>'d-block','event'=>'','cp_busca'=>'config][rg'],
+            'cpf'=>['label'=>'CPF','active'=>true,'type'=>'tel','exibe_busca'=>'d-block','event'=>'mask-cpf','tam'=>'3'],
             'config[telefone]'=>['label'=>'Telefone1','active'=>true,'type'=>'tel','tam'=>'3','exibe_busca'=>'d-block','event'=>'onblur=mask(this,clientes_mascaraTelefone); onkeypress=mask(this,clientes_mascaraTelefone);','cp_busca'=>'config][telefone'],
             'config[telefone2]'=>['label'=>'Telefone2','active'=>true,'type'=>'tel','tam'=>'3','exibe_busca'=>'d-block','event'=>'onblur=mask(this,clientes_mascaraTelefone); onkeypress=mask(this,clientes_mascaraTelefone);','cp_busca'=>'config][telefone2'],
             'config[nascimento]'=>['label'=>'Nascimento','cp_busca'=>'config][nascimento','active'=>true,'type'=>'date','tam'=>'3','exibe_busca'=>'d-block','event'=>'mask-data'],
@@ -155,7 +155,7 @@ class BeneficiariosController extends Controller
                 'type'=>'select',
                 'arr_opc'=>['m'=>'Masculino','f'=>'Feminino'],
                 'event'=>'',
-                'tam'=>'6',
+                'tam'=>'3',
                 'exibe_busca'=>true,
                 'option_select'=>false,
                 'class'=>'select2',
@@ -175,7 +175,7 @@ class BeneficiariosController extends Controller
                 ],
                 'arr_opc'=>Qlib::sql_array("SELECT id,nome FROM escolaridades WHERE ativo='s'",'nome','id'),'exibe_busca'=>'d-block',
                 'event'=>'',
-                'tam'=>'6',
+                'tam'=>'3',
                 'option_select'=>true,
                 'cp_busca'=>'config][escolaridade',
                 'class'=>'select2',
@@ -197,14 +197,26 @@ class BeneficiariosController extends Controller
                 'arr_opc'=>Qlib::sql_array("SELECT id,nome FROM estadocivils WHERE ativo='s'",'nome','id'),'exibe_busca'=>'d-block',
                 'event'=>'',
                 'cp_busca'=>'config][estado_civil',
-                'tam'=>'6',
+                'tam'=>'3',
                 'class'=>'select2',
             ],
-            'config[data_uniao]'=>['label'=>'Data da união','cp_busca'=>'config][data_uniao','active'=>true,'type'=>'date','tam'=>'6','exibe_busca'=>'d-block','event'=>''],
-            'config[tipo_uniao]'=>['label'=>'Tipo de união','cp_busca'=>'config][tipo_uniao','active'=>true,'type'=>'text','tam'=>'12','exibe_busca'=>'d-block','event'=>''],
+            'config[operadora]'=>[
+                'label'=>'Operadora',
+                'active'=>false,
+                'type'=>'select',
+                'arr_opc'=>Qlib::sql_array("SELECT id,nome FROM operadoras WHERE ativo='s'",'nome','id'),'exibe_busca'=>'d-block',
+                'event'=>'',
+                'tam'=>'3',
+                'class'=>'',
+                'exibe_busca'=>true,
+                'option_select'=>true,
+                'cp_busca'=>'config][operadora',
+            ],
+            'config[numero_carteira_operadora]'=>['label'=>'Número da Carteira da Operadora','cp_busca'=>'config][numero_carteira_operadora','active'=>true,'type'=>'tel','tam'=>'3','exibe_busca'=>'d-block','event'=>''],
+            'config[numero_cns]'=>['label'=>'Número da CNS','cp_busca'=>'config][numero_cns','active'=>true,'type'=>'text','tam'=>'3','exibe_busca'=>'d-block','event'=>''],
+            /*
             'config[mae]'=>['label'=>'Mãe','cp_busca'=>'config][mae','active'=>true,'type'=>'text','tam'=>'12','exibe_busca'=>'d-block','event'=>''],
             'config[pai]'=>['label'=>'Pai','cp_busca'=>'config][pai','active'=>true,'type'=>'text','tam'=>'12','exibe_busca'=>'d-block','event'=>''],
-            /*
             'conjuge'=>[
                 'label'=>'Cônjuge ou parceiro',
                 'active'=>false,
@@ -242,7 +254,7 @@ class BeneficiariosController extends Controller
         return [
             'id'=>['label'=>'Id','active'=>true,'type'=>'hidden','exibe_busca'=>'d-block','event'=>'','tam'=>'2'],
             'token'=>['label'=>'token','active'=>false,'type'=>'hidden','exibe_busca'=>'d-block','event'=>'','tam'=>'2'],
-            'tipo'=>[
+            /*'tipo'=>[
                 'label'=>'tipo de cadastro*',
                 'active'=>true,
                 'type'=>'hidden',
@@ -251,7 +263,7 @@ class BeneficiariosController extends Controller
                 'class'=>'',
                 'option_select'=>false,
                 'value'=>'2',
-            ],
+            ],*/
             'conjuge'=>[
                 'label'=>'cônjuge',
                 'active'=>true,

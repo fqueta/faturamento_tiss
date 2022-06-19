@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
             estadocivilSeeder::class,
             //bairroSeeder::class,
             //QuadraSeeder::class,
-            //etapaSeeder::class,
+            StateSeeder::class,
             tagSeeder::class,
             MenuSeeder::class,
             PermissionSeeder::class,

@@ -15,22 +15,8 @@ class PermissionSeeder extends Seeder
     public function run()
     {
         $arrPermiss = [
-            "master"=>
-            [
-                "ler"=>["painel"=>"s","transparencia"=>"s","cad-social"=>"s","cad-topografico"=>"s","familias"=>"s","quadras"=>"s","lotes"=>"s","beneficiarios"=>"s","bairros"=>"s","etapas"=>"s","escolaridades"=>"s","estado-civil"=>"s","relatorios"=>"s","relatorios_social"=>"s","relatorios_evolucao"=>"s","documentos"=>"s","qoptions"=>"s","config"=>"s","sistema"=>"s","users"=>"s","permissions"=>"s"],
-                "ler_arquivos"=>["cad-social"=>"s","cad-topografico"=>"s","familias"=>"s","quadras"=>"s","lotes"=>"s","beneficiarios"=>"s","bairros"=>"s","etapas"=>"s","escolaridades"=>"s","estado-civil"=>"s","relatorios"=>"s","relatorios_social"=>"s","relatorios_evolucao"=>"s","documentos"=>"s","qoptions"=>"s","config"=>"s","sistema"=>"s","users"=>"s","permissions"=>"s"],
-                "create"=>["familias"=>"s","bairros"=>"s","quadras"=>"s","lotes"=>"s","beneficiarios"=>"s","etapas"=>"s","escolaridades"=>"s","estado-civil"=>"s","relatorios_social"=>"s","relatorios_evolucao"=>"s","sistema"=>"s","users"=>"s","permissions"=>"s","documentos"=>"s","qoptions"=>"s"],
-                "update"=>["familias"=>"s","bairros"=>"s","quadras"=>"s","lotes"=>"s","beneficiarios"=>"s","etapas"=>"s","escolaridades"=>"s","estado-civil"=>"s","relatorios_social"=>"s","relatorios_evolucao"=>"s","sistema"=>"s","users"=>"s","permissions"=>"s","documentos"=>"s","qoptions"=>"s"],
-                "delete"=>["familias"=>"s","bairros"=>"s","quadras"=>"s","lotes"=>"s","beneficiarios"=>"s","etapas"=>"s","escolaridades"=>"s","estado-civil"=>"s","relatorios_social"=>"s","relatorios_evolucao"=>"s","sistema"=>"s","users"=>"s","permissions"=>"s","documentos"=>"s","qoptions"=>"s"]
-            ],
-            "admin"=>
-            [
-                "ler"=>["painel"=>"s","transparencia"=>"s","cad-social"=>"s","cad-topografico"=>"s","familias"=>"s","quadras"=>"s","lotes"=>"s","beneficiarios"=>"s","bairros"=>"s","etapas"=>"s","escolaridades"=>"s","estado-civil"=>"s","relatorios"=>"n","relatorios_social"=>"n","relatorios_evolucao"=>"n","documentos"=>"s","config"=>"s","sistema"=>"n","users"=>"s","permissions"=>"s"],
-                "ler_arquivos"=>["cad-social"=>"s","cad-topografico"=>"s","familias"=>"s","quadras"=>"s","lotes"=>"s","beneficiarios"=>"s","bairros"=>"s","etapas"=>"s","escolaridades"=>"s","estado-civil"=>"s","relatorios"=>"s","relatorios_social"=>"s","relatorios_evolucao"=>"s","documentos"=>"s","qoptions"=>"s","config"=>"s","sistema"=>"s","users"=>"s","permissions"=>"s"],
-                "create"=>["familias"=>"s","quadras"=>"s","lotes"=>"s","bairros"=>"s","beneficiarios"=>"s","etapas"=>"s","escolaridades"=>"s","estado-civil"=>"s","relatorios_social"=>"s","relatorios_evolucao"=>"s","sistema"=>"s","users"=>"s","permissions"=>"s","documentos"=>"s"],
-                "update"=>["familias"=>"s","quadras"=>"s","lotes"=>"s","bairros"=>"s","beneficiarios"=>"s","etapas"=>"s","escolaridades"=>"s","estado-civil"=>"s","relatorios_social"=>"s","relatorios_evolucao"=>"s","sistema"=>"s","users"=>"s","permissions"=>"s","documentos"=>"s"],
-                "delete"=>["familias"=>"s","quadras"=>"s","lotes"=>"s","bairros"=>"s","beneficiarios"=>"s","etapas"=>"s","escolaridades"=>"s","estado-civil"=>"s","relatorios_social"=>"s","relatorios_evolucao"=>"s","sistema"=>"s","users"=>"s","permissions"=>"s","documentos"=>"s"]
-            ],
+            "master"=>'{"ler":{"painel":"s","pacientes":"s","beneficiarios":"s","agenda":"s","guias":"s","internacao":"s","faturamento":"s","fechar_lote":"s","gerenciar_lote":"s","relatorios":"s","rel_guias":"s","rel_lotes":"s","rel_valores":"s","config":"s","solicitantes":"s","executantes":"s","tabelas":"s","documentos":"s","sistema":"s","users":"s","permissions":"s","operadoras":"s","escolaridades":"s","estado-civil":"s","tags":"s","qoptions":"s"},"create":{"beneficiarios":"s","internacao":"s","fechar_lote":"s","gerenciar_lote":"s","rel_guias":"s","rel_lotes":"s","rel_valores":"s","solicitantes":"s","executantes":"s","tabelas":"s","documentos":"s","sistema":"s","users":"s","permissions":"s","operadoras":"s","escolaridades":"s","estado-civil":"s","tags":"s","qoptions":"s"},"update":{"beneficiarios":"s","internacao":"s","fechar_lote":"s","gerenciar_lote":"s","rel_guias":"s","rel_lotes":"s","rel_valores":"s","solicitantes":"s","executantes":"s","tabelas":"s","documentos":"s","sistema":"s","users":"s","permissions":"s","operadoras":"s","escolaridades":"s","estado-civil":"s","tags":"s","qoptions":"s"},"delete":{"beneficiarios":"s","internacao":"s","fechar_lote":"s","gerenciar_lote":"s","rel_guias":"s","rel_lotes":"s","rel_valores":"s","solicitantes":"s","executantes":"s","tabelas":"s","documentos":"s","sistema":"s","users":"s","permissions":"s","operadoras":"s","escolaridades":"s","estado-civil":"s","tags":"s","qoptions":"s"},"ler_arquivos":{"beneficiarios":"s","internacao":"s","fechar_lote":"s","gerenciar_lote":"s","rel_guias":"s","rel_lotes":"s","rel_valores":"s","solicitantes":"s","executantes":"s","tabelas":"s","documentos":"s","sistema":"s","users":"s","permissions":"s","operadoras":"s","escolaridades":"s","estado-civil":"s","tags":"s","qoptions":"s"}}',
+            "admin"=>'{"ler":{"painel":"s","pacientes":"s","beneficiarios":"s","guias":"s","internacao":"s","faturamento":"s","fechar_lote":"s","gerenciar_lote":"s","relatorios":"s","rel_guias":"s","rel_lotes":"s","config":"s","solicitantes":"s","executantes":"s","tabelas":"s","users":"s","operadoras":"s"},"create":{"beneficiarios":"s","internacao":"s","fechar_lote":"s","gerenciar_lote":"s","rel_guias":"s","rel_lotes":"s","solicitantes":"s","executantes":"s","tabelas":"s","users":"s","operadoras":"s"},"update":{"beneficiarios":"s","internacao":"s","fechar_lote":"s","gerenciar_lote":"s","rel_guias":"s","rel_lotes":"s","solicitantes":"s","executantes":"s","tabelas":"s","users":"s","permissions":"s","operadoras":"s"},"delete":{"beneficiarios":"s","internacao":"s","fechar_lote":"s","gerenciar_lote":"s","rel_guias":"s","rel_lotes":"s","solicitantes":"s","executantes":"s","tabelas":"s","users":"s","permissions":"s","operadoras":"s"},"ler_arquivos":{"beneficiarios":"s","internacao":"s","fechar_lote":"s","gerenciar_lote":"s","rel_guias":"s","rel_lotes":"s","solicitantes":"s","executantes":"s","tabelas":"s","users":"s","permissions":"s","operadoras":"s"}}',
         ];
         DB::table('permissions')->insert([
             [
@@ -38,14 +24,14 @@ class PermissionSeeder extends Seeder
                 'description'=>'Desenvolvedores',
                 'redirect_login'=>'/home',
                 'active'=>'s',
-                'id_menu'=>json_encode($arrPermiss['master']),
+                'id_menu'=>$arrPermiss['master'],
             ],
             [
                 'name'=>'Administrador',
                 'description'=>'Administradores do sistema',
                 'redirect_login'=>'/home',
                 'active'=>'s',
-                'id_menu'=>json_encode($arrPermiss['admin']),
+                'id_menu'=>$arrPermiss['admin'],
             ],
             [
                 'name'=>'Gerente',

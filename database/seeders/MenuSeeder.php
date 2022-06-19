@@ -60,9 +60,9 @@ class MenuSeeder extends Seeder
                 'route'=>'beneficiarios.index',
                 'pai'=>'pacientes'
             ],
-            [
+            /*[
                 'categoria'=>'',
-                'description'=>'Guia de SP/SADT',
+                'description'=>'SP/SADT',
                 'icon'=>'fas fa-list',
                 'actived'=>true,
                 'url'=>'spsadt',
@@ -71,7 +71,7 @@ class MenuSeeder extends Seeder
             ],
             [
                 'categoria'=>'',
-                'description'=>'Guia de Consulta',
+                'description'=>'Consulta',
                 'icon'=>'fas fa-list',
                 'actived'=>true,
                 'url'=>'consulta',
@@ -80,31 +80,31 @@ class MenuSeeder extends Seeder
             ],
             [
                 'categoria'=>'',
-                'description'=>'Guia de Honorários Individuais',
+                'description'=>'Honorários Individuais',
                 'icon'=>'fas fa-list',
                 'actived'=>true,
                 'url'=>'honorarios',
                 'route'=>'guias.index',
                 'pai'=>'guias'
-            ],
+            ],*/
             [
                 'categoria'=>'',
-                'description'=>'Guias Resumo de Internação',
+                'description'=>'Resumo de Internação',
                 'icon'=>'fas fa-list',
                 'actived'=>true,
                 'url'=>'internacao',
-                'route'=>'guias.index',
+                'route'=>'internacao.index',
                 'pai'=>'guias'
             ],
-            [
+            /*[
                 'categoria'=>'',
-                'description'=>'Guias GTO',
+                'description'=>'GTO',
                 'icon'=>'fas fa-list',
                 'actived'=>true,
                 'url'=>'gto',
                 'route'=>'guias.index',
                 'pai'=>'guias'
-            ],
+            ],*/
             [
                 'categoria'=>'',
                 'description'=>'Faturamento',
@@ -179,7 +179,52 @@ class MenuSeeder extends Seeder
             ],
             [
                 'categoria'=>'',
-                'description'=>'Documentos',
+                'description'=>'Cadastro de Operadoras',
+                'icon'=>'fas fa-heartbeat',
+                'actived'=>true,
+                'url'=>'operadoras',
+                'route'=>'operadoras.index',
+                'pai'=>'config'
+            ],
+            [
+                'categoria'=>'',
+                'description'=>'Cadastro de Profissionais Solicitantes',
+                'icon'=>'fas fa-id-card-alt',
+                'actived'=>true,
+                'url'=>'solicitantes',
+                'route'=>'solicitantes.index',
+                'pai'=>'config'
+            ],
+            [
+                'categoria'=>'',
+                'description'=>'Cadastro de Profissionais Executantes',
+                'icon'=>'fas fa-id-card-alt',
+                'actived'=>true,
+                'url'=>'executantes',
+                'route'=>'executantes.index',
+                'pai'=>'config'
+            ],
+            [
+                'categoria'=>'',
+                'description'=>'Cadastro de Valores Cobrados',
+                'icon'=>'fas fa-barcode',
+                'actived'=>true,
+                'url'=>'tabelas',
+                'route'=>'tabelas.index',
+                'pai'=>'config'
+            ],
+            [
+                'categoria'=>'',
+                'description'=>'Configurações de Agenda',
+                'icon'=>'fas fa-cal',
+                'actived'=>true,
+                'url'=>'config_agenda',
+                'route'=>'tabelas.index',
+                'pai'=>'config'
+            ],
+            [
+                'categoria'=>'',
+                'description'=>'Cadastro de Documentos',
                 'icon'=>'fas fa-file-word',
                 'actived'=>true,
                 'url'=>'documentos',
@@ -211,15 +256,6 @@ class MenuSeeder extends Seeder
                 'actived'=>true,
                 'url'=>'permissions',
                 'route'=>'permissions.index',
-                'pai'=>'config'
-            ],
-            [
-                'categoria'=>'',
-                'description'=>'Cadastro de Operadoras',
-                'icon'=>'fas fa-heartbeat',
-                'actived'=>true,
-                'url'=>'operadoras',
-                'route'=>'operadoras.index',
                 'pai'=>'config'
             ],
             [

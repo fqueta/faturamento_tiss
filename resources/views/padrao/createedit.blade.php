@@ -9,7 +9,7 @@
 <div class="row">
     <div class="col-md-12 mens">
     </div>
-    <div class="col-md-8">
+    <div class="col-md-12">
         <div class="card card-primary">
             <div class="card-header">
                 <h3 class="card-title">Informações</h3>
@@ -29,6 +29,7 @@
             </div>
         </div>
     </div>
+    <!--
     <div class="col-md-4">
         <div class="card">
             <div class="card-header">
@@ -40,7 +41,7 @@
                 </div>
             </div>
             <div class="card-body">
-                {{App\Qlib\Qlib::gerUploadAquivos([
+                App\Qlib\Qlib::gerUploadAquivos([
                     'pasta'=>$config['route'].'/'.date('Y').'/'.date('m'),
                     'token_produto'=>$value['token'],
                     'tab'=>$config['route'],
@@ -51,7 +52,7 @@
                 ])}}
             </div>
         </div>
-    </div>
+    </div>-->
 </div>
 
 @stop

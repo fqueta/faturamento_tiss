@@ -12,9 +12,11 @@ use App\Http\Controllers\UploadController;
 use App\Http\Controllers\EtapaController;
 use App\Http\Controllers\EscolaridadeController;
 use App\Http\Controllers\EstadocivilController;
+use App\Http\Controllers\FaturamentosController;
 use App\Http\Controllers\LotesController;
 use App\Http\Controllers\RelatoriosController;
 use App\Http\Controllers\MapasController;
+use App\Http\Controllers\ProfissionaisController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
@@ -54,6 +56,31 @@ Route::prefix('permissions')->group(function(){
     Route::put('/{id}',[UserPermissions::class,'update'])->where('id', '[0-9]+')->name('permissions.update');
     Route::delete('/{id}',[UserPermissions::class,'destroy'])->where('id', '[0-9]+')->name('permissions.destroy');
 });*/
+
+Route::resource('tabelas','\App\Http\Controllers\TabelasController',['parameters' => [
+    'tabelas' => 'id'
+]]);
+Route::resource('operadoras','\App\Http\Controllers\PadraoController',['parameters' => [
+    'operadoras' => 'id'
+]]);
+Route::prefix('guias')->group(function(){
+    Route::resource('internacao','\App\Http\Controllers\GuiasController',['parameters' => [
+        'internacao' => 'id'
+    ]]);
+});
+Route::prefix('profissionais')->group(function(){
+    Route::resource('solicitantes','\App\Http\Controllers\ProfissionaisController',['parameters' => [
+        'solicitantes' => 'id'
+    ]]);
+    Route::resource('executantes','\App\Http\Controllers\ProfissionaisController',['parameters' => [
+        'executantes' => 'id'
+    ]]);
+});
+Route::prefix('faturamentos')->group(function(){
+    Route::get('/fechar',[FaturamentosController::class,'fechar'])->name('faturamento.fechar');
+    Route::get('/gerenciar',[FaturamentosController::class,'gerenciar'])->name('faturamento.gerenciar');
+});
+/*
 Route::prefix('familias')->group(function(){
     Route::get('/',[FamiliaController::class,'index'])->name('familias.index');
     Route::get('/create',[FamiliaController::class,'create'])->name('familias.create');
@@ -66,7 +93,7 @@ Route::prefix('familias')->group(function(){
     Route::get('export/filter', [FamiliaController::class, 'exportFilter'])->name('familias.export_filter');
     Route::get('campos', [FamiliaController::class, 'camposJson'])->name('familias.campos');
     Route::post('ajax', [FamiliaController::class, 'ajaxPost'])->name('familias.ajax');
-});
+});*/
 Route::prefix('bairros')->group(function(){
     Route::get('/',[BairroController::class,'index'])->name('bairros.index');
     Route::get('/create',[BairroController::class,'create'])->name('bairros.create');
@@ -111,8 +138,10 @@ Route::prefix('etapas')->group(function(){
 });
 Route::prefix('relatorios')->group(function(){
     Route::get('/',[RelatoriosController::class,'index'])->name('relatorios.index');
-    Route::get('/social',[RelatoriosController::class,'realidadeSocial'])->name('relatorios.social');
+    Route::get('/guias',[RelatoriosController::class,'guias'])->name('relatorios.guias');
+    Route::get('/lotes',[RelatoriosController::class,'lotes'])->name('relatorios.lotes');
     Route::get('/evolucao',[RelatoriosController::class,'create'])->name('relatorios.evolucao');
+    Route::get('/valores',[RelatoriosController::class,'valores'])->name('relatorios.valores');
     Route::get('export/filter', [RelatoriosController::class, 'exportFilter'])->name('relatorios.export_filter');
     //Route::post('/',[RelatoriosController::class,'store'])->name('relatorios.store');
     //Route::get('/{id}/show',[RelatoriosController::class,'show'])->name('relatorios.show');
