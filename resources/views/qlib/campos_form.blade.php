@@ -122,6 +122,15 @@
             <textarea name="{{$config['campo']}}" class="form-control @error($config['campo']) is-invalid @enderror {{$config['class']}}" rows="{{@$config['rows']}}" cols="{{@$config['cols']}}">@if(isset($config['value'])){{$config['value']}}@elseif($config['ac']=='cad'){{old($config['campo'])}}@endif</textarea>
             </div>
         </div>
+    @elseif ($config['type']=='html_script')
+        @php
+           $config['script'] = isset($config['script'])?$config['script']:false;
+        @endphp
+        <div class="col-{{$config['col']}}-{{$config['tam']}} {{$config['class_div']}}" div-id="{{$config['campo']}}">
+            @if ($config['script'])
+                {!!$config['script']!!}
+            @endif
+        </div>
     @elseif ($config['type']=='html')
         @php
            $config['script'] = isset($config['script'])?$config['script']:false;
@@ -244,7 +253,7 @@
         @if ($config['label'])
             <label for="{{$config['campo']}}">{{$config['label']}}</label>
         @endif
-        <input type="{{$config['type']}}" class="form-control @error($config['campo']) is-invalid @enderror {{$config['class']}}" id="inp-{{$config['campo']}}" name="{{$config['campo']}}" aria-describedby="{{$config['campo']}}" placeholder="{{$config['placeholder']}}" value="@if(isset($config['value'])){{$config['value']}}@elseif($config['ac']=='cad'){{old($config['campo'])}}@endif" {{$config['event']}} />
+        <input type="{{$config['type']}}" title="{{@$config['title']}}" class="form-control @error($config['campo']) is-invalid @enderror {{$config['class']}}" id="inp-{{$config['campo']}}" name="{{$config['campo']}}" aria-describedby="{{$config['campo']}}" placeholder="{{$config['placeholder']}}" value="@if(isset($config['value'])){{$config['value']}}@elseif($config['ac']=='cad'){{old($config['campo'])}}@endif" {{$config['event']}} />
         @error($config['campo'])
             <div class="alert alert-danger">{{ $message }}</div>
         @enderror
@@ -254,7 +263,7 @@
         @if ($config['label'])
             <label for="{{$config['campo']}}">{{$config['label']}}</label>
         @endif
-        <input type="{{$config['type']}}" class="form-control @error($config['campo']) is-invalid @enderror {{$config['class']}}" id="inp-{{$config['campo']}}" name="{{$config['campo']}}" aria-describedby="{{$config['campo']}}" placeholder="{{$config['placeholder']}}" value="@if(isset($config['value'])){{$config['value']}}@elseif($config['ac']=='cad'){{old($config['campo'])}}@endif" {{$config['event']}} />
+        <input type="{{$config['type']}}" title="{{@$config['title']}}" class="form-control @error($config['campo']) is-invalid @enderror {{$config['class']}}" id="inp-{{$config['campo']}}" name="{{$config['campo']}}" aria-describedby="{{$config['campo']}}" placeholder="{{$config['placeholder']}}" value="@if(isset($config['value'])){{$config['value']}}@elseif($config['ac']=='cad'){{old($config['campo'])}}@endif" {{$config['event']}} />
         @error($config['campo'])
             <div class="alert alert-danger">{{ $message }}</div>
         @enderror

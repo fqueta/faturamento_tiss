@@ -55,6 +55,7 @@
                     'data_selector'=>@$v['data_selector'],
                     'script'=>@$v['script'],
                     'valor_padrao'=>@$v['valor_padrao'],
+                    'title'=>@$v['title'],
                     'dados'=>@$v['dados'],
             ])}}
             @endforeach
