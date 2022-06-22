@@ -179,6 +179,7 @@ class Qlib
             $config['class'] = isset($config['class']) ? $config['class'] : false;
             $config['style'] = isset($config['style']) ? $config['style'] : false;
             $config['class_div'] = isset($config['class_div']) ? $config['class_div'] : false;
+            $config['id'] = !empty($config['id']) ? $config['id'] : 'inp-'.$config['campo'];
             if(@$config['type']=='chave_checkbox' && @$config['ac']=='cad'){
                 if(@$config['checked'] == null && isset($config['valor_padrao']))
                 $config['checked'] = $config['valor_padrao'];

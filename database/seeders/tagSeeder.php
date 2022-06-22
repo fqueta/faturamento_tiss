@@ -19,6 +19,7 @@ class tagSeeder extends Seeder
             ['nome'=>'Tags Codigo do CBO','obs'=>'Código Cbo.','ordem'=>2],
             ['nome'=>'Tags Concelho do profissional','obs'=>'Código Cbo.','ordem'=>3],
             ['nome'=>'Tags Tabelas e taxas','obs'=>'Tabelas de valores.','ordem'=>4],
+            ['nome'=>'Tags Motivos do encerramento','obs'=>'Motivos do encerramento da internação.','ordem'=>5],
             [
                 "value"=>"3.02.00",
                 "nome"=>"Tiss Versão 3.02.00",
@@ -1427,6 +1428,174 @@ class tagSeeder extends Seeder
                 "obs"=>"",
                 "config"=>"",
             ],
+            [
+                "value"=>"11",
+                "nome"=>"Alta Curado",
+                "config"=>"",
+                "pai"=>"5",
+                "ordem"=>"1",
+                "obs"=>""
+            ],
+            [
+                "value"=>"12",
+                "nome"=>"Alta Melhorado",
+                "config"=>"",
+                "pai"=>"5",
+                "ordem"=>"1",
+                "obs"=>""
+            ],
+            [
+                "value"=>"13",
+                "nome"=>"Alta da Puérpera e permanência do recém-nascido",
+                "config"=>"",
+                "pai"=>"5",
+                "ordem"=>"1",
+                "obs"=>""
+            ],
+            [
+                "value"=>"14",
+                "nome"=>"Alta a pedido",
+                "config"=>"",
+                "pai"=>"5",
+                "ordem"=>"1",
+                "obs"=>""
+            ],
+            [
+                "value"=>"15",
+                "nome"=>"Alta com previsão de retorno para acompanhamento do paciente",
+                "config"=>"",
+                "pai"=>"5",
+                "ordem"=>"1",
+                "obs"=>""
+            ],
+            [
+                "value"=>"16",
+                "nome"=>"Alta por Evasão",
+                "config"=>"",
+                "pai"=>"5",
+                "ordem"=>"1",
+                "obs"=>""
+            ],
+            [
+                "value"=>"17",
+                "nome"=>"Alta da Puérpera e recém-nascido",
+                "config"=>"",
+                "pai"=>"5",
+                "ordem"=>"1",
+                "obs"=>""
+            ],
+            [
+                "value"=>"18",
+                "nome"=>"Alta por Outros motivos",
+                "config"=>"",
+                "pai"=>"5",
+                "ordem"=>"1",
+                "obs"=>""
+            ],
+            [
+                "value"=>"21",
+                "nome"=>"Permanencia por características próprias da doença",
+                "config"=>"",
+                "pai"=>"5",
+                "ordem"=>"1",
+                "obs"=>""
+            ],
+            [
+                "value"=>"22",
+                "nome"=>"Permanencia por Intercorrência",
+                "config"=>"",
+                "pai"=>"5",
+                "ordem"=>"1",
+                "obs"=>""
+            ],
+            [
+                "value"=>"23",
+                "nome"=>"Permanencia por impossibilidade sócio-familiar",
+                "config"=>"",
+                "pai"=>"5",
+                "ordem"=>"1",
+                "obs"=>""
+            ],
+            [
+                "value"=>"24",
+                "nome"=>"permanencia por Processo de doação de órgãos, tecidos e células - doador vivo",
+                "config"=>"",
+                "pai"=>"5",
+                "ordem"=>"1",
+                "obs"=>""
+            ],
+            [
+                "value"=>"25",
+                "nome"=>"Permanencia por Processo de doação de órgãos, tecidos e células - doador morto",
+                "config"=>"",
+                "pai"=>"5",
+                "ordem"=>"1",
+                "obs"=>""
+            ],
+            [
+                "value"=>"26",
+                "nome"=>"Permanencia por mudança de procedimento",
+                "config"=>"",
+                "pai"=>"5",
+                "ordem"=>"1",
+                "obs"=>""
+            ],
+            [
+                "value"=>"27",
+                "nome"=>"Permanencia por re-operação",
+                "config"=>"",
+                "pai"=>"5",
+                "ordem"=>"1",
+                "obs"=>""
+            ],
+            [
+                "value"=>"28",
+                "nome"=>"Permanencia por outros motivos",
+                "config"=>"",
+                "pai"=>"5",
+                "ordem"=>"1",
+                "obs"=>""
+            ],
+            [
+                "value"=>"31",
+                "nome"=>"Transferido para outro estabelecimento",
+                "config"=>"",
+                "pai"=>"5",
+                "ordem"=>"1",
+                "obs"=>""
+            ],
+            [
+                "value"=>"41",
+                "nome"=>"Óbito com declaração de óbito fornecida pelo médico assistente",
+                "config"=>"",
+                "pai"=>"5",
+                "ordem"=>"1",
+                "obs"=>""
+            ],
+            [
+                "value"=>"42",
+                "nome"=>"Óbito com declaração de Óbito fornecida pelo Instituto Médico Legal - IML",
+                "config"=>"",
+                "pai"=>"5",
+                "ordem"=>"1",
+                "obs"=>""
+            ],
+            [
+                "value"=>"43",
+                "nome"=>"Óbito com declaração de Óbito fornecida pelo Serviço de Verificação de Óbito - SVO.",
+                "config"=>"",
+                "pai"=>"5",
+                "ordem"=>"1",
+                "obs"=>""
+            ],
+            [
+                "value"=>"51",
+                "nome"=>"ENCERRAMENTO ADMINISTRATIVO",
+                "config"=>"",
+                "pai"=>"5",
+                "ordem"=>"1",
+                "obs"=>""
+            ]
 
         ];
 

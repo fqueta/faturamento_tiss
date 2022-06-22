@@ -5,7 +5,7 @@
             @if ($config['label'])
                  <label for="{{$config['campo']}}">{{$config['label']}}</label><br>
             @endif
-            <select name="{{$config['campo']}}" {{$config['event']}} id="sele-{{$config['campo']}} @error($config['campo']) is-invalid @enderror" class="form-control custom-select selectpicker {{$config['class']}}">
+            <select name="{{$config['campo']}}" {{$config['event']}} id="{{$config['id']}}" class="form-control custom-select selectpicker {{$config['class']}} @error($config['campo']) is-invalid @enderror">
                 @if ($config['option_select'])
                     <option value="" class="option_select"> {{$config['label_option_select']}} </option>
                 @endif
@@ -263,7 +263,7 @@
         @if ($config['label'])
             <label for="{{$config['campo']}}">{{$config['label']}}</label>
         @endif
-        <input type="{{$config['type']}}" title="{{@$config['title']}}" class="form-control @error($config['campo']) is-invalid @enderror {{$config['class']}}" id="inp-{{$config['campo']}}" name="{{$config['campo']}}" aria-describedby="{{$config['campo']}}" placeholder="{{$config['placeholder']}}" value="@if(isset($config['value'])){{$config['value']}}@elseif($config['ac']=='cad'){{old($config['campo'])}}@endif" {{$config['event']}} />
+        <input type="{{$config['type']}}" title="{{@$config['title']}}" class="form-control @error($config['campo']) is-invalid @enderror {{$config['class']}}" id="{{$config['id']}}" name="{{$config['campo']}}" aria-describedby="{{$config['campo']}}" placeholder="{{$config['placeholder']}}" value="@if(isset($config['value'])){{$config['value']}}@elseif($config['ac']=='cad'){{old($config['campo'])}}@endif" {{$config['event']}} />
         @error($config['campo'])
             <div class="alert alert-danger">{{ $message }}</div>
         @enderror

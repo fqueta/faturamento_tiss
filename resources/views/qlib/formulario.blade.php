@@ -34,11 +34,11 @@
                         $value[$k] = isset($value[$nk])?$value[$nk]:false;
                     @endphp
                 @endif
-
             {{App\Qlib\Qlib::qForm([
                     'type'=>@$v['type'],
                     'campo'=>$k,
                     'label'=>$v['label'],
+                    'id'=>@$v['id'],
                     'placeholder'=>@$v['placeholder'],
                     'ac'=>$config['ac'],
                     'value'=>isset($v['value'])?$v['value']: @$value[$k],
