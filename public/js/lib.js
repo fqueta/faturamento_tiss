@@ -2088,9 +2088,9 @@ function alimenta_procedimento(){
     }
     if (erro == '0'){
         linha = parseFloat(document.getElementById('qtde_procedimento').value);
-        if(!linha){
-            var total_procedimento = $('#demo_procedimentos tr').length;
-            linha = total_procedimento;
+        var num_procedimento = $('#demo_procedimentos tr').length;
+        if(!linha || typeof linha=='NaN'){
+            linha = num_procedimento;
         }
         linha += 1;
         if (document.getElementById('procedimento_alimentador_hora1').value==''){
@@ -2115,24 +2115,26 @@ function alimenta_procedimento(){
         }
         document.getElementById('qtde_procedimento').value = linha;
         ref_linha = 0;
-        /*
-        for (var i=1;i<=linha;i++){
-            if(document.getElementById('procedimento_item_novo_'+i).value!=''){
-                ref_linha+=1
-            }
-        }*/
+        if(num_procedimento){
+            ref_linha = num_procedimento;
+            /*for (var i=1;i<=total_procedimento;i++){
+                if(document.getElementById('procedimento_item_novo_'+i).value!=''){
+                    ref_linha+=1
+                }
+            }*/
+        }
         //nova_linha = '<table id="linha_procedimento_'+linha+'" width="100%" style="display:block"><tr>';
-        var inpu = '<input type="text" name="config[procedimento]['+linha+'][item]" value="'+linha+'"/>';
+        var inpu = '<input type="hidden" name="config[procedimento]['+linha+'][item]" value="'+linha+'"/>';
         var arr_campos = ['data','hora1','hora2','via','tec','tabela','codigo','descricao','quantidade','fator','valor_unitario','valor_total'];
         if(arr_campos.length>0){
             for (let i = 0; i < arr_campos.length; i++) {
                 const element = arr_campos[i];
-                inpu += '<input type="text" name="config[procedimento]['+linha+']['+element+']" value="'+document.getElementById('procedimento_alimentador_'+element).value+'"/>';
+                inpu += '<input type="hidden" name="config[procedimento]['+linha+']['+element+']" value="'+document.getElementById('procedimento_alimentador_'+element).value+'"/>';
 
             }
         }
         nova_linha = '<tr id="linha_procedimento_'+linha+'">';
-        nova_linha += '<td class="celula_item" align="center" width="20" id="td_contador_linha_'+linha+'">'+linha+'</td>';
+        nova_linha += '<td class="celula_item" align="center" width="20" id="td_contador_linha_'+linha+'">'+ref_linha+'</td>';
         nova_linha += '<td class="celula_item" align="center" width="65">'+inpu+''+document.getElementById('procedimento_alimentador_data').value+'</td>';
         nova_linha += '<td class="celula_item" align="center" width="65">'+hora1+'</td>';
         nova_linha += '<td class="celula_item" align="center" width="60">'+hora2+'</td>';
@@ -2145,16 +2147,13 @@ function alimenta_procedimento(){
         nova_linha += '<td class="celula_item" align="center" width="50">'+document.getElementById('procedimento_alimentador_fator').value+'</td>';
         nova_linha += '<td class="celula_item" align="right" width="80">'+document.getElementById('procedimento_alimentador_valor_unitario').value+'</td>';
         nova_linha += '<td class="celula_item" align="right" width="60">'+document.getElementById('procedimento_alimentador_valor_total').value+'</td>';
-        nova_linha += '<td class="celula_item" align="center" width="30"><input type="button" class="botao" value="-" style="height:15px; font-weight:bold" onclick="procedimento_remove_item(\''+linha+'\')"></td>';
+        nova_linha += '<td class="celula_item" align="center" width="30"><button type="button" class="btn btn-outline-danger" onclick="procedimento_remove_item(\''+linha+'\')"><i class="fa fa-times"></i></button></td>';
         nova_linha += '</tr>';
         //nova_linha += '</tr></table>';
         document.getElementById('demo_procedimentos').innerHTML+=nova_linha;
 
             total_procedimento = 0;
             for (var i=1;i<=linha;i++){
-                //if (document.getElementById('procedimento_valorTotal_'+i).value!=''){
-                    //total_procedimento += parseFloat(document.getElementById('procedimento_valorTotal_'+i).value);
-                //}
                 try {
                     var sel = '[name="config[procedimento]['+i+'][valor_total]"]';
                     if (document.querySelector(sel).value!=''){
@@ -2171,7 +2170,7 @@ function alimenta_procedimento(){
         document.getElementById('procedimento_alimentador_data').value='';
         document.getElementById('procedimento_alimentador_hora1').value='';
         document.getElementById('procedimento_alimentador_hora2').value='';
-        document.getElementById('procedimento_alimentador_tabela').value='';
+        //document.getElementById('procedimento_alimentador_tabela').value='';
         document.getElementById('procedimento_alimentador_codigo').value='';
         document.getElementById('procedimento_alimentador_descricao').value='';
         document.getElementById('procedimento_alimentador_quantidade').value='';
@@ -2180,8 +2179,9 @@ function alimenta_procedimento(){
         document.getElementById('procedimento_alimentador_fator').value='';
         document.getElementById('procedimento_alimentador_valor_unitario').value='';
         document.getElementById('procedimento_alimentador_valor_total').value='';
-        document.getElementById('procedimento_alimentador_tabela').value=document.getElementById('tabela_padrao').value;
+        //document.getElementById('procedimento_alimentador_tabela').value=document.getElementById('tabela_padrao').value;
         calcula_total_geral();
+        $('#add-procedimento').modal('hide');
     }
 }
 function calcula_total_geral(){
@@ -2227,6 +2227,7 @@ function calcula_total_geral(){
 
 }
 function procedimento_remove_item(linha){
+    /*
     document.getElementById('procedimento_item_novo_'+linha).value='';
     document.getElementById('procedimento_data_'+linha).value='';
     document.getElementById('procedimento_hora1_'+linha).value='';
@@ -2241,20 +2242,30 @@ function procedimento_remove_item(linha){
     document.getElementById('procedimento_valorUnitario_'+linha).value='';
     document.getElementById('procedimento_valorTotal_'+linha).value='';
     document.getElementById('linha_procedimento_'+linha).style.display='none';
+    */
+    document.getElementById('tr_contador_linha_'+linha).remove();
     qtde_linhas = document.getElementById('qtde_procedimento').value;
     contador_linha = 0;
     for (var i=1;i<=qtde_linhas;i++){
-        if(document.getElementById('linha_procedimento_'+i).style.display=='block'){
-            contador_linha += 1;
-            document.getElementById('td_contador_linha_'+i).innerHTML=contador_linha
-        }
+        contador_linha += 1;
+        //if(document.getElementById('linha_procedimento_'+i).style.display=='block'){
+            //document.getElementById('td_contador_linha_'+i).innerHTML=contador_linha
+        //}
     }
     linha = document.getElementById('qtde_procedimento').value;
 
         total_procedimento = 0;
         for (var i=1;i<=linha;i++){
-            if (document.getElementById('procedimento_valorTotal_'+i).value!=''){
-                total_procedimento += parseFloat(document.getElementById('procedimento_valorTotal_'+i).value);
+            //if (document.getElementById('procedimento_valorTotal_'+i).value!=''){
+                //total_procedimento += parseFloat(document.getElementById('procedimento_valorTotal_'+i).value);
+            //}
+            try {
+                var sel = '[name="config[procedimento]['+i+'][valor_total]"]';
+                if (document.querySelector(sel).value!=''){
+                    total_procedimento += parseFloat(document.querySelector(sel).value);
+                }
+            } catch (e) {
+                console.log(e);
             }
         }
         total_procedimento = total_procedimento.toFixed(2);

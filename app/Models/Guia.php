@@ -15,6 +15,7 @@ class Guia extends Model
     ];
     protected $fillable = [
         'token',
+        'numero_guia',
         'nome',
         'ordem',
         'ativo',
