@@ -113,6 +113,7 @@ class GuiasController extends Controller
     public function campos($sec = false){
         $camposOper = new PadraoController($this->user);
         if($this->url=='internacao'){
+            $qtde_procedimento=0;
             $arr_PainelProssedimentos = [
                 'procedimento[data]'        =>['label'=>'34-Data','active'=>false,'placeholder'=>'','type'=>'date','id'=>'procedimento_alimentador_data','exibe_busca'=>'d-block','event'=>'onfocus=this.style.backgroundColor=\'#ffffff\'','tam'=>'2','cp_busca'=>'','title'=>''],
                 'procedimento[horaInicio]'  =>['label'=>'35-Hora Início','id'=>'procedimento_alimentador_hora1','active'=>false,'placeholder'=>'Preenchimento condicionado. Deve ser preenchido quando o procedimento ocorrer em situações de urgência e emergência.','type'=>'time','exibe_busca'=>'d-block','event'=>'onfocus=this.style.backgroundColor=\'#ffffff\'','tam'=>'2','cp_busca'=>'','title'=>''],
@@ -146,6 +147,7 @@ class GuiasController extends Controller
                     'event'=>'',
                     'tam'=>'2',
                     'class'=>'',
+                    'id'=>'procedimento_alimentador_via',
                     'title'=>'Condicionado. Deve ser preenchido em caso de procedimento cirúrgico.',
                     'exibe_busca'=>true,
                     'option_select'=>true,
@@ -161,6 +163,7 @@ class GuiasController extends Controller
                     'event'=>'',
                     'tam'=>'2',
                     'class'=>'',
+                    'id'=>'procedimento_alimentador_tec',
                     'title'=>'Código da técnica utilizada para realização do procedimento, conforme tabela de domínio nº 48.',
                     'exibe_busca'=>true,
                     'option_select'=>true,
@@ -172,7 +175,7 @@ class GuiasController extends Controller
             ];
             $arrSeq = range(1,100);
             $arr_Painelexecutantes = [
-                'executante[seqRef]'=>[
+                'executante[DeqRef]'=>[
                     'label'=>'46-Seq. Ref.',
                     'active'=>false,
                     'type'=>'select',
@@ -185,6 +188,62 @@ class GuiasController extends Controller
                     'exibe_busca'=>true,
                     'option_select'=>true,
                 ],
+                'executante[GrauPart]'=>[
+                    'label'=>'47-Gru. Part.',
+                    'active'=>false,
+                    'type'=>'select',
+                    'arr_opc'=>[
+                        "00"=>"00 - Cirurgião","01"=>"01 - Primeiro Auxiliar","02"=>"02 - Segundo Auxiliar","03"=>"03 - Terceiro Auxiliar","04"=>"04 - Quarto Auxiliar","05"=>"05 - Instrumentador","06"=>"06 - Anestesista","07"=>"07 - Auxiliar de Anestesista","08"=>"08 - Consultor","09"=>"09 - Perfusionista","10"=>"10 - Pediatra na sala de parto","11"=>"11 - Auxiliar SADT","12"=>"12 - Clínico","13"=>"13 - Intensivista",
+
+                    ],
+                    'exibe_busca'=>'d-block',
+                    'event'=>'',
+                    'tam'=>'2',
+                    'class'=>'',
+                    'title'=>'Condicionado. Deve ser  preenchido sempre que houver honorários profissionais relativos aos procedimentos realizados e tratar-se de procedimento realizado por equipe.',
+                    'exibe_busca'=>true,
+                    'option_select'=>true,
+                ],
+                'executante[idProfissional]'=>[
+                    'label'=>'49-Nome Profissional',
+                    'active'=>false,
+                    'type'=>'select',
+                    'data_selector'=>[
+                        'campos'=>$camposOper->campos('operadoras'),
+                        'route_index'=>route('operadoras.index'),
+                        'id_form'=>'frm-operadoras',
+                        'action'=>route('operadoras.store'),
+                        'campo_id'=>'id',
+                        'campo_bus'=>'nome',
+                        'label'=>'Operadora',
+                    ],
+                    'arr_opc'=>Qlib::sql_array("SELECT id,nome FROM operadoras WHERE ativo='s'",'nome','id'),'exibe_busca'=>'d-block',
+                    'event'=>'required',
+                    'tam'=>'5',
+                    'class'=>'',
+                    'exibe_busca'=>true,
+                    'option_select'=>true,
+                    'title'=>'Nome do profissional participante da equipe de execução do procedimento.',
+                    'cp_busca'=>'config][idProfissional',
+                ],
+                'executante[codigoCpfProfissional]'  =>['label'=>'47-Cód. na Operadora / CPF','id'=>'codigo_cpf_profissional','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','class'=>'mask-cpf','event'=>' ','tam'=>'3','cp_busca'=>'','title'=>'Código na Operadora ou CPF do profissional participante da equipe de execução do procedimento.'],
+                'executante[conselho]'=>[
+                    'label'=>'Conselho',
+                    'active'=>false,
+                    'type'=>'select',
+                    'arr_opc'=>Qlib::sql_array("SELECT value,nome FROM tags WHERE ativo='s' AND pai='3' ORDER BY id ASC",'nome','value'),'exibe_busca'=>'d-block',
+                    'event'=>'',
+                    'tam'=>'4',
+                    'class'=>'',
+                    'exibe_busca'=>true,
+                    'option_select'=>true,
+                    'cp_busca'=>'config][conselho',
+                ],
+                'executor[numero_conselho]'=>['label'=>'N° no Conselho','active'=>true,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'disabled','tam'=>'4'],
+                'executor[uf_conselho]'=>['label'=>'UF','active'=>true,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'disabled','tam'=>'1'],
+                'executor[cbo]'=>['label'=>'Cód. CBO','active'=>true,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'disabled','tam'=>'3'],
+
+
             ];
             return [
                 'id'=>['label'=>'Id','active'=>true,'type'=>'hidden','exibe_busca'=>'d-block','event'=>'','tam'=>'2'],
@@ -361,17 +420,19 @@ class GuiasController extends Controller
                 'painel1'=>['label'=>'Procedimentos e Exames Realizados','active'=>false,'tam'=>'12','script'=>'guias.procedimentos','type'=>'html','class_div'=>'','dados'=>$arr_PainelProssedimentos],
                 'sep5'=>['label'=>'Identificação do(s) Profissional(is) Executante(s)','active'=>false,'tam'=>'12','script'=>'<h5>Identificação do(s) Profissional(is) Executante(s)</h5>','type'=>'html_script','class_div'=>'bg-secondary'],
                 'painel2'=>['label'=>'linsta de executantes','active'=>false,'tam'=>'12','script'=>'guias.executantes','type'=>'html','class_div'=>'','dados'=>$arr_Painelexecutantes],
-                'config[valorProcedimentos]'=>['label'=>'54-Procedimentos (R$)','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'required ','tam'=>'2','cp_busca'=>'config][valorProcedimentos','title'=>'Valor total de todos os procedimentos realizados'],
-                'config[valorDiarias]'=>['label'=>'55-Diárias (R$)','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'required ','tam'=>'2','cp_busca'=>'config][valorDiarias','title'=>'Valor total das diárias, considerando o valor de cada diária e a quantidade de diárias cobradas'],
-                'config[valorTaxasAlugueis]'=>['label'=>'56-Taxas e Aluguéis (R$)','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'required ','tam'=>'2','cp_busca'=>'config][valorProcedimentos','title'=>'Valor total das taxas e aluguéis,  considerando o somatório de todas as taxas e aluguéis cobrados'],
-                'config[valorProcedimentos]'=>['label'=>'54-Procedimentos (R$)','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'required ','tam'=>'2','cp_busca'=>'config][valorProcedimentos','title'=>'Valor total de todos os procedimentos realizados'],
-                'config[valorProcedimentos]'=>['label'=>'54-Procedimentos (R$)','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'required ','tam'=>'2','cp_busca'=>'config][valorProcedimentos','title'=>'Valor total de todos os procedimentos realizados'],
-                'config[valorProcedimentos]'=>['label'=>'54-Procedimentos (R$)','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'required ','tam'=>'2','cp_busca'=>'config][valorProcedimentos','title'=>'Valor total de todos os procedimentos realizados'],
-                'config[valorProcedimentos]'=>['label'=>'54-Procedimentos (R$)','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'required ','tam'=>'2','cp_busca'=>'config][valorProcedimentos','title'=>'Valor total de todos os procedimentos realizados'],
-                'config[valorProcedimentos]'=>['label'=>'54-Procedimentos (R$)','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'required ','tam'=>'2','cp_busca'=>'config][valorProcedimentos','title'=>'Valor total de todos os procedimentos realizados'],
+                'config[qtdProcedimentos]'=>['label'=>'quantidade de procedimentos','id'=>'qtde_procedimento','active'=>false,'placeholder'=>'','type'=>'hidden','exibe_busca'=>'d-block','event'=>'','tam'=>'3','cp_busca'=>'config][qtdProcedimentos','title'=>'Valor total de todos os procedimentos realizados'],
+                'config[tabela_padrao]'=>['label'=>'tabela_padrao','id'=>'tabela_padrao','active'=>false,'placeholder'=>'','type'=>'hidden','exibe_busca'=>'d-block','event'=>' ','tam'=>'3','cp_busca'=>'config][tabela_padrao','title'=>'Valor total de todos os procedimentos realizados'],
+                'config[valorProcedimentos]'=>['label'=>'54-Total de Procedimentos (R$)','id'=>'total_procedimentos','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'required ','tam'=>'3','cp_busca'=>'config][valorProcedimentos','title'=>'Valor total de todos os procedimentos realizados'],
+                'config[valorDiarias]'=>['label'=>'55-Total de Diárias (R$)','id'=>'total_diarias','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'','tam'=>'3','cp_busca'=>'config][valorDiarias','title'=>'Valor total das diárias, considerando o valor de cada diária e a quantidade de diárias cobradas'],
+                'config[valorTaxasAlugueis]'=>['label'=>'56-Total de Taxas e Aluguéis (R$)','id'=>'total_taxas','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'','tam'=>'3','cp_busca'=>'config][valorProcedimentos','title'=>'Valor total das taxas e aluguéis,  considerando o somatório de todas as taxas e aluguéis cobrados'],
+                'config[valorMateriais]'=>['label'=>'57-Total de Materiais (R$)','active'=>false,'id'=>'total_materiais','placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'','tam'=>'3','cp_busca'=>'config][valorMateriais','title'=>'Valor total dos materiais, considerando o valor unitário de cada material e a quantidade utilizada.'],
+                'config[valorOPME]'=>['label'=>'58-Total de OPME (R$)','active'=>false,'placeholder'=>'','id'=>'total_opme','type'=>'text','exibe_busca'=>'d-block','event'=>'','tam'=>'3','cp_busca'=>'config][valorOPME','title'=>'Preenchimento condicionado. Deve ser preenchido caso haja órtese, prótese ou material especial cobrado, conforme negociação entre as partes.'],
+                'config[valorMedicamentos]'=>['label'=>'59-Total de Medicamentos (R$)','active'=>false,'id'=>'total_medicamentos','placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'','tam'=>'3','cp_busca'=>'config][valorMedicamentos','title'=>'Valor total de Medicamentos'],
+                'config[valorGasesMedicinais]'=>['label'=>'60-Total de Gases Medicinais (R$)','id'=>'total_gases','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'','tam'=>'3','cp_busca'=>'config][valorGasesMedicinais','title'=>'Valor total de todos os procedimentos realizados'],
+                'config[valorTotalGeral]'=>['label'=>'61-Total Geral (R$)','active'=>false,'placeholder'=>'','id'=>'total_geral','type'=>'text','exibe_busca'=>'d-block','event'=>'required ','tam'=>'3','cp_busca'=>'config][valorTotalGeral','title'=>'Somatório de todos os valores totais de procedimentos realizados e itens assistenciais utilizados'],
+                'obs'=>['label'=>'65-Observação','active'=>false,'type'=>'textarea','exibe_busca'=>'d-block','event'=>'maxlenght=500','tam'=>'12'],
 
                 /*
-                'obs'=>['label'=>'Observação','active'=>false,'type'=>'textarea','exibe_busca'=>'d-block','event'=>'','tam'=>'12'],
                 'ativo'=>['label'=>'Liberar','active'=>true,'type'=>'chave_checkbox','value'=>'s','valor_padrao'=>'s','exibe_busca'=>'d-block','event'=>'','tam'=>'3','arr_opc'=>['s'=>'Sim','n'=>'Não']],
                 */
             ];
@@ -534,7 +595,8 @@ class GuiasController extends Controller
                 'route'=>$this->routa,
                 'id'=>$id,
             ];
-
+            //dd($dados[0]);
+            $_REQUEST['dados'] = $dados[0];
             $ret = [
                 'value'=>$dados[0],
                 'config'=>$config,
@@ -562,7 +624,7 @@ class GuiasController extends Controller
         $dados = $request->all();
         $ajax = isset($dados['ajax'])?$dados['ajax']:'n';
         foreach ($dados as $key => $value) {
-            if($key!='_method'&&$key!='_token'&&$key!='ac'&&$key!='ajax'){
+            if($key!='_method'&&$key!='_token'&&$key!='ac'&&$key!='ajax'&&$key!='procedimento'&&$key!='executante'){
                 if($key=='data_batismo' || $key=='data_nasci'){
                     if($value=='0000-00-00' || $value=='00/00/0000'){
                     }else{

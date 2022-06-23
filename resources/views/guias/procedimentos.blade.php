@@ -30,6 +30,7 @@
                 </tr>
             </tbody>
             <tbody class="list-procedimentos" id="demo_procedimentos">
+                <!--
                 <tr>
                     <td class="celula_item" align="center" width="20" id="td_contador_linha_1">1</td>
                     <td class="celula_item" align="center" width="65">01/06/2022</td>
@@ -46,6 +47,7 @@
                     <td class="celula_item" align="right" width="60">0.30</td>
                     <td class="celula_item" align="center" width="30"><input type="button" class="botao" value="-" style="height: 15px; font-weight: bold;" onclick="procedimento_remove_item('1')" /></td>
                 </tr>
+            -->
             </tbody>
         </table>
     </div>
