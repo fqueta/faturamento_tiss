@@ -2113,15 +2113,10 @@ function alimenta_procedimento(){
         }else{
             tec = document.getElementById('procedimento_alimentador_tec').value;
         }
-        document.getElementById('qtde_procedimento').value = linha;
+        //document.getElementById('qtde_procedimento').value = linha;
         ref_linha = 0;
         if(num_procedimento){
             ref_linha = num_procedimento;
-            /*for (var i=1;i<=total_procedimento;i++){
-                if(document.getElementById('procedimento_item_novo_'+i).value!=''){
-                    ref_linha+=1
-                }
-            }*/
         }
         //nova_linha = '<table id="linha_procedimento_'+linha+'" width="100%" style="display:block"><tr>';
         var inpu = '<input type="hidden" name="config[procedimento]['+linha+'][item]" value="'+linha+'"/>';
@@ -2156,6 +2151,7 @@ function alimenta_procedimento(){
             for (var i=1;i<=linha;i++){
                 try {
                     var sel = '[name="config[procedimento]['+i+'][valor_total]"]';
+                    alert(sel);
                     if (document.querySelector(sel).value!=''){
                         total_procedimento += parseFloat(document.querySelector(sel).value);
                     }
@@ -2170,7 +2166,7 @@ function alimenta_procedimento(){
         document.getElementById('procedimento_alimentador_data').value='';
         document.getElementById('procedimento_alimentador_hora1').value='';
         document.getElementById('procedimento_alimentador_hora2').value='';
-        //document.getElementById('procedimento_alimentador_tabela').value='';
+        document.getElementById('procedimento_alimentador_tabela').value='';
         document.getElementById('procedimento_alimentador_codigo').value='';
         document.getElementById('procedimento_alimentador_descricao').value='';
         document.getElementById('procedimento_alimentador_quantidade').value='';
@@ -2179,7 +2175,7 @@ function alimenta_procedimento(){
         document.getElementById('procedimento_alimentador_fator').value='';
         document.getElementById('procedimento_alimentador_valor_unitario').value='';
         document.getElementById('procedimento_alimentador_valor_total').value='';
-        //document.getElementById('procedimento_alimentador_tabela').value=document.getElementById('tabela_padrao').value;
+        document.getElementById('procedimento_alimentador_tabela').value=document.getElementById('tabela_padrao').value;
         calcula_total_geral();
         $('#add-procedimento').modal('hide');
     }
@@ -2227,22 +2223,6 @@ function calcula_total_geral(){
 
 }
 function procedimento_remove_item(linha){
-    /*
-    document.getElementById('procedimento_item_novo_'+linha).value='';
-    document.getElementById('procedimento_data_'+linha).value='';
-    document.getElementById('procedimento_hora1_'+linha).value='';
-    document.getElementById('procedimento_hora2_'+linha).value='';
-    document.getElementById('procedimento_tabela_'+linha).value='';
-    document.getElementById('procedimento_codigo_'+linha).value='';
-    document.getElementById('procedimento_descricao_'+linha).value='';
-    document.getElementById('procedimento_quantidade_'+linha).value='';
-    document.getElementById('procedimento_via_'+linha).value='';
-    document.getElementById('procedimento_tec_'+linha).value='';
-    document.getElementById('procedimento_fator_'+linha).value='';
-    document.getElementById('procedimento_valorUnitario_'+linha).value='';
-    document.getElementById('procedimento_valorTotal_'+linha).value='';
-    document.getElementById('linha_procedimento_'+linha).style.display='none';
-    */
     document.getElementById('tr_contador_linha_'+linha).remove();
     qtde_linhas = document.getElementById('qtde_procedimento').value;
     contador_linha = 0;
@@ -2272,4 +2252,147 @@ function procedimento_remove_item(linha){
         document.getElementById('total_procedimentos').value = total_procedimento;
         calcula_total_geral();
 
+}
+function alimenta_executante(){
+    erro = '0';
+    if (document.getElementById('executante_alimentador_seq').value==''){
+        document.getElementById('executante_alimentador_seq').style.backgroundColor='#ff5555';
+        erro = '1';
+    }
+    if (document.getElementById('executante_alimentador_grau_part').value==''){
+        document.getElementById('executante_alimentador_grau_part').style.backgroundColor='#ff5555';
+        erro = '1';
+    }
+    if (document.getElementById('executante_alimentador_nome').value==''){
+        document.getElementById('executante_alimentador_nome').style.backgroundColor='#ff5555';
+        erro = '1';
+    }
+    if (document.getElementById('executante_alimentador_codigo').value==''){
+        document.getElementById('executante_alimentador_codigo').style.backgroundColor='#ff5555';
+        erro = '1';
+    }
+    if (erro == '0'){
+        linha = parseFloat(document.getElementById('qtde_executante').value);
+        var num_executantes = $('#demo_executantes tr').length;
+        if(!linha || typeof linha=='NaN'){
+            linha = num_executantes;
+        }
+        linha += 1;
+        info_exec = document.getElementById('executante_alimentador_nome').value.split('|');
+        var_exec_id = info_exec[0];
+        var_exec_nome = info_exec[1];
+        var inpu = '<input type="hidden" name="config[executantes]['+linha+'][item]" value="'+linha+'"/>';
+        var arr_campos = ['seq','ex_id','ex_nome','grau_part','codigo','conselho','conselho_numero','conselho_uf','cbo'];
+        if(arr_campos.length>0){
+            for (let i = 0; i < arr_campos.length; i++) {
+                const element = arr_campos[i];
+                if(element=='ex_nome'){
+                    inpu += '<input type="hidden" name="config[executantes]['+linha+']['+element+']" value="'+var_exec_nome+'"/>';
+                }else if(element=='ex_id'){
+                    inpu += '<input type="hidden" name="config[executantes]['+linha+']['+element+']" value="'+var_exec_id+'"/>';
+                }else{
+                    inpu += '<input type="hidden" name="config[executantes]['+linha+']['+element+']" value="'+document.getElementById('executante_alimentador_'+element).value+'"/>';
+                }
+            }
+        }
+
+        nova_linha = '<table id="linha_executante_'+linha+'" width="100%" style="display:block"><tr>';
+        nova_linha += '<td class="celula_item" align="center" width="50">'+inpu+document.getElementById('executante_alimentador_seq').value+'</td>';
+        nova_linha += '<td class="celula_item" align="center" width="70">'+document.getElementById('executante_alimentador_grau_part').value+'</td>';
+        nova_linha += '<td class="celula_item" width="370">'+var_exec_nome+'</td>';
+        nova_linha += '<td class="celula_item" align="center" width="140">'+document.getElementById('executante_alimentador_codigo').value+'</td>';
+        nova_linha += '<td class="celula_item" align="center" width="60">'+document.getElementById('executante_alimentador_conselho').value+'</td>';
+        nova_linha += '<td class="celula_item" align="center" width="95">'+document.getElementById('executante_alimentador_conselho_numero').value+'</td>';
+        nova_linha += '<td class="celula_item" align="center" width="30">'+document.getElementById('executante_alimentador_conselho_uf').value+'</td>';
+        nova_linha += '<td class="celula_item" align="center" width="75">'+document.getElementById('executante_alimentador_cbo').value+'</td>';
+        nova_linha += '<td class="celula_item" align="center" width="30"><button type="button" class="btn btn-outline-danger" onclick="executante_remove_item(\''+linha+'\')"><i class="fa fa-times"></i></button></td>';
+        nova_linha += '</tr></table>';
+        document.getElementById('qtde_executante').value = linha;
+        document.getElementById('demo_executantes').innerHTML+=nova_linha;
+        document.getElementById('executante_alimentador_ex_id').value='';
+        document.getElementById('executante_alimentador_seq').value='';
+        document.getElementById('executante_alimentador_grau_part').value='';
+        document.getElementById('executante_alimentador_nome').value='';
+        document.getElementById('executante_alimentador_codigo').value='';
+        document.getElementById('executante_alimentador_conselho').value='';
+        document.getElementById('executante_alimentador_conselho_numero').value='';
+        document.getElementById('executante_alimentador_conselho_uf').value='';
+        document.getElementById('executante_alimentador_cbo').value='';
+    }
+}
+
+function executante_remove_item(linha){
+    document.getElementById('executor_linha_'+linha).remove();
+}
+function autocompletarSelect(tipo){
+    if(typeof tipo=='undefined'){
+        return;
+    }
+    if (tipo=='executante'){
+        valor=document.getElementById('executante_alimentador_nome').value;
+        if (valor==''){
+            document.getElementById('executante_alimentador_codigo').value = '';
+            document.getElementById('executante_alimentador_conselho').value = '';
+            document.getElementById('executante_alimentador_conselho_numero').value = '';
+            document.getElementById('executante_alimentador_conselho_uf').value = '';
+            document.getElementById('executante_alimentador_cbo').value = '';
+            document.getElementById('executante_alimentador_ex_id').value = '';
+            document.getElementById('executante_alimentador_nome').style.backgroundColor='#ffffff';
+            document.getElementById('executante_alimentador_codigo').style.backgroundColor='#ffffff';
+        }else{
+            valores_exec = valor.split('|');
+            var dados = '';
+            try {
+
+                if(valores_exec[2]!=''){
+                    dados = JSON.parse(valores_exec[2]);
+                }
+                console.log(dados);
+                document.getElementById('executante_alimentador_codigo').value = dados.cpf_profissional;
+                document.getElementById('executante_alimentador_conselho').value = dados.conselho;
+                document.getElementById('executante_alimentador_conselho_numero').value = dados.numero_conselho;
+                document.getElementById('executante_alimentador_conselho_uf').value = dados.uf_conselho;
+                document.getElementById('executante_alimentador_cbo').value = dados.cbo;
+                document.getElementById('executante_alimentador_ex_id').value = valores_exec[0];
+                document.getElementById('executante_alimentador_nome').style.backgroundColor='#ffffff';
+                document.getElementById('executante_alimentador_codigo').style.backgroundColor='#ffffff';
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    }
+}
+function escolhe_operadora(){
+   var op = document.getElementById('select_operadora');
+    if(op.valor==''){
+        document.getElementById('op_id').value = '';
+        document.getElementById('registro_ans').value = '';
+        document.getElementById('cont_exec_codigo').value = '';
+        document.getElementById('tabela_padrao').value = '';
+        document.getElementById('procedimento_alimentador_tabela').value='';
+        //document.getElementById('campo_1').style.backgroundColor='#ffffff';
+    }else{
+        var val=op.options[op.selectedIndex].getAttribute('data-values');
+        var arr_val='';
+        if(val){
+            arr_val = decodeArray(val);
+            console.log(arr_val);
+            if(config=JSON.parse(arr_val.config)){
+                console.log(config);
+                document.getElementById('cont_exec_codigo').style.backgroundColor='#ffffff';
+                //info_operadora = valor.split("|");
+                //document.getElementById('op_id').value = info_operadora[0];
+                document.getElementById('op_id').value = arr_val.id;
+                document.getElementById('registro_ans').value = arr_val.registro;
+                document.getElementById('cont_exec_codigo').value = config.identidade;
+                document.getElementById('tabela_padrao').value = config.tabela_cobranca;
+                document.getElementById('procedimento_alimentador_tabela').value = config.tabela_cobranca;
+                document.getElementById('procedimento_alimentador_tabela').style.backgroundColor='#ffffff';
+            }
+            //document.getElementById('campo_1').style.backgroundColor='#ffffff';
+            //document.getElementById('campo_13').style.backgroundColor='#ffffff';
+        }
+        autocompletarSelect('beneficiario');
+        //verifica_versao_tiss(arr_val.id);
+    }
 }

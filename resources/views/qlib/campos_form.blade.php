@@ -10,7 +10,16 @@
                     <option value="" class="option_select"> {{$config['label_option_select']}} </option>
                 @endif
                 @foreach ($config['arr_opc'] as $k=>$v)
-                    <option value="{{$k}}" class="opcs" @if(isset($config['value']) && $config['value'] == $k) selected @endif>{{$v}}</option>
+                    @php
+                        $arr_v = explode('@#',$v);
+                        $attr_data = false;
+                        if(isset($arr_v[1])&& !empty($arr_v[1])){
+                            $v = $arr_v[0];
+                            $attr_data = 'data-values="'.$arr_v[1].'"';
+                        }
+
+                    @endphp
+                    <option value="{{$k}}" {!!$attr_data!!} class="opcs" @if(isset($config['value']) && $config['value'] == $k) selected @endif>{{$v}}</option>
                 @endforeach
             </select>
             @error($config['campo'])
@@ -251,11 +260,21 @@
     @elseif($config['type']=='text_array')
     <div class="form-group col-{{$config['col']}}-{{$config['tam']}} {{$config['class_div']}}" div-id="{{$config['campo']}}" >
         @if ($config['label'])
-            <label for="{{$config['campo']}}">{{$config['label']}}</label>
+        <label for="{{$config['campo']}}">{{$config['label']}}</label>
         @endif
         <input type="{{$config['type']}}" title="{{@$config['title']}}" class="form-control @error($config['campo']) is-invalid @enderror {{$config['class']}}" id="inp-{{$config['campo']}}" name="{{$config['campo']}}" aria-describedby="{{$config['campo']}}" placeholder="{{$config['placeholder']}}" value="@if(isset($config['value'])){{$config['value']}}@elseif($config['ac']=='cad'){{old($config['campo'])}}@endif" {{$config['event']}} />
         @error($config['campo'])
-            <div class="alert alert-danger">{{ $message }}</div>
+        <div class="alert alert-danger">{{ $message }}</div>
+        @enderror
+    </div>
+    @elseif($config['type']=='text_upcase')
+    <div class="form-group col-{{$config['col']}}-{{$config['tam']}} {{$config['class_div']}}" div-id="{{$config['campo']}}" >
+        @if ($config['label'])
+        <label for="{{$config['campo']}}">{{$config['label']}}</label>
+        @endif
+        <input type="{{$config['type']}}" title="{{@$config['title']}}" class="form-control @error($config['campo']) is-invalid @enderror {{$config['class']}}" id="{{$config['id']}}" name="{{$config['campo']}}" aria-describedby="{{$config['campo']}}" placeholder="{{$config['placeholder']}}" onkeyup="upcase(event,this)" value="@if(isset($config['value'])){{$config['value']}}@elseif($config['ac']=='cad'){{old($config['campo'])}}@endif" {{$config['event']}} />
+        @error($config['campo'])
+        <div class="alert alert-danger">{{ $message }}</div>
         @enderror
     </div>
     @else

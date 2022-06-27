@@ -128,9 +128,9 @@ class ProfissionaisController extends Controller
                     'option_select'=>true,
                     'cp_busca'=>'config][operadora',
                 ],
-                'nome'=>['label'=>'Nome do Contratado '.$this->label,'active'=>true,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'','tam'=>'8'],
+                'nome'=>['label'=>'Nome do Contratado '.$this->label,'active'=>true,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'','tam'=>'8'],
                 'config[identificacao]'=>['label'=>'Identificação do Contratado na Operadora','active'=>false,'placeholder'=>'','type'=>'tel','exibe_busca'=>'d-block','event'=>'','tam'=>'4','cp_busca'=>'config][identificacao',],
-                'config[nome_profissional]'=>['label'=>'Nome do Profissional Solicitante','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'','tam'=>'12','cp_busca'=>'config][nome_profissional',],
+                'config[nome_profissional]'=>['label'=>'Nome do Profissional Solicitante','active'=>false,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'','tam'=>'12','cp_busca'=>'config][nome_profissional',],
                 'config[conselho]'=>[
                     'label'=>'Conselho Profissional',
                     'active'=>false,
@@ -143,8 +143,8 @@ class ProfissionaisController extends Controller
                     'option_select'=>true,
                     'cp_busca'=>'config][conselho',
                 ],
-                'config[numero_conselho]'=>['label'=>'N° no Conselho','active'=>true,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'','tam'=>'4'],
-                'config[uf_concelhor]'=>[
+                'config[numero_conselho]'=>['label'=>'N° no Conselho','active'=>true,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'','tam'=>'4'],
+                'config[uf_conselho]'=>[
                     'label'=>'UF do Conselho',
                     'active'=>false,
                     'type'=>'select',
@@ -154,7 +154,7 @@ class ProfissionaisController extends Controller
                     'class'=>'',
                     'exibe_busca'=>true,
                     'option_select'=>true,
-                    'cp_busca'=>'config][uf_concelhor',
+                    'cp_busca'=>'config][uf_conselho',
                 ],
                 'config[cbo]'=>[
                     'label'=>'Especialidade / Código CBO',
@@ -179,8 +179,8 @@ class ProfissionaisController extends Controller
                 'id'=>['label'=>'Id','active'=>true,'type'=>'hidden','exibe_busca'=>'d-block','event'=>'','tam'=>'2'],
                 'token'=>['label'=>'token','active'=>false,'type'=>'hidden','exibe_busca'=>'d-block','event'=>'','tam'=>'2'],
                 'type'=>['label'=>'type','active'=>false,'type'=>'hidden','value'=>$this->url,'exibe_busca'=>'d-block','event'=>'','tam'=>'2'],
-                'nome'=>['label'=>'Nome do Profissional Executante','active'=>true,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'','tam'=>'8'],
-                'config[cpf_profissional]'=>['label'=>'CPF do Profissional(opcional)','active'=>true,'placeholder'=>'','type'=>'tel','exibe_busca'=>'d-block','event'=>'mask-cpf','tam'=>'4','cp_busca'=>'config][identificacao',],
+                'nome'=>['label'=>'Nome do Profissional Executante','active'=>true,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'','tam'=>'8'],
+                'config[cpf_profissional]'=>['label'=>'CPF do Profissional(opcional)','active'=>true,'placeholder'=>'','type'=>'tel','exibe_busca'=>'d-block','event'=>'mask-cpf','tam'=>'4','cp_busca'=>'config][cpf_profissional',],
                 'config[conselho]'=>[
                     'label'=>'Conselho Profissional',
                     'active'=>false,
@@ -193,8 +193,8 @@ class ProfissionaisController extends Controller
                     'option_select'=>true,
                     'cp_busca'=>'config][conselho',
                 ],
-                'config[numero_conselho]'=>['label'=>'N° no Conselho','active'=>true,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'','tam'=>'4'],
-                'config[uf_concelhor]'=>[
+                'config[numero_conselho]'=>['label'=>'N° no Conselho','active'=>true,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'','tam'=>'4','cp_busca'=>'config][numero_conselho'],
+                'config[uf_conselho]'=>[
                     'label'=>'UF do Conselho',
                     'active'=>false,
                     'type'=>'select',
@@ -204,7 +204,7 @@ class ProfissionaisController extends Controller
                     'class'=>'',
                     'exibe_busca'=>true,
                     'option_select'=>true,
-                    'cp_busca'=>'config][uf_concelhor',
+                    'cp_busca'=>'config][uf_conselho',
                 ],
                 'config[cbo]'=>[
                     'label'=>'Especialidade / Código CBO',
@@ -219,7 +219,7 @@ class ProfissionaisController extends Controller
                     'option_select'=>true,
                     'cp_busca'=>'config][cbo',
                 ],
-                'config[telefone]'=>['label'=>'Telefone de Contato(opcional)','active'=>true,'placeholder'=>'','type'=>'tel','exibe_busca'=>'d-block','event'=>'onblur=mask(this,clientes_mascaraTelefone); onkeypress=mask(this,clientes_mascaraTelefone);','tam'=>'4'],
+                'config[telefone]'=>['label'=>'Telefone de Contato(opcional)','active'=>true,'placeholder'=>'','type'=>'tel','exibe_busca'=>'d-block','event'=>'onblur=mask(this,clientes_mascaraTelefone); onkeypress=mask(this,clientes_mascaraTelefone);','tam'=>'4','cp_busca'=>'config][telefone',],
                 //'obs'=>['label'=>'Observação','active'=>false,'type'=>'textarea','exibe_busca'=>'d-block','event'=>'','tam'=>'12'],
                 'ativo'=>['label'=>'Liberar','active'=>true,'type'=>'chave_checkbox','value'=>'s','valor_padrao'=>'s','exibe_busca'=>'d-block','event'=>'','tam'=>'3','arr_opc'=>['s'=>'Sim','n'=>'Não']],
             ];

@@ -133,7 +133,7 @@ class GuiasController extends Controller
                     'option_select'=>true,
                     'cp_busca'=>'config][tabela_cobranca',
                 ],
-                'procedimento[codigo]'  =>['label'=>'Código do procedimento','id'=>'procedimento_alimentador_codigo','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'onfocus=this.style.backgroundColor=\'#ffffff\'','tam'=>'3','cp_busca'=>'','title'=>''],
+                'procedimento[codigo]'  =>['label'=>'Código do procedimento','id'=>'procedimento_alimentador_codigo','active'=>false,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'onfocus=this.style.backgroundColor=\'#ffffff\'','tam'=>'3','cp_busca'=>'','title'=>''],
                 'procedimento[descricao]'  =>['label'=>'Descrição','id'=>'procedimento_alimentador_descricao','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'onkeyup=upcase(event,this) onfocus=this.style.backgroundColor=\'#ffffff\'','tam'=>'9','cp_busca'=>'','title'=>''],
                 'procedimento[qde]'  =>['label'=>'40-Quantidade','id'=>'procedimento_alimentador_quantidade','active'=>false,'placeholder'=>'','type'=>'number','exibe_busca'=>'d-block','event'=>'onfocus=this.style.backgroundColor=\'#ffffff\' onchange=procedimento_alimentador_total()','tam'=>'2','cp_busca'=>'','title'=>'Código identificador do procedimento realizado pelo prestador, conforme tabela de domínio.'],
                 'procedimento[viaAcesso]'=>[
@@ -168,15 +168,18 @@ class GuiasController extends Controller
                     'exibe_busca'=>true,
                     'option_select'=>true,
                 ],
-                'procedimento[reducaoAcrescimo]'  =>['label'=>'43-Fator Red/Acrésc','id'=>'procedimento_alimentador_fator','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'onkeypress=return(currencyFormat(this,\'\',\'.\',4,event)) onkeyup=procedimento_alimentador_total()','tam'=>'2','cp_busca'=>'','title'=>'Obrigatório. Quando não houver redução ou acréscimo sobre o valor do procedimento, o campo deve ser preenchido com 1,00.'],
-                'procedimento[valorUnitario]'  =>['label'=>'44-Valor Unitário','id'=>'procedimento_alimentador_valor_unitario','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'onfocus=this.style.backgroundColor=\'#ffffff\' onkeyup=procedimento_alimentador_total()','tam'=>'2','class'=>'moeda','cp_busca'=>'','title'=>'Obrigatório. Quando não houver redução ou acréscimo sobre o valor do procedimento, o campo deve ser preenchido com 1,00.'],
-                'procedimento[valorTotal]'  =>['label'=>'45-Valor Total','id'=>'procedimento_alimentador_valor_total','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','class'=>'','event'=>' onkeyup=procedimento_alimentador_total()','tam'=>'2','cp_busca'=>'','title'=>'Valor total do procedimento realizado, considerando a quantidade de procedimentos realizados, o valor unitário e o fator de redução ou acréscimo'],
+                'procedimento[reducaoAcrescimo]'  =>['label'=>'43-Fator Red/Acrésc','id'=>'procedimento_alimentador_fator','active'=>false,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'onkeypress=return(currencyFormat(this,\'\',\'.\',4,event)) onkeyup=procedimento_alimentador_total()','tam'=>'2','cp_busca'=>'','title'=>'Obrigatório. Quando não houver redução ou acréscimo sobre o valor do procedimento, o campo deve ser preenchido com 1,00.'],
+                'procedimento[valorUnitario]'  =>['label'=>'44-Valor Unitário','id'=>'procedimento_alimentador_valor_unitario','active'=>false,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'onfocus=this.style.backgroundColor=\'#ffffff\' onkeyup=procedimento_alimentador_total()','tam'=>'2','class'=>'moeda','cp_busca'=>'','title'=>'Obrigatório. Quando não houver redução ou acréscimo sobre o valor do procedimento, o campo deve ser preenchido com 1,00.'],
+                'procedimento[valorTotal]'  =>['label'=>'45-Valor Total','id'=>'procedimento_alimentador_valor_total','active'=>false,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','class'=>'','event'=>' onkeyup=procedimento_alimentador_total()','tam'=>'2','cp_busca'=>'','title'=>'Valor total do procedimento realizado, considerando a quantidade de procedimentos realizados, o valor unitário e o fator de redução ou acréscimo'],
 
             ];
-            $arrSeq = range(1,100);
+            $arrSeq = range(0,100);
+            unset($arrSeq[0]);
             $arr_Painelexecutantes = [
-                'executante[DeqRef]'=>[
+                'executante[id_executante]'  =>['label'=>'id do executor','id'=>'executante_alimentador_ex_id','active'=>false,'placeholder'=>'','type'=>'hidden','exibe_busca'=>'d-block','class'=>'','event'=>' ','tam'=>'3','cp_busca'=>'','title'=>'Código na Operadora ou CPF do profissional participante da equipe de execução do procedimento.'],
+                'executante[SeqRef]'=>[
                     'label'=>'46-Seq. Ref.',
+                    'id'=>'executante_alimentador_seq',
                     'active'=>false,
                     'type'=>'select',
                     'arr_opc'=>$arrSeq,
@@ -190,6 +193,7 @@ class GuiasController extends Controller
                 ],
                 'executante[GrauPart]'=>[
                     'label'=>'47-Gru. Part.',
+                    'id'=>'executante_alimentador_grau_part',
                     'active'=>false,
                     'type'=>'select',
                     'arr_opc'=>[
@@ -206,6 +210,7 @@ class GuiasController extends Controller
                 ],
                 'executante[idProfissional]'=>[
                     'label'=>'49-Nome Profissional',
+                    'id'=>'executante_alimentador_nome',
                     'active'=>false,
                     'type'=>'select',
                     'data_selector'=>[
@@ -217,8 +222,8 @@ class GuiasController extends Controller
                         'campo_bus'=>'nome',
                         'label'=>'Operadora',
                     ],
-                    'arr_opc'=>Qlib::sql_array("SELECT id,nome FROM operadoras WHERE ativo='s'",'nome','id'),'exibe_busca'=>'d-block',
-                    'event'=>'',
+                    'arr_opc'=>Qlib::sql_array2("SELECT id,nome,config FROM profissionals WHERE ativo='s' AND type='executantes'",'nome','id'),'exibe_busca'=>'d-block',
+                    'event'=>'onchange=autocompletarSelect(\'executante\')',
                     'tam'=>'5',
                     'class'=>'',
                     'exibe_busca'=>true,
@@ -226,9 +231,10 @@ class GuiasController extends Controller
                     'title'=>'Nome do profissional participante da equipe de execução do procedimento.',
                     'cp_busca'=>'config][idProfissional',
                 ],
-                'executante[codigoCpfProfissional]'  =>['label'=>'47-Cód. na Operadora / CPF','id'=>'codigo_cpf_profissional','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','class'=>'mask-cpf','event'=>' ','tam'=>'3','cp_busca'=>'','title'=>'Código na Operadora ou CPF do profissional participante da equipe de execução do procedimento.'],
+                'executante[codigoCpfProfissional]'  =>['label'=>'47-Cód. na Operadora / CPF','id'=>'executante_alimentador_codigo','active'=>false,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','class'=>'mask-cpf','event'=>' ','tam'=>'3','cp_busca'=>'','title'=>'Código na Operadora ou CPF do profissional participante da equipe de execução do procedimento.'],
                 'executante[conselho]'=>[
                     'label'=>'Conselho',
+                    'id'=>'executante_alimentador_conselho',
                     'active'=>false,
                     'type'=>'select',
                     'arr_opc'=>Qlib::sql_array("SELECT value,nome FROM tags WHERE ativo='s' AND pai='3' ORDER BY id ASC",'nome','value'),'exibe_busca'=>'d-block',
@@ -239,9 +245,9 @@ class GuiasController extends Controller
                     'option_select'=>true,
                     'cp_busca'=>'config][conselho',
                 ],
-                'executor[numero_conselho]'=>['label'=>'N° no Conselho','active'=>true,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'disabled','tam'=>'4'],
-                'executor[uf_conselho]'=>['label'=>'UF','active'=>true,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'disabled','tam'=>'1'],
-                'executor[cbo]'=>['label'=>'Cód. CBO','active'=>true,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'disabled','tam'=>'3'],
+                'executor[numero_conselho]'=>['label'=>'N° no Conselho','id'=>'executante_alimentador_conselho_numero','active'=>true,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'disabled','tam'=>'4'],
+                'executor[uf_conselho]'=>['label'=>'UF','active'=>true,'placeholder'=>'','id'=>'executante_alimentador_conselho_uf','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'disabled','tam'=>'1'],
+                'executor[cbo]'=>['label'=>'Cód. CBO','active'=>true,'placeholder'=>'','id'=>'executante_alimentador_cbo','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'disabled','tam'=>'3'],
 
 
             ];
@@ -249,10 +255,12 @@ class GuiasController extends Controller
                 'id'=>['label'=>'Id','active'=>true,'type'=>'hidden','exibe_busca'=>'d-block','event'=>'','tam'=>'2'],
                 'token'=>['label'=>'token','active'=>false,'type'=>'hidden','exibe_busca'=>'d-block','event'=>'','tam'=>'2'],
                 'type'=>['label'=>'type','active'=>false,'type'=>'hidden','value'=>$this->url,'exibe_busca'=>'d-block','event'=>'','tam'=>'2'],
-                'config[registro_ans]'=>[
+                'config[registro_ans]'=>['label'=>'Registro Ans','id'=>'registro_ans','active'=>true,'type'=>'hidden','exibe_busca'=>'d-block','event'=>'','cp_busca'=>'config][registro_ans','tam'=>'2'],
+                'config[op_id]'=>['label'=>'id operadora','active'=>true,'id'=>'op_id','type'=>'hidden','exibe_busca'=>'d-block','event'=>'','cp_busca'=>'config][op_id','tam'=>'2'],
+                'config[select_operadora]'=>[
                     'label'=>'1-Registro ANS',
                     'active'=>false,
-                    'type'=>'selector',
+                    'type'=>'select',
                     'data_selector'=>[
                         'campos'=>$camposOper->campos('operadoras'),
                         'route_index'=>route('operadoras.index'),
@@ -262,26 +270,28 @@ class GuiasController extends Controller
                         'campo_bus'=>'nome',
                         'label'=>'Operadora',
                     ],
-                    'arr_opc'=>Qlib::sql_array("SELECT id,nome FROM operadoras WHERE ativo='s'",'nome','id'),'exibe_busca'=>'d-block',
-                    'event'=>'required',
+                    'arr_opc'=>Qlib::sql_array("SELECT id,nome,registro,config FROM operadoras WHERE ativo='s'",'registro','id','nome',' | '),'exibe_busca'=>'d-block',
+                    'event'=>'required onchange=escolhe_operadora()',
                     'tam'=>'4',
                     'class'=>'',
                     'exibe_busca'=>true,
                     'option_select'=>true,
-                    'cp_busca'=>'config][registro_ans',
+                    'title'=>'Registro da operadora de plano privado de assistência à saúdena Agência Nacional de SaúdeSuplementar (ANS)',
+                    'id'=>'select_operadora',
+                    'cp_busca'=>'config][select_operadora',
                 ],
-                'numero_guia'=>['label'=>'2-Nº Guia no Prestador','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'required maxlength=20','tam'=>'4',],
-                'config[nome_guia]'=>['label'=>'3-Nº da Guia de Solicitação de Internação','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'required maxlength=20','tam'=>'4','cp_busca'=>'config][nome_guia',],
+                'numero_guia'=>['label'=>'2-Nº Guia no Prestador','active'=>false,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'required maxlength=20','tam'=>'4',],
+                'config[numeroGuiaSolicitacaoInternacao]'=>['label'=>'3-Nº da Guia de Solicitação de Internação','active'=>false,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'required maxlength=20','tam'=>'4','cp_busca'=>'config][numeroGuiaSolicitacaoInternacao',],
                 'config[data_autorizacao]'=>['label'=>'4-Data da Autorização','active'=>false,'placeholder'=>'','type'=>'date','exibe_busca'=>'d-block','event'=>'required','tam'=>'3','cp_busca'=>'config][data_autorizacao','title'=>'Data em que a autorização para realização do atendimento/procedimento foi concedida pela operadora.'],
-                'config[senha]'=>['label'=>'5-Senha','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'required maxlength=20','tam'=>'2','cp_busca'=>'config][senha',],
+                'config[senha]'=>['label'=>'5-Senha','active'=>false,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'required maxlength=20','tam'=>'2','cp_busca'=>'config][senha',],
                 'config[dataValidadeSenha]'=>['label'=>'6-Data de Validade da Senha','active'=>false,'placeholder'=>'','type'=>'date','exibe_busca'=>'d-block','event'=>'required','tam'=>'3','cp_busca'=>'config][dataValidadeSenha','title'=>'Deve ser preenchido em
                 caso de autorização pela operadora com emissão de senha com prazo de validade'],
-                'config[numeroGuiaOperadora]'=>['label'=>'7-Nº da Guia Atribuído pela Operadora','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'required maxlength=20','tam'=>'4','cp_busca'=>'config][numeroGuiaOperadora',],
+                'config[numeroGuiaOperadora]'=>['label'=>'7-Nº da Guia Atribuído pela Operadora','active'=>false,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'required maxlength=20','tam'=>'4','cp_busca'=>'config][numeroGuiaOperadora',],
                 'sep1'=>['label'=>'Dados do Beneficiário','active'=>false,'tam'=>'12','script'=>'<h5>Dados do Beneficiário</h5>','type'=>'html_script','class_div'=>'bg-secondary'],
-                'config[numeroCarteira]'=>['label'=>'8-Número da Carteira','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'required maxlength=20','tam'=>'3','cp_busca'=>'config][numeroCarteira',],
+                'config[numeroCarteira]'=>['label'=>'8-Número da Carteira','active'=>false,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'required maxlength=20','tam'=>'3','cp_busca'=>'config][numeroCarteira',],
                 'config[validadeCarteira]'=>['label'=>'9-Validade da Carteira','active'=>false,'placeholder'=>'','type'=>'date','exibe_busca'=>'d-block','event'=>'','tam'=>'2','cp_busca'=>'config][validadeCarteira','title'=>'Preenchimento Condicionado. Deve ser preenchido somente na utilização da contingência em papel quando a operadora exigir autorização prévia para procedimentos ambulatoriais e tal autorização não puder ser obtida.'],
-                'nome'=>['label'=>'10-Nome','active'=>true,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'required maxlength=70','tam'=>'5'],
-                //'config[cartaoSaude]'=>['label'=>'11-Cartão Nacional de Saúde','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'','tam'=>'2','cp_busca'=>'config][validadeCarteira','title'=>'Preenchimento Condicionado. Deve ser preenchido somente na utilização da contingência em papel quando a operadora exigir autorização prévia para procedimentos ambulatoriais e tal autorização não puder ser obtida.'],
+                'nome'=>['label'=>'10-Nome','active'=>true,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'required maxlength=70','tam'=>'5'],
+                //'config[cartaoSaude]'=>['label'=>'11-Cartão Nacional de Saúde','active'=>false,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'','tam'=>'2','cp_busca'=>'config][validadeCarteira','title'=>'Preenchimento Condicionado. Deve ser preenchido somente na utilização da contingência em papel quando a operadora exigir autorização prévia para procedimentos ambulatoriais e tal autorização não puder ser obtida.'],
                 'config[atendimentoRN]'=>[
                     'label'=>'12-Atendimento a RN',
                     'active'=>false,
@@ -296,8 +306,8 @@ class GuiasController extends Controller
                     'title'=>'Deve ser informado "S" - sim - caso o atendimento seja do recém-nato e o beneficiário seja o responsável e "N" - não - quando o atendimento for do próprio beneficiário.',
                 ],
                 'sep2'=>['label'=>'Dados do Contratado Executante','active'=>false,'tam'=>'12','script'=>'<h5>Dados do Contratado Executante</h5>','type'=>'html_script','class_div'=>'bg-secondary'],
-                'config[codigoNaOperadora]'=>['label'=>'13-Código na Operadora','active'=>false,'placeholder'=>'','type'=>'tel','exibe_busca'=>'d-block','event'=>'required maxlength=14','tam'=>'3','cp_busca'=>'config][codigoNaOperadora','title'=>'Código na operadora ou CNPJ do prestador contratado que executou o procedimento.'],
-                'config[nomeContratado]'=>['label'=>'14-Nome do Contratado','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'required maxlength=7','tam'=>'7','cp_busca'=>'config][nomeContratado','title'=>''],
+                'config[codigoNaOperadora]'=>['label'=>'13-Código na Operadora','id'=>'cont_exec_codigo','active'=>false,'placeholder'=>'','type'=>'tel','exibe_busca'=>'d-block','event'=>'required maxlength=14','tam'=>'3','cp_busca'=>'config][codigoNaOperadora','title'=>'Código na operadora ou CNPJ do prestador contratado que executou o procedimento.'],
+                'config[nomeContratado]'=>['label'=>'14-Nome do Contratado','active'=>false,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'required maxlength=70','tam'=>'7','cp_busca'=>'config][nomeContratado','title'=>''],
                 'config[codigoCNES]'=>['label'=>'15-Código CNES','active'=>false,'placeholder'=>'','type'=>'tel','exibe_busca'=>'d-block','event'=>'required maxlength=7','tam'=>'2','cp_busca'=>'config][codigoCNES','title'=>'Caso o prestador ainda não possua o código do CNES preencher o campo com 9999999.'],
                 'sep3'=>['label'=>'Dados da Internação','active'=>false,'tam'=>'12','script'=>'<h5>Dados da Internação</h5>','type'=>'html_script','class_div'=>'bg-secondary'],
                 'config[caraterAtendimento]'=>[
@@ -364,10 +374,10 @@ class GuiasController extends Controller
                     'option_select'=>true,
                     'cp_busca'=>'config][regimeInternacao',
                 ],
-                'config[CID10Principal]'=>['label'=>'24-CID10 Principal (opcional)','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'maxlength=4','tam'=>'3','cp_busca'=>'config][CID10Principal','title'=>'Código do diagnóstico principal de acordo com a Classificação Internacional de Doenças e de Problemas Relacionados a Saúde - 10ª revisão'],
-                'config[CID10_2]'=>['label'=>'25-CID10 (2)','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'maxlength=4','tam'=>'2','cp_busca'=>'config][CID10_2','title'=>'Código do diagnóstico secundário de acordo com a Classificação Internacional de Doenças e de Problemas Relacionados a Saúde - 10ª revisão'],
-                'config[CID10_3]'=>['label'=>'26-CID10 (3)','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'maxlength=4','tam'=>'2','cp_busca'=>'config][CID10_3','title'=>'Código do terceiro diagnóstico de acordo com a Classificação Internacional de Doenças e de Problemas Relacionados a Saúde - 10ª revisão'],
-                'config[CID10_4]'=>['label'=>'27-CID10 (4)','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'maxlength=4','tam'=>'2','cp_busca'=>'config][CID10_4','title'=>'Código do quarto diagnóstico de acordo com a Classificação Internacional de Doenças e de Problemas Relacionados a Saúde - 10ª revisão'],
+                'config[CID10Principal]'=>['label'=>'24-CID10 Principal (opcional)','active'=>false,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'maxlength=4','tam'=>'3','cp_busca'=>'config][CID10Principal','title'=>'Código do diagnóstico principal de acordo com a Classificação Internacional de Doenças e de Problemas Relacionados a Saúde - 10ª revisão'],
+                'config[CID10_2]'=>['label'=>'25-CID10 (2)','active'=>false,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'maxlength=4','tam'=>'2','cp_busca'=>'config][CID10_2','title'=>'Código do diagnóstico secundário de acordo com a Classificação Internacional de Doenças e de Problemas Relacionados a Saúde - 10ª revisão'],
+                'config[CID10_3]'=>['label'=>'26-CID10 (3)','active'=>false,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'maxlength=4','tam'=>'2','cp_busca'=>'config][CID10_3','title'=>'Código do terceiro diagnóstico de acordo com a Classificação Internacional de Doenças e de Problemas Relacionados a Saúde - 10ª revisão'],
+                'config[CID10_4]'=>['label'=>'27-CID10 (4)','active'=>false,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'maxlength=4','tam'=>'2','cp_busca'=>'config][CID10_4','title'=>'Código do quarto diagnóstico de acordo com a Classificação Internacional de Doenças e de Problemas Relacionados a Saúde - 10ª revisão'],
                 'config[indicadorAcidente]'=>[
                     'label'=>'28-Indicação de Acidente',
                     'active'=>false,
@@ -399,7 +409,7 @@ class GuiasController extends Controller
                     'cp_busca'=>'config][motivoEncerramento',
                 ],
                 'config[declaracaoNascidoVivo]'=>['label'=>'30-N° da decl. de nasc. vivo','active'=>true,'placeholder'=>'','type'=>'tel','exibe_busca'=>'d-block','event'=>'maxlength=11','tam'=>'3','cp_busca'=>'config][declaracaoNascidoVivo','title'=>'Deve ser preenchido em caso de internação obstétrica onde tenha havido nascido vivo.'],
-                'config[CID10Obito]'=>['label'=>'31-CID 10 Óbito','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'maxlength=4','tam'=>'2','cp_busca'=>'config][CID10Obito','title'=>'Código do diagnóstico de óbito do paciente de acordo com a Classificação Internacional de Doenças e de Problemas Relacionados a Saúde - 10ª revisão'],
+                'config[CID10Obito]'=>['label'=>'31-CID 10 Óbito','active'=>false,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'maxlength=4','tam'=>'2','cp_busca'=>'config][CID10Obito','title'=>'Código do diagnóstico de óbito do paciente de acordo com a Classificação Internacional de Doenças e de Problemas Relacionados a Saúde - 10ª revisão'],
                 'config[nDeclaracaoObito]'=>['label'=>'32-N° da decl. de óbito','active'=>true,'placeholder'=>'','type'=>'tel','exibe_busca'=>'d-block','event'=>'maxlength=11','tam'=>'2','cp_busca'=>'config][nDeclaracaoObito','title'=>'Preenchimento Condicionado. Deve ser preenchido quando o motivo de encerramento for igual ao código 41 (Óbito com declaração
                 de óbito fornecida pelo médico assistente) ou quando for óbito do RN na guia de internação da mãe.','descricao'=>'Número da declaração de óbito, que é o documento-base do Sistema de Informações sobre Mortalidade do Ministério da Saúde (SIM/MS).'],
                 'config[indicadorDoRN]'=>[
@@ -418,18 +428,19 @@ class GuiasController extends Controller
                 ],
                 'sep4'=>['label'=>'Procedimentos e Exames Realizados','active'=>false,'tam'=>'12','script'=>'<h5>Procedimentos e Exames Realizados</h5>','type'=>'html_script','class_div'=>'bg-secondary'],
                 'painel1'=>['label'=>'Procedimentos e Exames Realizados','active'=>false,'tam'=>'12','script'=>'guias.procedimentos','type'=>'html','class_div'=>'px-0','dados'=>$arr_PainelProssedimentos],
-                'sep5'=>['label'=>'Identificação do(s) Profissional(is) Executante(s)','active'=>false,'tam'=>'12','script'=>'<h5>Identificação do(s) Profissional(is) Executante(s)</h5>','type'=>'html_script','class_div'=>'bg-secondary'],
+                'sep5'=>['label'=>'Identificação da Equipe','active'=>false,'tam'=>'12','script'=>'<h5>Identificação da Equipe</h5>','type'=>'html_script','class_div'=>'bg-secondary'],
                 'painel2'=>['label'=>'linsta de executantes','active'=>false,'tam'=>'12','script'=>'guias.executantes','type'=>'html','class_div'=>'','dados'=>$arr_Painelexecutantes],
-                'config[qtdProcedimentos]'=>['label'=>'quantidade de procedimentos','id'=>'qtde_procedimento','active'=>false,'placeholder'=>'','type'=>'hidden','exibe_busca'=>'d-block','event'=>'','tam'=>'3','cp_busca'=>'config][qtdProcedimentos','title'=>'Valor total de todos os procedimentos realizados'],
+                'config[qtdProcedimentos]'=>['label'=>'quantidade de procedimentos','id'=>'qtde_procedimento','active'=>false,'placeholder'=>'','type'=>'hidden','exibe_busca'=>'d-block','event'=>'','tam'=>'3','cp_busca'=>'config][qtdProcedimentos','title'=>''],
+                'config[qtdExecutantes]'=>['label'=>'quantidade de executantes','id'=>'qtde_executante','active'=>false,'placeholder'=>'','type'=>'hidden','exibe_busca'=>'d-block','event'=>'','tam'=>'3','cp_busca'=>'config][qtdExecutantes','title'=>''],
                 'config[tabela_padrao]'=>['label'=>'tabela_padrao','id'=>'tabela_padrao','active'=>false,'placeholder'=>'','type'=>'hidden','exibe_busca'=>'d-block','event'=>' ','tam'=>'3','cp_busca'=>'config][tabela_padrao','title'=>'Valor total de todos os procedimentos realizados'],
-                'config[valorProcedimentos]'=>['label'=>'54-Total de Procedimentos (R$)','id'=>'total_procedimentos','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'required ','tam'=>'3','cp_busca'=>'config][valorProcedimentos','title'=>'Valor total de todos os procedimentos realizados'],
-                'config[valorDiarias]'=>['label'=>'55-Total de Diárias (R$)','id'=>'total_diarias','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'','tam'=>'3','cp_busca'=>'config][valorDiarias','title'=>'Valor total das diárias, considerando o valor de cada diária e a quantidade de diárias cobradas'],
-                'config[valorTaxasAlugueis]'=>['label'=>'56-Total de Taxas e Aluguéis (R$)','id'=>'total_taxas','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'','tam'=>'3','cp_busca'=>'config][valorTaxasAlugueis','title'=>'Valor total das taxas e aluguéis,  considerando o somatório de todas as taxas e aluguéis cobrados'],
-                'config[valorMateriais]'=>['label'=>'57-Total de Materiais (R$)','active'=>false,'id'=>'total_materiais','placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'','tam'=>'3','cp_busca'=>'config][valorMateriais','title'=>'Valor total dos materiais, considerando o valor unitário de cada material e a quantidade utilizada.'],
-                'config[valorOPME]'=>['label'=>'58-Total de OPME (R$)','active'=>false,'placeholder'=>'','id'=>'total_opme','type'=>'text','exibe_busca'=>'d-block','event'=>'','tam'=>'3','cp_busca'=>'config][valorOPME','title'=>'Preenchimento condicionado. Deve ser preenchido caso haja órtese, prótese ou material especial cobrado, conforme negociação entre as partes.'],
-                'config[valorMedicamentos]'=>['label'=>'59-Total de Medicamentos (R$)','active'=>false,'id'=>'total_medicamentos','placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'','tam'=>'3','cp_busca'=>'config][valorMedicamentos','title'=>'Valor total de Medicamentos'],
-                'config[valorGasesMedicinais]'=>['label'=>'60-Total de Gases Medicinais (R$)','id'=>'total_gases','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'','tam'=>'3','cp_busca'=>'config][valorGasesMedicinais','title'=>'Valor total de todos os procedimentos realizados'],
-                'config[valorTotalGeral]'=>['label'=>'61-Total Geral (R$)','active'=>false,'placeholder'=>'','id'=>'total_geral','type'=>'text','exibe_busca'=>'d-block','event'=>'required ','tam'=>'3','cp_busca'=>'config][valorTotalGeral','title'=>'Somatório de todos os valores totais de procedimentos realizados e itens assistenciais utilizados'],
+                'config[valorProcedimentos]'=>['label'=>'54-Total de Procedimentos (R$)','id'=>'total_procedimentos','active'=>false,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'required ','tam'=>'3','cp_busca'=>'config][valorProcedimentos','title'=>'Valor total de todos os procedimentos realizados'],
+                'config[valorDiarias]'=>['label'=>'55-Total de Diárias (R$)','id'=>'total_diarias','active'=>false,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'','tam'=>'3','cp_busca'=>'config][valorDiarias','title'=>'Valor total das diárias, considerando o valor de cada diária e a quantidade de diárias cobradas'],
+                'config[valorTaxasAlugueis]'=>['label'=>'56-Total de Taxas e Aluguéis (R$)','id'=>'total_taxas','active'=>false,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'','tam'=>'3','cp_busca'=>'config][valorTaxasAlugueis','title'=>'Valor total das taxas e aluguéis,  considerando o somatório de todas as taxas e aluguéis cobrados'],
+                'config[valorMateriais]'=>['label'=>'57-Total de Materiais (R$)','active'=>false,'id'=>'total_materiais','placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'','tam'=>'3','cp_busca'=>'config][valorMateriais','title'=>'Valor total dos materiais, considerando o valor unitário de cada material e a quantidade utilizada.'],
+                'config[valorOPME]'=>['label'=>'58-Total de OPME (R$)','active'=>false,'placeholder'=>'','id'=>'total_opme','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'','tam'=>'3','cp_busca'=>'config][valorOPME','title'=>'Preenchimento condicionado. Deve ser preenchido caso haja órtese, prótese ou material especial cobrado, conforme negociação entre as partes.'],
+                'config[valorMedicamentos]'=>['label'=>'59-Total de Medicamentos (R$)','active'=>false,'id'=>'total_medicamentos','placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'','tam'=>'3','cp_busca'=>'config][valorMedicamentos','title'=>'Valor total de Medicamentos'],
+                'config[valorGasesMedicinais]'=>['label'=>'60-Total de Gases Medicinais (R$)','id'=>'total_gases','active'=>false,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'','tam'=>'3','cp_busca'=>'config][valorGasesMedicinais','title'=>'Valor total de todos os procedimentos realizados'],
+                'config[valorTotalGeral]'=>['label'=>'61-Total Geral (R$)','active'=>false,'placeholder'=>'','id'=>'total_geral','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'required ','tam'=>'3','cp_busca'=>'config][valorTotalGeral','title'=>'Somatório de todos os valores totais de procedimentos realizados e itens assistenciais utilizados'],
                 'obs'=>['label'=>'65-Observação','active'=>false,'type'=>'textarea','exibe_busca'=>'d-block','event'=>'maxlenght=500','tam'=>'12'],
 
                 /*
@@ -442,7 +453,7 @@ class GuiasController extends Controller
                 'id'=>['label'=>'Id','active'=>true,'type'=>'hidden','exibe_busca'=>'d-block','event'=>'','tam'=>'2'],
                 'token'=>['label'=>'token','active'=>false,'type'=>'hidden','exibe_busca'=>'d-block','event'=>'','tam'=>'2'],
                 'type'=>['label'=>'type','active'=>false,'type'=>'hidden','value'=>$this->url,'exibe_busca'=>'d-block','event'=>'','tam'=>'2'],
-                'nome'=>['label'=>'Nome do Guia Executante','active'=>true,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'','tam'=>'8'],
+                'nome'=>['label'=>'Nome do Guia Executante','active'=>true,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'','tam'=>'8'],
                 'config[cpf_guia]'=>['label'=>'CPF do Guia(opcional)','active'=>true,'placeholder'=>'','type'=>'tel','exibe_busca'=>'d-block','event'=>'mask-cpf','tam'=>'4','cp_busca'=>'config][identificacao',],
                 'config[conselho]'=>[
                     'label'=>'Conselho Guia',
@@ -456,7 +467,7 @@ class GuiasController extends Controller
                     'option_select'=>true,
                     'cp_busca'=>'config][conselho',
                 ],
-                'config[numero_conselho]'=>['label'=>'N° no Conselho','active'=>true,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'','tam'=>'4'],
+                'config[numero_conselho]'=>['label'=>'N° no Conselho','active'=>true,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'','tam'=>'4'],
                 'config[uf_concelhor]'=>[
                     'label'=>'UF do Conselho',
                     'active'=>false,

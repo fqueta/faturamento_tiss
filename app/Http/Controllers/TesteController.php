@@ -20,13 +20,10 @@ class TesteController extends Controller
     {
 
         $user = Auth::user();
-        $doc = new LotesController($user);
-        $lote = isset($_GET['lote'])?$_GET['lote']:201;
-        $oc = isset($_GET['oc'])?$_GET['oc']:289;
-        $config = [
-            'docs'=>$doc->fichaOcupante($lote,$oc),
-        ];
-        return view('teste',$config);
+        //$doc = new LotesController($user);
+        $ac = new GeradorXmlController();
+        echo $ac->guiaResumoInternacao(5);
+        //return view('teste',$config);
     }
     public function ajax(){
         $limit = isset($_GET['limit']) ?$_GET['limit'] : 50;

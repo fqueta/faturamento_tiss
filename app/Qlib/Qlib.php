@@ -318,8 +318,46 @@ class Qlib
                             /*Tipo de campo exibe*/
                             $userinfo[$table[$i][$ind_2]] = $table[$i][$ind] . '' . $leg . '' . Qlib::dataExibe($table[$i][$ind_3]);
                         }
+                        if($type == 'dados'){
+                            $userinfo[$table[$i][$ind_2]] = $table[$i][$ind] . '' . $leg . '' . $table[$i][$ind_3];
+                        }
                     }else{
                         $userinfo[$table[$i][$ind_2]] = $table[$i][$ind] . '' . $leg . '' . $table[$i][$ind_3];
+                    }
+                }
+                if(isset($userinfo[$table[$i][$ind_2]]))
+                $userinfo[$table[$i][$ind_2]] .= '@#'.Qlib::encodeArray($table[$i]);
+            }
+        }
+
+        return $userinfo;
+    }
+    static function sql_array2($sql, $ind, $ind_2, $ind_3 = '', $leg = '',$type=false){
+        $table = DB::select($sql);
+        $userinfo = array();
+        if($table){
+            //dd($table);
+            for($i = 0;$i < count($table);$i++){
+                $table[$i] = (array)$table[$i];
+                //$k = $table[$i][$ind_2];
+                $k = false;
+                foreach ($table[$i] as $key => $value) {
+                    $k .= $value.'|';
+                }
+                if($ind_3 == ''){
+                    $userinfo[$k] =  $table[$i][$ind];
+                }elseif(is_array($ind_3) && isset($ind_3['tab'])){
+                    /*É sinal que o valor vira de banco de dados*/
+                    $sql = "SELECT ".$ind_3['campo_enc']." FROM `".$ind_3['tab']."` WHERE ".$ind_3['campo_bus']." = '".$k."'";
+                    $userinfo[$k] = $sql;
+                }else{
+                    if($type){
+                        if($type == 'data'){
+                            /*Tipo de campo exibe*/
+                            $userinfo[$k] = $table[$i][$ind] . '' . $leg . '' . Qlib::dataExibe($table[$i][$ind_3]);
+                        }
+                    }else{
+                        $userinfo[$k] = $table[$i][$ind] . '' . $leg . '' . $table[$i][$ind_3];
                     }
                 }
             }
@@ -742,5 +780,21 @@ class Qlib
         $dPermission = Permission::FindOrFail($id_permission);
         $ret = isset($dPermission['redirect_login']) ? $dPermission['redirect_login']:'/';
         return $ret;
+    }
+    static function tirarAcentos($string){
+        return preg_replace(array("/(á|à|ã|â|ä)/","/(Á|À|Ã|Â|Ä)/","/(é|è|ê|ë)/","/(É|È|Ê|Ë)/","/(í|ì|î|ï)/","/(Í|Ì|Î|Ï)/","/(ó|ò|õ|ô|ö)/","/(Ó|Ò|Õ|Ô|Ö)/","/(ú|ù|û|ü)/","/(Ú|Ù|Û|Ü)/","/(ñ)/","/(Ñ)/"),explode(" ","a A e E i I o O u U n N"),$string);
+    }
+    static function sanitizeString($str) {
+        $str = preg_replace('/[áàãâä]/ui', 'a', $str);
+        $str = preg_replace('/[éèêë]/ui', 'e', $str);
+        $str = preg_replace('/[íìîï]/ui', 'i', $str);
+        $str = preg_replace('/[óòõôö]/ui', 'o', $str);
+        $str = preg_replace('/[úùûü]/ui', 'u', $str);
+        $str = preg_replace('/[Ç]/ui', 'C', $str);
+        $str = preg_replace('/[ç]/ui', 'c', $str);
+        // $str = preg_replace('/[,(),;:|!"#$%&/=?~^><ªº-]/', '_', $str);
+        //$str = preg_replace('/[^a-z0-9]/i', '_', $str);
+        //$str = preg_replace('/_+/', '_', $str); // ideia do Bacco :)
+        return $str;
     }
 }
