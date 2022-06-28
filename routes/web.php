@@ -13,6 +13,7 @@ use App\Http\Controllers\EtapaController;
 use App\Http\Controllers\EscolaridadeController;
 use App\Http\Controllers\EstadocivilController;
 use App\Http\Controllers\FaturamentosController;
+use App\Http\Controllers\GuiasController;
 use App\Http\Controllers\LotesController;
 use App\Http\Controllers\RelatoriosController;
 use App\Http\Controllers\MapasController;
@@ -67,6 +68,8 @@ Route::prefix('guias')->group(function(){
     Route::resource('internacao','\App\Http\Controllers\GuiasController',['parameters' => [
         'internacao' => 'id'
     ]]);
+    Route::get('/print/{id}',[GuiasController::class,'print'])->name('guias.print');
+
 });
 Route::prefix('profissionais')->group(function(){
     Route::resource('solicitantes','\App\Http\Controllers\ProfissionaisController',['parameters' => [

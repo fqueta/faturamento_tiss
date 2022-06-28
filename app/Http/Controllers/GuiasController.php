@@ -8,6 +8,7 @@ use App\Models\Guia;
 use App\Qlib\Qlib;
 use App\Models\User;
 use App\Models\_upload;
+use App\Models\Operadora;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -730,5 +731,20 @@ class GuiasController extends Controller
             $ret = redirect()->route($routa.'.index',['mens'=>'Registro deletado com sucesso!','color'=>'success']);
         }
         return $ret;
+    }
+    public function print($id = null)
+    {
+        $ret=false;
+        if($id){
+            $d = Guia::FindOrFail($id);
+            if($d['config']){
+                $d['config'] = Qlib::lib_json_array($d['config']);
+                $ret['dados'] = $d;
+                //$ret['arr_peradoras'] = Qlib::sql_array("SELECT id,nome,registro,config FROM operadoras WHERE ativo='s'",'registro','id','nome',' | ','encode');
+                $dados_operadora = Operadora::Find(@$d['config']['op_id']);
+                $ret['dados_operadora'] = $dados_operadora;
+            }
+        }
+        return view('guias.print', $ret);
     }
 }
