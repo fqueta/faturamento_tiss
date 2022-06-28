@@ -122,7 +122,7 @@ class PadraoController extends Controller
                 'id'=>['label'=>'Id','active'=>true,'type'=>'hidden','exibe_busca'=>'d-block','event'=>'','tam'=>'2'],
                 'token'=>['label'=>'token','active'=>false,'type'=>'hidden','exibe_busca'=>'d-block','event'=>'','tam'=>'2'],
                 'registro'=>['label'=>'Nº do Registro ANS','active'=>true,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'','tam'=>'4'],
-                'nome'=>['label'=>'Nome da Operadora de Saúde','active'=>true,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'','tam'=>'8'],
+                'nome'=>['label'=>'Nome da Operadora de Saúde','active'=>true,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'','tam'=>'8'],
                 'config[identidade]'=>['label'=>'Sua Identificação nesta Operadora de Saúde','active'=>false,'type'=>'text','tam'=>'6','exibe_busca'=>'d-block','event'=>'','cp_busca'=>'config][identidade'],
                 'config[versao_tiss]'=>[
                     'label'=>'Versão do Padrão TISS',
@@ -210,6 +210,7 @@ class PadraoController extends Controller
     {
         $validatedData = $request->validate([
             'nome' => ['required','string','unique:profissionals'],
+            'registro' => ['required'],
         ]);
         $dados = $request->all();
         $data = $this->sanitize($dados);
