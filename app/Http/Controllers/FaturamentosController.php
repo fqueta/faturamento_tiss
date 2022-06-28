@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Qlib\Qlib;
 use App\Models\User;
 use App\Models\_upload;
+use App\Models\Faturamento;
 use App\Models\Guia;
 use App\Models\Lote;
 use Illuminate\Support\Facades\Auth;
@@ -126,10 +127,11 @@ class FaturamentosController extends Controller
             'order'=>isset($get['order']) ? $get['order']: 'desc',
         ];
         if($this->type){
-            $guia =  Guia::where('excluido','=','n')->where('type','=',$this->type)->where('deletado','=','n')->orderBy('id',$config['order']);
+            $guia =  Guia::where('excluido','=','n')->where('lote','=','n')->where('type','=',$this->type)->where('deletado','=','n')->orderBy('id',$config['order']);
         }else{
-            $guia =  Guia::where('excluido','=','n')->where('deletado','=','n')->orderBy('id',$config['order']);
+            $guia =  Guia::where('excluido','=','n')->where('lote','=','n')->where('deletado','=','n')->orderBy('id',$config['order']);
         }
+
         //$guia =  Guia::where('excluido','=','n')->where('deletado','=','n')->orderBy('id',$config['order']);
         //$guia =  DB::table('guias')->where('excluido','=','n')->where('deletado','=','n')->orderBy('id',$config['order']);
         $guia_totais = new stdClass;
@@ -211,7 +213,7 @@ class FaturamentosController extends Controller
                 $token = isset($_POST['token'])?$_POST['token']:uniqid();
                 $type = isset($_POST['type'])?$_POST['type']:'internaçao';
                 $nome = isset($_POST['nome'])?$_POST['nome']:'Lote salvo por '.$this->user->nome.' em '.date('d/m/Y');
-                $salvarLote = Lote::create([
+                $salvarLote = Faturamento::create([
                     'mes'=>$mes,
                     'ano'=>$ano,
                     'token'=>$token,
@@ -229,7 +231,7 @@ class FaturamentosController extends Controller
                                 'lote'=>'s',
                             ]);
                         }
-                        $alte_lote = Lote::where('id',$salvarLote->id)->update([
+                        $alte_lote = Faturamento::where('id',$salvarLote->id)->update([
                             'config'=>Qlib::lib_array_json($ret),
                         ]);
                         $ret['exec'] = true;

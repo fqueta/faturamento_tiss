@@ -29,7 +29,7 @@
                 <h4 class="card-title">Localizar Guias</h4>
             </div>
             <div class="card-body">
-                <form action="" method="get">
+                <form action="" id="frm-busca" method="get">
                     <div class="row">
                     @if (isset($config['campos_busca']))
                         @foreach ($config['campos_busca'] as $k=>$v)
@@ -129,7 +129,9 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                @include('faturamento.table_faturamento')
+                @if (isset($_GET['filter']))
+                    @include('faturamento.table_faturamento')
+                @endif
             </div>
         </div>
         <div class="card-footer d-print-none">
@@ -183,14 +185,6 @@
 
                     //});
                 }
-
-                /*if(m=res.value.matricula){
-                    $('[name="matricula"]').val(m);
-                    $('#txt-matricula').html(m);
-                }else{
-                    $('[name="matricula"]').val('');
-                    $('#txt-matricula').html('');
-                }*/
             });
         }
         $(function(){
@@ -237,6 +231,10 @@
             });
             $('#auto-proprietario').on('click',function(){
                 $(this).val('');
+            });
+            $('[type="submit"]').on('click',function(e){
+                e.preventDefault();
+                $('#frm-busca').submit();
             });
         });
     </script>
