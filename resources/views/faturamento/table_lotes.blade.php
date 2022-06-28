@@ -30,10 +30,10 @@
                 $link = isset($gArq['link'])?$gArq['link']:false;
                 $vtGuias = 0;
                 $qtdGuias = 0;
-                dd($xml);
+                //dd($xml);
                 if(isset($xml['dados'])&&$xml['dados']){
+                    $qtdGuias = count($xml['dados']);
                     if(is_array($xml['dados'])){
-                        $qtdGuias = count($xml['dados']);
                         foreach ($xml['dados'] as $kto => $vto) {
                             $vtGuias += (double)$vto['valorTotalGeral'];
                         }
