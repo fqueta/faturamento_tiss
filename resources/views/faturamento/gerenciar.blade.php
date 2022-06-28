@@ -41,7 +41,7 @@
                                 'placeholder'=>@$v['placeholder'],
                                 'ac'=>$config['ac'],
                                 'value'=>@$_GET['filter'][$k],
-                                'tam'=>@$v['tam'],
+                                'tam'=>'3',
                                 'event'=>@$v['event'],
                                 'checked'=>@$value[$k],
                                 'selected'=>@$_GET['filter'][$k],
@@ -58,12 +58,37 @@
                                 'dados'=>@$v['dados'],
                             ])}}
                         @endforeach
+                        @if (isset($config['campos_data']))
+                            @foreach ($config['campos_data'] as $k=>$v)
+                                {{App\Qlib\Qlib::qForm([
+                                    'type'=>@$v['type'],
+                                    'campo'=>@$k,
+                                    'label'=>$v['label'],
+                                    'id'=>@$v['id'],
+                                    'placeholder'=>@$v['placeholder'],
+                                    'ac'=>$config['ac'],
+                                    'value'=>@$v['selected'],
+                                    'tam'=>'3',
+                                    'event'=>@$v['event'],
+                                    'checked'=>@$v['selected'],
+                                    'selected'=>@$v['selected'],
+                                    'arr_opc'=>@$v['arr_opc'],
+                                    'option_select'=>@$v['option_select'],
+                                    'class'=>@$v['class'],
+                                    'class_div'=>@$v['class_div'],
+                                    'rows'=>@$v['rows'],
+                                    'cols'=>@$v['cols'],
+                                    'data_selector'=>@$v['data_selector'],
+                                    'script'=>@$v['script'],
+                                    'valor_padrao'=>@$v['valor_padrao'],
+                                    'title'=>@$v['title'],
+                                    'dados'=>@$v['dados'],
+                                ])}}
+                            @endforeach
+                        @endif
                     @endif
-                        <div class="col-md-2 pt-4">
-                            <button type="submit" class="btn btn-secondary mt-1 btn-block">{{__('Pesquisar Guias')}}</button>
-                        </div>
-                        <div class="col-md-2 pt-4">
-                            <button type="button" id="btn-fechar-lote" class="btn btn-primary mt-1 btn-block">{{__('Fechar Lote')}}</button>
+                        <div class="col-md-2">
+                            <button type="submit" id="pesquisar" class="btn btn-primary mt-1 btn-block">{{__('Pesquisar')}}</button>
                         </div>
                     </div>
                 </form>
@@ -129,66 +154,8 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                @if (isset($_GET['filter']))
-                    @include('faturamento.table_faturamento')
-                @endif
-            </div>
+                @include('faturamento.table_lotes')
 
-            <!-- Modal -->
-            <div class="modal fade" id="facharLote" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Fechamento</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                        </div>
-                        <div class="modal-body">
-                             <form id="referencia" action="">
-                                @csrf
-                                <div class="row">
-                                    <div id="modal-m" class="col-md-12 text-center">
-                                        <p>Para fechar o lote informe um mês de referência.</p>
-                                    </div>
-
-                                    @if (isset($config['campos_data']))
-                                        @foreach ($config['campos_data'] as $k=>$v)
-                                            {{App\Qlib\Qlib::qForm([
-                                                'type'=>@$v['type'],
-                                                'campo'=>@$k,
-                                                'label'=>$v['label'],
-                                                'id'=>@$v['id'],
-                                                'placeholder'=>@$v['placeholder'],
-                                                'ac'=>$config['ac'],
-                                                'value'=>@$v['selected'],
-                                                'tam'=>'6',
-                                                'event'=>@$v['event'],
-                                                'checked'=>@$v['selected'],
-                                                'selected'=>@$v['selected'],
-                                                'arr_opc'=>@$v['arr_opc'],
-                                                'option_select'=>@$v['option_select'],
-                                                'class'=>@$v['class'],
-                                                'class_div'=>@$v['class_div'],
-                                                'rows'=>@$v['rows'],
-                                                'cols'=>@$v['cols'],
-                                                'data_selector'=>@$v['data_selector'],
-                                                'script'=>@$v['script'],
-                                                'valor_padrao'=>@$v['valor_padrao'],
-                                                'title'=>@$v['title'],
-                                                'dados'=>@$v['dados'],
-                                            ])}}
-                                        @endforeach
-                                    @endif
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
-                            <button type="button" class="btn btn-primary" onclick="executarFechamento();">Fechar este lote</button>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
         <div class="card-footer d-print-none">

@@ -2395,3 +2395,12 @@ function escolhe_operadora(){
         //verifica_versao_tiss(arr_val.id);
     }
 }
+function verificaCheckbox(sele){
+    var objs = coleta_checked($(sele));
+    if(objs=='' || typeof objs=='undefinid'){
+        var msg = '<div class="row"><div id="modal-m" class="col-md-12 text-center"><p>É necessário selecionar uma guia para fechar um lote.</p></div></div>';
+        alerta(msg,'modal-faturamento-erro','Alerta','',true);
+        return false;
+    }
+    return objs;
+}

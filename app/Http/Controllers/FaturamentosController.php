@@ -77,6 +77,50 @@ class FaturamentosController extends Controller
         ];
     }
 
+    public function camposData(){
+        $meses = Qlib::Meses();
+        $anos = [];
+        foreach (range((date('Y')-4),(date('Y')+4)) as $key => $v) {
+            $anos[$v] = $v;
+        }
+        return [
+            'mes'=>[
+                'label'=>'Mês referência',
+                'active'=>false,
+                'type'=>'select',
+                'arr_opc'=>$meses,
+                'exibe_busca'=>'d-block',
+                'event'=>'',
+                'tam'=>'4',
+                'class'=>'',
+                'campo'=>'mes',
+                'exibe_busca'=>true,
+                'selected'=>date('m'),
+                'option_select'=>true,
+                'title'=>'',
+                'id'=>'type',
+                'cp_busca'=>'',
+            ],
+            'ano'=>[
+                'label'=>'Ano referência',
+                'active'=>false,
+                'type'=>'select',
+                'arr_opc'=>$anos,
+                'exibe_busca'=>'d-block',
+                'selected'=>date('Y'),
+                'event'=>'',
+                'tam'=>'4',
+                'class'=>'',
+                'campo'=>'ano',
+                'exibe_busca'=>true,
+                'option_select'=>true,
+                'title'=>'',
+                'id'=>'type',
+                'cp_busca'=>'',
+            ],
+        ];
+    }
+
     public function fechar(Request $request)
     {
         $title = __('Fechamentos de guias');
@@ -85,12 +129,18 @@ class FaturamentosController extends Controller
 
         $config = [
             'campos_busca'=>$this->campos(),
+            'campos_data'=>$this->camposData(),
             'ac' =>'alt',
         ];
         $this->authorize('ler', $this->url);
         $title = 'Guias Cadastradas';
         $titulo = $title;
-        $queryGuia = $this->queryGuia($_GET);
+        if(isset($get['filter'])){
+            $siga = true;
+        }else{
+            $siga = false;
+        }
+        $queryGuia = $this->queryGuia($_GET,['siga'=>$siga,'lote'=>'n']);
         $queryGuia['config']['exibe'] = 'html';
         $routa = $this->routa;
         // return view($this->view.'.index',[
@@ -121,16 +171,111 @@ class FaturamentosController extends Controller
         $get = isset($_GET) ? $_GET:[];
         $ano = date('Y');
         $mes = date('m');
+        $lote = isset($config['lote'])?$config['lote']:false;
+        $siga = isset($config['siga'])?$config['siga']:false;
         //$todasFamilias = Familia::where('excluido','=','n')->where('deletado','=','n');
         $config = [
             'limit'=>isset($get['limit']) ? $get['limit']: 50,
             'order'=>isset($get['order']) ? $get['order']: 'desc',
         ];
         if($this->type){
-            $guia =  Guia::where('excluido','=','n')->where('lote','=','n')->where('type','=',$this->type)->where('deletado','=','n')->orderBy('id',$config['order']);
+            $guia =  Guia::where('excluido','=','n')->where('type','=',$this->type)->where('deletado','=','n')->orderBy('id',$config['order']);
         }else{
-            $guia =  Guia::where('excluido','=','n')->where('lote','=','n')->where('deletado','=','n')->orderBy('id',$config['order']);
+            $guia =  Guia::where('excluido','=','n')->where('deletado','=','n')->orderBy('id',$config['order']);
         }
+        if($lote){
+            $guia->where('lote','=',$lote);
+        }
+
+        //$guia =  Guia::where('excluido','=','n')->where('deletado','=','n')->orderBy('id',$config['order']);
+        //$guia =  DB::table('guias')->where('excluido','=','n')->where('deletado','=','n')->orderBy('id',$config['order']);
+        $guia_totais = new stdClass;
+        $campos = $this->campos();
+        $tituloTabela = 'Lista de todos cadastros';
+        $arr_titulo = false;
+        if(isset($get['filter'])){
+                $titulo_tab = false;
+                $i = 0;
+                foreach ($get['filter'] as $key => $value) {
+                    if(!empty($value)){
+                        if($key=='id'){
+                            $guia->where($key,'LIKE', $value);
+                            $titulo_tab .= 'Todos com *'. $campos[$key]['label'] .'% = '.$value.'& ';
+                            $arr_titulo[$campos[$key]['label']] = $value;
+                        }elseif($key=='op_id'){
+
+                            $guia->where('config','LIKE', '%"'.$key.'":"'.$value.'"%');
+                            $titulo_tab .= 'Todos com *'. $campos[$key]['label'] .'% = '.$value.'& ';
+                            $arr_titulo[$campos[$key]['label']] = $value;
+                        }else{
+                            $guia->where($key,'LIKE','%'. $value. '%');
+                            if($campos[$key]['type']=='select'){
+                                $value = $campos[$key]['arr_opc'][$value];
+                            }
+                            $arr_titulo[$campos[$key]['label']] = $value;
+                            $titulo_tab .= 'Todos com *'. $campos[$key]['label'] .'% = '.$value.'& ';
+                        }
+                        $i++;
+                    }
+                }
+                if($titulo_tab){
+                    $tituloTabela = 'Lista de: &'.$titulo_tab;
+                                //$arr_titulo = explode('&',$tituloTabela);
+                }
+                $fm = $guia;
+                if($config['limit']=='todos'){
+                    $guia = $guia->get();
+                }else{
+                    $guia = $guia->paginate($config['limit']);
+                }
+        }else{
+            $fm = $guia;
+            if($config['limit']=='todos'){
+                $guia = $guia->get();
+            }else{
+                $guia = $guia->paginate($config['limit']);
+            }
+        }
+        $guia_totais->todos = $fm->count();
+        $guia_totais->esteMes = $fm->whereYear('created_at', '=', $ano)->whereMonth('created_at','=',$mes)->get()->count();
+        $guia_totais->ativos = $fm->where('ativo','=','s')->get()->count();
+        $guia_totais->inativos = $fm->where('ativo','=','n')->get()->count();
+
+        $ret['guia'] = $guia;
+        $ret['guia_totais'] = $guia_totais;
+        $ret['arr_titulo'] = $arr_titulo;
+        $ret['campos'] = $campos;
+        $ret['config'] = $config;
+        $ret['tituloTabela'] = $tituloTabela;
+        $ret['config']['resumo'] = [
+            'todos_registro'=>['label'=>'Todos cadastros','value'=>$guia_totais->todos,'icon'=>'fas fa-calendar'],
+            'todos_mes'=>['label'=>'Cadastros recentes','value'=>$guia_totais->esteMes,'icon'=>'fas fa-calendar-times'],
+            'todos_ativos'=>['label'=>'Cadastros ativos','value'=>$guia_totais->ativos,'icon'=>'fas fa-check'],
+            'todos_inativos'=>['label'=>'Cadastros inativos','value'=>$guia_totais->inativos,'icon'=>'fas fa-archive'],
+        ];
+        return $ret;
+    }
+    public function queryFaturas($get=false,$config=false)
+    {
+        $ret = false;
+        $get = isset($_GET) ? $_GET:[];
+        $ano = date('Y');
+        $mes = date('m');
+        //$lote = isset($config['lote'])?$config['lote']:false;
+        $siga = isset($config['siga'])?$config['siga']:true;
+        //$todasFamilias = Familia::where('excluido','=','n')->where('deletado','=','n');
+        $config = [
+            'limit'=>isset($get['limit']) ? $get['limit']: 50,
+            'order'=>isset($get['order']) ? $get['order']: 'desc',
+        ];
+        if($this->type){
+            $guia =  Faturamento::where('excluido','=','n')->where('type','=',$this->type)->where('deletado','=','n')->orderBy('id',$config['order']);
+        }else{
+            $guia =  Faturamento::where('excluido','=','n')->where('deletado','=','n')->orderBy('id',$config['order']);
+        }
+        /*if($lote){
+            $guia->where('lote','=',$lote);
+        }*/
 
         //$guia =  Guia::where('excluido','=','n')->where('deletado','=','n')->orderBy('id',$config['order']);
         //$guia =  DB::table('guias')->where('excluido','=','n')->where('deletado','=','n')->orderBy('id',$config['order']);
@@ -244,5 +389,35 @@ class FaturamentosController extends Controller
             return $ret;
         }
         return $ret;
+    }
+    function gerenciarLote(){
+        $title = __('Fechamentos de guias');
+        $titulo = $title;
+        //$GuiasController = new GuiasController($this->user);
+
+        $config = [
+            'campos_busca'=>$this->campos(),
+            'campos_data'=>$this->camposData(),
+            'ac' =>'alt',
+        ];
+        $this->authorize('ler', $this->url);
+        $title = 'Guias Cadastradas';
+        $titulo = $title;
+        $siga = false;
+        if(isset($get['filter'])){
+            $siga = true;
+        }
+        $queryGuia = $this->queryFaturas($_GET,['siga'=>$siga]);
+        $queryGuia['config']['exibe'] = 'html';
+        $routa = $this->routa;
+        $ret = [
+            'title'=>$title,
+            'titulo'=>$titulo,
+            'config'=>$config,
+            'view'=>$this->view,
+            'guias'=>$queryGuia['guia'],
+
+        ];
+        return view('faturamento.gerenciar',$ret);
     }
 }
