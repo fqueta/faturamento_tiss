@@ -25,17 +25,19 @@
         @if (isset($guias) && is_object($guias))
             @foreach ($guias as $kt=>$vt)
             @php
-                $gArq = $vt['config']['geraGuia'];
-                $xml = App\Qlib\Qlib::lib_json_array($gArq['dadosXml']);
-                $link = isset($gArq['link'])?$gArq['link']:false;
-                $vtGuias = 0;
                 $qtdGuias = 0;
-                //dd($xml);
-                if(isset($xml['dados'])&&$xml['dados']){
-                    $qtdGuias = count($xml['dados']);
-                    if(is_array($xml['dados'])){
-                        foreach ($xml['dados'] as $kto => $vto) {
-                            $vtGuias += (double)$vto['valorTotalGeral'];
+                $vtGuias = 0;
+                $link = false;
+                if($vt['config']){
+                    $gArq = isset($vt['config']['geraGuia'])?$vt['config']['geraGuia']:false;
+                    $link = isset($gArq['link'])?$gArq['link']:false;
+                    $xml = App\Qlib\Qlib::lib_json_array($gArq['dadosXml']);
+                    if(isset($xml['dados'])){
+                        if(is_array($xml['dados'])){
+                            foreach ($xml['dados'] as $kto => $vto) {
+                                $qtdGuias ++;
+                                $vtGuias += $vto['valorTotalGeral'];
+                            }
                         }
                     }
                 }
@@ -49,7 +51,7 @@
                     {{$vt['id']}}
                 </td>
                 <td>
-                    {{$qtdGuias}}
+                    {{@$qtdGuias}}
                 </td>
 
                 <td>
@@ -59,7 +61,7 @@
                     {{$vt['mes']}}/{{$vt['ano']}}
                 </td>
                 <td>
-                    <a href="{{$link}}" target="_blank" class="btn btn-secondary"  rel="noopener noreferrer" download="">{{__('Baixar XML')}}</a>
+                    <a href="{{@$link}}" target="_blank" class="btn btn-secondary"  rel="noopener noreferrer" download="">{{__('Baixar XML')}}</a>
                 </td>
             </tr>
             @endforeach
