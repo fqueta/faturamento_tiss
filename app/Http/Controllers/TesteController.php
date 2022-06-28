@@ -22,7 +22,8 @@ class TesteController extends Controller
         $user = Auth::user();
         //$doc = new LotesController($user);
         $ac = new GeradorXmlController();
-        echo $ac->guiaResumoInternacao(5);
+        $ret = $ac->guiaResumoInternacao(['3','4','5','6'],5);
+        dd($ret);
         //return view('teste',$config);
     }
     public function ajax(){

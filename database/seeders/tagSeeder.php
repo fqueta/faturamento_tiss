@@ -20,6 +20,7 @@ class tagSeeder extends Seeder
             ['nome'=>'Tags Concelho do profissional','obs'=>'Código Cbo.','ordem'=>3],
             ['nome'=>'Tags Tabelas e taxas','obs'=>'Tabelas de valores.','ordem'=>4],
             ['nome'=>'Tags Motivos do encerramento','obs'=>'Motivos do encerramento da internação.','ordem'=>5],
+            ['nome'=>'Tipos de guias','obs'=>'Tipos de guias','ordem'=>6],
             [
                 "value"=>"3.02.00",
                 "nome"=>"Tiss Versão 3.02.00",
@@ -1595,8 +1596,48 @@ class tagSeeder extends Seeder
                 "pai"=>"5",
                 "ordem"=>"1",
                 "obs"=>""
-            ]
-
+            ],
+            //tipos de guias
+            [
+                "value"=>"spsadt",
+                "nome"=>"Guia de SP/SADT",
+                "config"=>"",
+                "pai"=>"6",
+                "ordem"=>"1",
+                "obs"=>"",
+            ],
+            [
+                "value"=>"consulta",
+                "nome"=>"Guia de Consulta",
+                "config"=>"",
+                "pai"=>"6",
+                "ordem"=>"1",
+                "obs"=>"",
+            ],
+            [
+                "value"=>"honorario",
+                "nome"=>"Guia de Honorário Individual",
+                "config"=>"",
+                "pai"=>"6",
+                "ordem"=>"1",
+                "obs"=>"",
+            ],
+            [
+                "value"=>"internacao",
+                "nome"=>"Guia de Resumo de Internação",
+                "config"=>"",
+                "pai"=>"6",
+                "ordem"=>"1",
+                "obs"=>"",
+            ],
+            [
+                "value"=>"glosa",
+                "nome"=>"Guia de Recurso de Glosa",
+                "config"=>"",
+                "pai"=>"6",
+                "ordem"=>"1",
+                "obs"=>"",
+            ],
         ];
 
         foreach ($arr as $key => $value) {

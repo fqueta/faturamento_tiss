@@ -270,7 +270,7 @@ class GuiasController extends Controller
                         'campo_bus'=>'nome',
                         'label'=>'Operadora',
                     ],
-                    'arr_opc'=>Qlib::sql_array("SELECT id,nome,registro,config FROM operadoras WHERE ativo='s'",'registro','id','nome',' | '),'exibe_busca'=>'d-block',
+                    'arr_opc'=>Qlib::sql_array("SELECT id,nome,registro,config FROM operadoras WHERE ativo='s'",'registro','id','nome',' | ','encode'),'exibe_busca'=>'d-block',
                     'event'=>'required onchange=escolhe_operadora()',
                     'tam'=>'4',
                     'class'=>'',

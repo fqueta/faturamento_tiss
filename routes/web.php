@@ -77,8 +77,10 @@ Route::prefix('profissionais')->group(function(){
     ]]);
 });
 Route::prefix('faturamentos')->group(function(){
-    Route::get('/fechar',[FaturamentosController::class,'fechar'])->name('faturamento.fechar');
-    Route::get('/gerenciar',[FaturamentosController::class,'gerenciar'])->name('faturamento.gerenciar');
+    Route::get('/fechar-lote',[FaturamentosController::class,'fechar'])->name('faturamento.fechar');
+    Route::get('/gerar-lote/{id}',[FaturamentosController::class,'gerarLote'])->name('faturamento.gerar.lote');
+    Route::post('/fechar-lote/{id}',[FaturamentosController::class,'salvarLote'])->name('faturamento.salvar.lote');
+    Route::get('/gerenciar-lote',[FaturamentosController::class,'gerenciar'])->name('faturamento.gerenciar');
 });
 /*
 Route::prefix('familias')->group(function(){

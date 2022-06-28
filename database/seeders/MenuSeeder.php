@@ -119,7 +119,7 @@ class MenuSeeder extends Seeder
                 'description'=>'Fechar Lote',
                 'icon'=>'fas fa-file',
                 'actived'=>true,
-                'url'=>'fechar_lote',
+                'url'=>'fechar-lote',
                 'route'=>'faturamento.fechar',
                 'pai'=>'faturamento'
             ],
@@ -128,7 +128,7 @@ class MenuSeeder extends Seeder
                 'description'=>'Gerenciar Lote',
                 'icon'=>'fas fa-file',
                 'actived'=>true,
-                'url'=>'gerenciar_lote',
+                'url'=>'gerenciar-lote',
                 'route'=>'faturamento.gerenciar',
                 'pai'=>'faturamento'
             ],

@@ -13,25 +13,35 @@ class GeradorXmlController extends Controller
     {
 
     }
-    public function guiaResumoInternacao( $idGuia = null){
-        $ret = false;
+    public function guiaResumoInternacao( $idGuia = null,$id_lote=4){
+        $ret['exec'] = false;
         $dadosGuia = false;
-        if($idGuia){
+        $tipo = 'str';
+
+        if(is_array($idGuia)){
+            $tipo = 'arr';
+            foreach ($idGuia as $key => $value) {
+                if($value){
+                    $dadosGuia[$key] = Guia::FindOrFail($value);
+                    $dadosGuia[$key]['config'] = Qlib::lib_json_array(@$dadosGuia[$key]['config']);
+                }
+            }
+        }else{
             $dadosGuia = Guia::FindOrFail($idGuia);
         }
         $CalcHash=false;
-        if(isset($dadosGuia['config'])&&!empty($dadosGuia['config'])){
-            $dadosGuia['config'] = Qlib::lib_json_array($dadosGuia['config']);
+        // if(isset($dadosGuia['config'])&&!empty($dadosGuia['config'])){
+        //     $dadosGuia['config'] = Qlib::lib_json_array($dadosGuia['config']);
 
-        }else{
-            return $ret;
-        }
+        // }else{
+        //     return $ret;
+        // }
         $_XML['tipoTransacao']          = 'ENVIO_LOTE_GUIAS';
-        $_XML['sequencialTransacao']    = '3';
+        $_XML['sequencialTransacao']    = $id_lote;
         $_XML['dataRegistroTransacao']  = date('Y-m-d');
         $_XML['horaRegistroTransacao']  = date('H:i:s');
         $_XML['padrao_tiss']            = '3.05.00';
-        $_XML['numeroLote']            = '3';
+        $_XML['numeroLote']            = $id_lote;
         $arr_var = [
             'cnpj'=>'codigoNaOperadora',
             'registroANS'=>'registro_ans',
@@ -70,24 +80,27 @@ class GeradorXmlController extends Controller
             'procedimento'=>'procedimento',
         ];
 
-
         $i=0;
-        foreach ($arr_var as $key => $val) {
-            if($key=='numeroGuiaPrestador'){
-                $_XML[$key] = isset($dadosGuia[$val])?$dadosGuia[$val]:false;
-            }elseif($key=='nomeBeneficiario'){
-                $_XML[$key] = isset($dadosGuia[$val])?$dadosGuia[$val]:false;
-            }elseif($key=='procedimento'){
-                $_XML['procedimentos'] = $dadosGuia['config'][$val];
-            }elseif($key=='horaInicioFaturamento' || $key=='horaFinalFaturamento' || $key=='horaInicial' || $key=='horaFinal'){
-                $_XML[$key] = $dadosGuia['config'][$val].':00';
-            }else{
-                if(isset($dadosGuia['config'][$val])){
-                    $_XML[$key] = trim($dadosGuia['config'][$val]);
+        if($tipo=='arr'){
+            foreach ($dadosGuia as $k1 => $va1) {
+                foreach ($arr_var as $key => $val) {
+                    if($key=='numeroGuiaPrestador'){
+                        $_XML['dados'][$k1][$key] = isset($va1[$val])?$va1[$val]:false;
+                    }elseif($key=='nomeBeneficiario'){
+                        $_XML['dados'][$k1][$key] = isset($va1[$val])?$va1[$val]:false;
+                    }elseif($key=='procedimento'){
+                        $_XML['dados'][$k1]['procedimentos'] = $va1['config'][$val];
+                    }elseif($key=='horaInicioFaturamento' || $key=='horaFinalFaturamento' || $key=='horaInicial' || $key=='horaFinal'){
+                        $_XML['dados'][$k1][$key] = $va1['config'][$val].':00';
+                    }else{
+                        if(isset($va1['config'][$val])){
+                            $_XML['dados'][$k1][$key] = trim($va1['config'][$val]);
+                        }
+                    }
                 }
             }
         }
-
+        $ret['dadosXml'] = Qlib::lib_array_json($_XML);
         $xml = new DOMDocument('1.0', 'UTF-8');
         //também poderia ser UTF-8
 
@@ -152,9 +165,9 @@ class GeradorXmlController extends Controller
                         $identificacaoPrestador = $xml->createElement("ans:identificacaoPrestador");
                         $origem->appendChild($identificacaoPrestador);
 
-                        $CNPJ = $xml->createElement("ans:CNPJ", $_XML['cnpj']);
+                        $CNPJ = $xml->createElement("ans:CNPJ", $_XML['dados'][0]['cnpj']);
                         $identificacaoPrestador->appendChild($CNPJ);
-                        $CalcHash .= $_XML['cnpj'];
+                        $CalcHash .= $_XML['dados'][0]['cnpj'];
 
 
                 // ans:mensagemTISS / ans:cabecalho / ans:destino
@@ -162,9 +175,9 @@ class GeradorXmlController extends Controller
                 $cabecalho->appendChild($destino);
 
                         // ans:mensagemTISS / ans:cabecalho / ans:registroANS
-                        $registroANS = $xml->createElement("ans:registroANS", $_XML['registroANS']);
+                        $registroANS = $xml->createElement("ans:registroANS", $_XML['dados'][0]['registroANS']);
                         $destino->appendChild($registroANS);
-                        $CalcHash .= $_XML['registroANS'];
+                        $CalcHash .= $_XML['dados'][0]['registroANS'];
 
                 // ans:mensagemTISS / ans:cabecalho / ans:Padrao
                 $Padrao = $xml->createElement("ans:Padrao", $_XML['padrao_tiss']);
@@ -191,288 +204,294 @@ class GeradorXmlController extends Controller
                     $loteGuias->appendChild($guiasTISS);
 
                     // ans:mensagemTISS / ans:prestadorParaOperadora / loteGuias / guiaResumoInternacao
-
-                    $guiaResumoInternacao = $xml->createElement("ans:guiaResumoInternacao");
-                    $guiasTISS->appendChild($guiaResumoInternacao);
-
-                    // ans:mensagemTISS / ans:prestadorParaOperadora / loteGuias / cabecalhoGuia
-                    $cabecalhoGuia = $xml->createElement("ans:cabecalhoGuia");
-                    $guiaResumoInternacao->appendChild($cabecalhoGuia);
-
-                    $registroANS = $xml->createElement("ans:registroANS", $_XML['registroANS']); //registroANS
-                    $cabecalhoGuia->appendChild($registroANS);
-                    $CalcHash .= $_XML['registroANS'];
-
-
-                    $numeroGuiaPrestador = $xml->createElement("ans:numeroGuiaPrestador", $_XML['numeroGuiaPrestador']); //numeroGuiaPrestador
-                    $cabecalhoGuia->appendChild($numeroGuiaPrestador);
-                    $CalcHash .= $_XML['numeroGuiaPrestador'];
-
-                    // ans:mensagemTISS / ans:prestadorParaOperadora / loteGuias / guiaResumoInternacao / numeroGuiaSolicitacaoInternacao
-                     $numeroGuiaSolicitacaoInternacao = $xml->createElement("ans:numeroGuiaSolicitacaoInternacao", $_XML['numeroGuiaSolicitacaoInternacao']);
-                     $guiaResumoInternacao->appendChild($numeroGuiaSolicitacaoInternacao);
-                     $CalcHash .= $_XML['numeroGuiaSolicitacaoInternacao'];
-                     // ans:mensagemTISS / ans:prestadorParaOperadora / loteGuias / guiaResumoInternacao / dadosAutorizacao
-                    $dadosAutorizacao = $xml->createElement("ans:dadosAutorizacao");
-                    $guiaResumoInternacao->appendChild($dadosAutorizacao);
-
-
-
-                    $dataAutorizacao = $xml->createElement("ans:dataAutorizacao", $_XML['dataAutorizacao']); //dataAutorizacao
-                    $dadosAutorizacao->appendChild($dataAutorizacao);
-                    $CalcHash .= $_XML['dataAutorizacao'];
-
-                    $numeroGuiaOperadora = $xml->createElement("ans:numeroGuiaOperadora", $_XML['numeroGuiaOperadora']); //numeroGuiaOperadora
-                    $dadosAutorizacao->appendChild($numeroGuiaOperadora);
-                    $CalcHash .= $_XML['numeroGuiaOperadora'];
-
-
-                    $senha = $xml->createElement("ans:senha", $_XML['senha']); //senha
-                    $dadosAutorizacao->appendChild($senha);
-                    $CalcHash .= $_XML['senha'];
-
-                    $dataValidadeSenha = $xml->createElement("ans:dataValidadeSenha", $_XML['dataValidadeSenha']); //dataValidadeSenha
-                    $dadosAutorizacao->appendChild($dataValidadeSenha);
-                    $CalcHash .= $_XML['dataValidadeSenha'];
-
-
-                    $dadosBeneficiario = $xml->createElement("ans:dadosBeneficiario"); //dadosBeneficiario
-                    $guiaResumoInternacao->appendChild($dadosBeneficiario);
-
-
-                    $dadosExecutante = $xml->createElement("ans:dadosExecutante"); //dadosExecutante
-                    $guiaResumoInternacao->appendChild($dadosExecutante);
-
-                    $numeroCarteira = $xml->createElement("ans:numeroCarteira", $_XML['numeroCarteira']); //numeroCarteira
-                    $dadosBeneficiario->appendChild($numeroCarteira);
-                    $CalcHash .= $_XML['numeroCarteira'];
-
-
-                    $atendimentoRN = $xml->createElement("ans:atendimentoRN", $_XML['atendimentoRN']); //atendimentoRN
-                    $dadosBeneficiario->appendChild($atendimentoRN);
-                    $CalcHash .= $_XML['atendimentoRN'];
-
-
-                    $nomeBeneficiario = $xml->createElement("ans:nomeBeneficiario", $_XML['nomeBeneficiario']); //nomeBeneficiario
-                    $dadosBeneficiario->appendChild($nomeBeneficiario);
-                    $CalcHash .= $_XML['nomeBeneficiario'];
-
-                    //contratadoExecutante
-                    $contratadoExecutante = $xml->createElement("ans:contratadoExecutante");
-                    $dadosExecutante->appendChild($contratadoExecutante);
-
-
-
-                    $cnpjContratado = $xml->createElement("ans:cnpjContratado", $_XML['cnpjContratado']); //cnpjContratado
-                    $contratadoExecutante->appendChild($cnpjContratado);
-                    $CalcHash .= $_XML['cnpjContratado'];
-
-
-                    $nomeContratado = $xml->createElement("ans:nomeContratado", $_XML['nomeContratado']); //nomeContratado
-                    $contratadoExecutante->appendChild($nomeContratado);
-                    $CalcHash .= $_XML['nomeContratado'];
-
-                    $CNES = $xml->createElement("ans:CNES", $_XML['CNES']); //CNES
-                    $dadosExecutante->appendChild($CNES);
-                    $CalcHash .= $_XML['CNES'];
-
-
-                    //No dados internação
-                    $dadosInternacao = $xml->createElement("ans:dadosInternacao"); //dadosInternacao
-                    $guiaResumoInternacao->appendChild($dadosInternacao);
-
-                        $caraterAtendimento = $xml->createElement("ans:caraterAtendimento",$_XML['caraterAtendimento']); //caraterAtendimento
-                        $dadosInternacao->appendChild($caraterAtendimento);
-                        $CalcHash .= $_XML['caraterAtendimento'];
-
-                        $tipoFaturamento = $xml->createElement("ans:tipoFaturamento",$_XML['tipoFaturamento']); //tipoFaturamento
-                        $dadosInternacao->appendChild($tipoFaturamento);
-                        $CalcHash .= $_XML['tipoFaturamento'];
-
-                        $dataInicioFaturamento = $xml->createElement("ans:dataInicioFaturamento",$_XML['dataInicioFaturamento']); //dataInicioFaturamento
-                        $dadosInternacao->appendChild($dataInicioFaturamento);
-                        $CalcHash .= $_XML['dataInicioFaturamento'];
-
-                        $horaInicioFaturamento = $xml->createElement("ans:horaInicioFaturamento",$_XML['horaInicioFaturamento']); //horaInicioFaturamento
-                        $dadosInternacao->appendChild($horaInicioFaturamento);
-                        $CalcHash .= $_XML['horaInicioFaturamento'];
-
-                        $dataFinalFaturamento = $xml->createElement("ans:dataFinalFaturamento",$_XML['dataFinalFaturamento']); //dataFinalFaturamento
-                        $dadosInternacao->appendChild($dataFinalFaturamento);
-                        $CalcHash .= $_XML['dataFinalFaturamento'];
-
-                        $horaFinalFaturamento = $xml->createElement("ans:horaFinalFaturamento",$_XML['horaFinalFaturamento']); //horaFinalFaturamento
-                        $dadosInternacao->appendChild($horaFinalFaturamento);
-                        $CalcHash .= $_XML['horaFinalFaturamento'];
-
-                        $tipoInternacao = $xml->createElement("ans:tipoInternacao",$_XML['tipoInternacao']); //tipoInternacao
-                        $dadosInternacao->appendChild($tipoInternacao);
-                        $CalcHash .= $_XML['tipoInternacao'];
-
-                        $regimeInternacao = $xml->createElement("ans:regimeInternacao",$_XML['regimeInternacao']); //regimeInternacao
-                        $dadosInternacao->appendChild($regimeInternacao);
-                        $CalcHash .= $_XML['regimeInternacao'];
-
-                    //No dados saida internação
-                    $dadosSaidaInternacao = $xml->createElement("ans:dadosSaidaInternacao"); //dadosSaidaInternacao
-                    $guiaResumoInternacao->appendChild($dadosSaidaInternacao);
-                        if(isset($_XML['diagnostico']) && !empty($_XML['diagnostico'])){
-                            $diagnostico = $xml->createElement("ans:diagnostico",$_XML['diagnostico']); //diagnostico
-                            $dadosSaidaInternacao->appendChild($diagnostico);
-                            $CalcHash .= $_XML['diagnostico'];
-                        }
-
-                        $indicadorAcidente = $xml->createElement("ans:indicadorAcidente",$_XML['indicadorAcidente']); //indicadorAcidente
-                        $dadosSaidaInternacao->appendChild($indicadorAcidente);
-                        $CalcHash .= $_XML['indicadorAcidente'];
-
-                        $motivoEncerramento = $xml->createElement("ans:motivoEncerramento",$_XML['motivoEncerramento']); //motivoEncerramento
-                        $dadosSaidaInternacao->appendChild($motivoEncerramento);
-                        $CalcHash .= $_XML['motivoEncerramento'];
-                    //inicio No de procedimentos
-                    $procedimentosExecutados = $xml->createElement("ans:procedimentosExecutados"); //procedimentosExecutados
-                    $guiaResumoInternacao->appendChild($procedimentosExecutados);
-                    if(isset($_XML['procedimentos']) && is_array($_XML['procedimentos'])){
-                        foreach ($_XML['procedimentos'] as $key => $v) {
-                                    //listagem de procedimentos
-                                    $procedimentoExecutado = $xml->createElement("ans:procedimentoExecutado"); //procedimentoExecutado
-                                    $procedimentosExecutados->appendChild($procedimentoExecutado);
-                                    //elementos
-
-                                    $sequencialItem = $xml->createElement("ans:sequencialItem",@$v['item']); //sequencialItem
-                                    $procedimentoExecutado->appendChild($sequencialItem);
-                                    $CalcHash .= trim(@$v['item']);
-                                    $dataExecucao = $xml->createElement("ans:dataExecucao",@$v['data']); //dataExecucao
-                                    $procedimentoExecutado->appendChild($dataExecucao);
-                                    $CalcHash .= trim(@$v['data']);
-                                    if(!empty($v['hora1'])){
-                                        $v['hora1'] .= ':00';
-                                    }
-                                    if(!empty($v['hora2'])){
-                                        $v['hora2'] .= ':00';
-                                    }
-                                    $horaInicial = $xml->createElement("ans:horaInicial",@$v['hora1']); //horaInicial
-                                    $procedimentoExecutado->appendChild($horaInicial);
-                                    $CalcHash .= trim(@$v['hora1']);
-                                    $horaFinal = $xml->createElement("ans:horaFinal",@$v['hora2']); //horaFinal
-                                    $procedimentoExecutado->appendChild($horaFinal);
-                                    $CalcHash .= trim(@$v['hora2']);
-
-                                    $procedimento = $xml->createElement("ans:procedimento"); //procedimento
-                                    $procedimentoExecutado->appendChild($procedimento);
-
-                                        $codigoTabela = $xml->createElement("ans:codigoTabela",@$v['tabela']); //procedimento
-                                        $procedimento->appendChild($codigoTabela);
-                                        $CalcHash .= trim(@$v['tabela']);
-
-                                        $codigoProcedimento = $xml->createElement("ans:codigoProcedimento",@$v['codigo']); //procedimento
-                                        $procedimento->appendChild($codigoProcedimento);
-                                        $CalcHash .= trim(@$v['codigo']);
-                                        $desc = Qlib::sanitizeString(@$v['descricao']);
-                                        $descricaoProcedimento = $xml->createElement("ans:descricaoProcedimento",$desc); //procedimento
-                                        $procedimento->appendChild($descricaoProcedimento);
-                                        $CalcHash .= trim($desc);
-
-
-                                    $quantidadeExecutada = $xml->createElement("ans:quantidadeExecutada",@$v['quantidade']); //quantidadeExecutada
-                                    $procedimentoExecutado->appendChild($quantidadeExecutada);
-                                    $CalcHash .= trim(@$v['quantidade']);
-                                    $viaAcesso = $xml->createElement("ans:viaAcesso",@$v['via']); //viaAcesso
-                                    $procedimentoExecutado->appendChild($viaAcesso);
-                                    $CalcHash .= trim(@$v['via']);
-
-                                    $tecnicaUtilizada = $xml->createElement("ans:tecnicaUtilizada",@$v['tec']); //tecnicaUtilizada
-                                    $procedimentoExecutado->appendChild($tecnicaUtilizada);
-                                    $CalcHash .= trim(@$v['tec']);
-
-                                    $reducaoAcrescimo = $xml->createElement("ans:reducaoAcrescimo",@$v['fator']); //reducaoAcrescimo
-                                    $procedimentoExecutado->appendChild($reducaoAcrescimo);
-                                    $CalcHash .= trim(@$v['fator']);
-
-                                    $v['valor_unitario'] = str_replace('R$','',@$v['valor_unitario']);
-                                    $v['valor_unitario'] = str_replace('.','',@$v['valor_unitario']);
-                                    $v['valor_unitario'] = str_replace(',','.',@$v['valor_unitario']);
-                                    $v['valor_unitario'] = trim(@$v['valor_unitario']);
-
-                                    $valorUnitario = $xml->createElement("ans:valorUnitario",@$v['valor_unitario']); //valorUnitario
-                                    $procedimentoExecutado->appendChild($valorUnitario);
-                                    $CalcHash .= @$v['valor_unitario'];
-
-                                    $valorTotal = $xml->createElement("ans:valorTotal",@$v['valor_total']); //valorTotal
-                                    $procedimentoExecutado->appendChild($valorTotal);
-                                    $CalcHash .= trim(@$v['valor_total']);
-
-                        }
+                    if(!isset($_XML['dados'])){
+                        return 'dados insuficientes';
                     }
+                    foreach ($_XML['dados'] as $key => $d_xml) {
+                        $guiaResumoInternacao = $xml->createElement("ans:guiaResumoInternacao");
 
-                    //Fim Nô de procedimentos
-                    //Inicio Nô de total
-                    //inicio No de procedimentos
-                    $valorTotal = $xml->createElement("ans:valorTotal"); //valorTotal
-                    $guiaResumoInternacao->appendChild($valorTotal);
+                            $guiasTISS->appendChild($guiaResumoInternacao);
 
-                        //$valorProcedimentos = $xml->createElement("ans:valorProcedimentos",$_XML['valorProcedimentos']); //valorProcedimentos
-                        //$valorTotal->appendChild($valorProcedimentos);
-                        //$CalcHash .= $_XML['valorProcedimentos'];
+                            // ans:mensagemTISS / ans:prestadorParaOperadora / loteGuias / cabecalhoGuia
+                            $cabecalhoGuia = $xml->createElement("ans:cabecalhoGuia");
+                            $guiaResumoInternacao->appendChild($cabecalhoGuia);
 
-                        $valorProcedimentos = $xml->createElement("ans:valorProcedimentos",$_XML['valorProcedimentos']); //valorProcedimentos
-                        $valorTotal->appendChild($valorProcedimentos);
-                        $CalcHash .= $_XML['valorProcedimentos'];
-                        if($_XML['valorDiarias'] == '0.00'){
-                            $_XML['valorDiarias']=0;
-                        }
-                        $valorDiarias = $xml->createElement("ans:valorDiarias",$_XML['valorDiarias']); //valorDiarias
-                        $valorTotal->appendChild($valorDiarias);
-                        $CalcHash .= $_XML['valorDiarias'];
-
-                        if($_XML['valorTaxasAlugueis'] == '0.00'){
-                            $_XML['valorTaxasAlugueis']=0;
-                        }
-
-                        $valorTaxasAlugueis = $xml->createElement("ans:valorTaxasAlugueis",$_XML['valorTaxasAlugueis']); //valorTaxasAlugueis
-                        $valorTotal->appendChild($valorTaxasAlugueis);
-                        $CalcHash .= $_XML['valorTaxasAlugueis'];
-
-                        if($_XML['valorMateriais'] == '0.00'){
-                            $_XML['valorMateriais']=0;
-                        }
+                            $registroANS = $xml->createElement("ans:registroANS", $d_xml['registroANS']); //registroANS
+                            $cabecalhoGuia->appendChild($registroANS);
+                            $CalcHash .= $d_xml['registroANS'];
 
 
-                        $valorMateriais = $xml->createElement("ans:valorMateriais",$_XML['valorMateriais']); //valorMateriais
-                        $valorTotal->appendChild($valorMateriais);
-                        $CalcHash .= $_XML['valorMateriais'];
+                            $numeroGuiaPrestador = $xml->createElement("ans:numeroGuiaPrestador", $d_xml['numeroGuiaPrestador']); //numeroGuiaPrestador
+                            $cabecalhoGuia->appendChild($numeroGuiaPrestador);
+                            $CalcHash .= $d_xml['numeroGuiaPrestador'];
 
-                        if($_XML['valorMedicamentos'] == '0.00'){
-                            $_XML['valorMedicamentos']=0;
-                        }
-
-
-                        $valorMedicamentos = $xml->createElement("ans:valorMedicamentos",$_XML['valorMedicamentos']); //valorMedicamentos
-                        $valorTotal->appendChild($valorMedicamentos);
-                        $CalcHash .= $_XML['valorMedicamentos'];
-
-                        if($_XML['valorOPME'] == '0.00'){
-                            $_XML['valorOPME']=0;
-                        }
+                            // ans:mensagemTISS / ans:prestadorParaOperadora / loteGuias / guiaResumoInternacao / numeroGuiaSolicitacaoInternacao
+                            $numeroGuiaSolicitacaoInternacao = $xml->createElement("ans:numeroGuiaSolicitacaoInternacao", $d_xml['numeroGuiaSolicitacaoInternacao']);
+                            $guiaResumoInternacao->appendChild($numeroGuiaSolicitacaoInternacao);
+                            $CalcHash .= $d_xml['numeroGuiaSolicitacaoInternacao'];
+                            // ans:mensagemTISS / ans:prestadorParaOperadora / loteGuias / guiaResumoInternacao / dadosAutorizacao
+                            $dadosAutorizacao = $xml->createElement("ans:dadosAutorizacao");
+                            $guiaResumoInternacao->appendChild($dadosAutorizacao);
 
 
-                        $valorOPME = $xml->createElement("ans:valorOPME",$_XML['valorOPME']); //valorOPME
-                        $valorTotal->appendChild($valorOPME);
-                        $CalcHash .= $_XML['valorOPME'];
 
-                        if($_XML['valorGasesMedicinais'] == '0.00'){
-                            $_XML['valorGasesMedicinais']=0;
-                        }
+                            $dataAutorizacao = $xml->createElement("ans:dataAutorizacao", $d_xml['dataAutorizacao']); //dataAutorizacao
+                            $dadosAutorizacao->appendChild($dataAutorizacao);
+                            $CalcHash .= $d_xml['dataAutorizacao'];
+
+                            $numeroGuiaOperadora = $xml->createElement("ans:numeroGuiaOperadora", $d_xml['numeroGuiaOperadora']); //numeroGuiaOperadora
+                            $dadosAutorizacao->appendChild($numeroGuiaOperadora);
+                            $CalcHash .= $d_xml['numeroGuiaOperadora'];
 
 
-                        $valorGasesMedicinais = $xml->createElement("ans:valorGasesMedicinais",$_XML['valorGasesMedicinais']); //valorGasesMedicinais
-                        $valorTotal->appendChild($valorGasesMedicinais);
-                        $CalcHash .= $_XML['valorGasesMedicinais'];
+                            $senha = $xml->createElement("ans:senha", $d_xml['senha']); //senha
+                            $dadosAutorizacao->appendChild($senha);
+                            $CalcHash .= $d_xml['senha'];
 
-                        $valorTotalGeral = $xml->createElement("ans:valorTotalGeral",$_XML['valorTotalGeral']); //valorTotalGeral
-                        $valorTotal->appendChild($valorTotalGeral);
-                        $CalcHash .= $_XML['valorTotalGeral'];
+                            $dataValidadeSenha = $xml->createElement("ans:dataValidadeSenha", $d_xml['dataValidadeSenha']); //dataValidadeSenha
+                            $dadosAutorizacao->appendChild($dataValidadeSenha);
+                            $CalcHash .= $d_xml['dataValidadeSenha'];
 
+
+                            $dadosBeneficiario = $xml->createElement("ans:dadosBeneficiario"); //dadosBeneficiario
+                            $guiaResumoInternacao->appendChild($dadosBeneficiario);
+
+
+                            $dadosExecutante = $xml->createElement("ans:dadosExecutante"); //dadosExecutante
+                            $guiaResumoInternacao->appendChild($dadosExecutante);
+
+                            $numeroCarteira = $xml->createElement("ans:numeroCarteira", $d_xml['numeroCarteira']); //numeroCarteira
+                            $dadosBeneficiario->appendChild($numeroCarteira);
+                            $CalcHash .= $d_xml['numeroCarteira'];
+
+
+                            $atendimentoRN = $xml->createElement("ans:atendimentoRN", $d_xml['atendimentoRN']); //atendimentoRN
+                            $dadosBeneficiario->appendChild($atendimentoRN);
+                            $CalcHash .= $d_xml['atendimentoRN'];
+
+
+                            $nomeBeneficiario = $xml->createElement("ans:nomeBeneficiario", $d_xml['nomeBeneficiario']); //nomeBeneficiario
+                            $dadosBeneficiario->appendChild($nomeBeneficiario);
+                            $CalcHash .= $d_xml['nomeBeneficiario'];
+
+                            //contratadoExecutante
+                            $contratadoExecutante = $xml->createElement("ans:contratadoExecutante");
+                            $dadosExecutante->appendChild($contratadoExecutante);
+
+
+
+                            $cnpjContratado = $xml->createElement("ans:cnpjContratado", $d_xml['cnpjContratado']); //cnpjContratado
+                            $contratadoExecutante->appendChild($cnpjContratado);
+                            $CalcHash .= $d_xml['cnpjContratado'];
+
+
+                            $nomeContratado = $xml->createElement("ans:nomeContratado", $d_xml['nomeContratado']); //nomeContratado
+                            $contratadoExecutante->appendChild($nomeContratado);
+                            $CalcHash .= $d_xml['nomeContratado'];
+
+                            $CNES = $xml->createElement("ans:CNES", $d_xml['CNES']); //CNES
+                            $dadosExecutante->appendChild($CNES);
+                            $CalcHash .= $d_xml['CNES'];
+
+
+                            //No dados internação
+                            $dadosInternacao = $xml->createElement("ans:dadosInternacao"); //dadosInternacao
+                            $guiaResumoInternacao->appendChild($dadosInternacao);
+
+                                $caraterAtendimento = $xml->createElement("ans:caraterAtendimento",$d_xml['caraterAtendimento']); //caraterAtendimento
+                                $dadosInternacao->appendChild($caraterAtendimento);
+                                $CalcHash .= $d_xml['caraterAtendimento'];
+
+                                $tipoFaturamento = $xml->createElement("ans:tipoFaturamento",$d_xml['tipoFaturamento']); //tipoFaturamento
+                                $dadosInternacao->appendChild($tipoFaturamento);
+                                $CalcHash .= $d_xml['tipoFaturamento'];
+
+                                $dataInicioFaturamento = $xml->createElement("ans:dataInicioFaturamento",$d_xml['dataInicioFaturamento']); //dataInicioFaturamento
+                                $dadosInternacao->appendChild($dataInicioFaturamento);
+                                $CalcHash .= $d_xml['dataInicioFaturamento'];
+
+                                $horaInicioFaturamento = $xml->createElement("ans:horaInicioFaturamento",$d_xml['horaInicioFaturamento']); //horaInicioFaturamento
+                                $dadosInternacao->appendChild($horaInicioFaturamento);
+                                $CalcHash .= $d_xml['horaInicioFaturamento'];
+
+                                $dataFinalFaturamento = $xml->createElement("ans:dataFinalFaturamento",$d_xml['dataFinalFaturamento']); //dataFinalFaturamento
+                                $dadosInternacao->appendChild($dataFinalFaturamento);
+                                $CalcHash .= $d_xml['dataFinalFaturamento'];
+
+                                $horaFinalFaturamento = $xml->createElement("ans:horaFinalFaturamento",$d_xml['horaFinalFaturamento']); //horaFinalFaturamento
+                                $dadosInternacao->appendChild($horaFinalFaturamento);
+                                $CalcHash .= $d_xml['horaFinalFaturamento'];
+
+                                $tipoInternacao = $xml->createElement("ans:tipoInternacao",$d_xml['tipoInternacao']); //tipoInternacao
+                                $dadosInternacao->appendChild($tipoInternacao);
+                                $CalcHash .= $d_xml['tipoInternacao'];
+
+                                $regimeInternacao = $xml->createElement("ans:regimeInternacao",$d_xml['regimeInternacao']); //regimeInternacao
+                                $dadosInternacao->appendChild($regimeInternacao);
+                                $CalcHash .= $d_xml['regimeInternacao'];
+
+                            //No dados saida internação
+                            $dadosSaidaInternacao = $xml->createElement("ans:dadosSaidaInternacao"); //dadosSaidaInternacao
+                            $guiaResumoInternacao->appendChild($dadosSaidaInternacao);
+                                if(isset($d_xml['diagnostico']) && !empty($d_xml['diagnostico'])){
+                                    $diagnostico = $xml->createElement("ans:diagnostico",$d_xml['diagnostico']); //diagnostico
+                                    $dadosSaidaInternacao->appendChild($diagnostico);
+                                    $CalcHash .= $d_xml['diagnostico'];
+                                }
+
+                                $indicadorAcidente = $xml->createElement("ans:indicadorAcidente",$d_xml['indicadorAcidente']); //indicadorAcidente
+                                $dadosSaidaInternacao->appendChild($indicadorAcidente);
+                                $CalcHash .= $d_xml['indicadorAcidente'];
+
+                                $motivoEncerramento = $xml->createElement("ans:motivoEncerramento",$d_xml['motivoEncerramento']); //motivoEncerramento
+                                $dadosSaidaInternacao->appendChild($motivoEncerramento);
+                                $CalcHash .= $d_xml['motivoEncerramento'];
+                            //inicio No de procedimentos
+                            $procedimentosExecutados = $xml->createElement("ans:procedimentosExecutados"); //procedimentosExecutados
+                            $guiaResumoInternacao->appendChild($procedimentosExecutados);
+                            if(isset($d_xml['procedimentos']) && is_array($d_xml['procedimentos'])){
+                                foreach ($d_xml['procedimentos'] as $key => $v) {
+                                            //listagem de procedimentos
+                                            $procedimentoExecutado = $xml->createElement("ans:procedimentoExecutado"); //procedimentoExecutado
+                                            $procedimentosExecutados->appendChild($procedimentoExecutado);
+                                            //elementos
+
+                                            $sequencialItem = $xml->createElement("ans:sequencialItem",@$v['item']); //sequencialItem
+                                            $procedimentoExecutado->appendChild($sequencialItem);
+                                            $CalcHash .= trim(@$v['item']);
+                                            $dataExecucao = $xml->createElement("ans:dataExecucao",@$v['data']); //dataExecucao
+                                            $procedimentoExecutado->appendChild($dataExecucao);
+                                            $CalcHash .= trim(@$v['data']);
+                                            if(!empty($v['hora1'])){
+                                                $v['hora1'] .= ':00';
+                                            }
+                                            if(!empty($v['hora2'])){
+                                                $v['hora2'] .= ':00';
+                                            }
+                                            $horaInicial = $xml->createElement("ans:horaInicial",@$v['hora1']); //horaInicial
+                                            $procedimentoExecutado->appendChild($horaInicial);
+                                            $CalcHash .= trim(@$v['hora1']);
+                                            $horaFinal = $xml->createElement("ans:horaFinal",@$v['hora2']); //horaFinal
+                                            $procedimentoExecutado->appendChild($horaFinal);
+                                            $CalcHash .= trim(@$v['hora2']);
+
+                                            $procedimento = $xml->createElement("ans:procedimento"); //procedimento
+                                            $procedimentoExecutado->appendChild($procedimento);
+
+                                                $codigoTabela = $xml->createElement("ans:codigoTabela",@$v['tabela']); //procedimento
+                                                $procedimento->appendChild($codigoTabela);
+                                                $CalcHash .= trim(@$v['tabela']);
+
+                                                $codigoProcedimento = $xml->createElement("ans:codigoProcedimento",@$v['codigo']); //procedimento
+                                                $procedimento->appendChild($codigoProcedimento);
+                                                $CalcHash .= trim(@$v['codigo']);
+                                                $desc = Qlib::sanitizeString(@$v['descricao']);
+                                                $descricaoProcedimento = $xml->createElement("ans:descricaoProcedimento",$desc); //procedimento
+                                                $procedimento->appendChild($descricaoProcedimento);
+                                                $CalcHash .= trim($desc);
+
+
+                                            $quantidadeExecutada = $xml->createElement("ans:quantidadeExecutada",@$v['quantidade']); //quantidadeExecutada
+                                            $procedimentoExecutado->appendChild($quantidadeExecutada);
+                                            $CalcHash .= trim(@$v['quantidade']);
+                                            $viaAcesso = $xml->createElement("ans:viaAcesso",@$v['via']); //viaAcesso
+                                            $procedimentoExecutado->appendChild($viaAcesso);
+                                            $CalcHash .= trim(@$v['via']);
+
+                                            $tecnicaUtilizada = $xml->createElement("ans:tecnicaUtilizada",@$v['tec']); //tecnicaUtilizada
+                                            $procedimentoExecutado->appendChild($tecnicaUtilizada);
+                                            $CalcHash .= trim(@$v['tec']);
+
+                                            $reducaoAcrescimo = $xml->createElement("ans:reducaoAcrescimo",@$v['fator']); //reducaoAcrescimo
+                                            $procedimentoExecutado->appendChild($reducaoAcrescimo);
+                                            $CalcHash .= trim(@$v['fator']);
+
+                                            $v['valor_unitario'] = str_replace('R$','',@$v['valor_unitario']);
+                                            $v['valor_unitario'] = str_replace('.','',@$v['valor_unitario']);
+                                            $v['valor_unitario'] = str_replace(',','.',@$v['valor_unitario']);
+                                            $v['valor_unitario'] = trim(@$v['valor_unitario']);
+
+                                            $valorUnitario = $xml->createElement("ans:valorUnitario",@$v['valor_unitario']); //valorUnitario
+                                            $procedimentoExecutado->appendChild($valorUnitario);
+                                            $CalcHash .= @$v['valor_unitario'];
+
+                                            $valorTotal = $xml->createElement("ans:valorTotal",@$v['valor_total']); //valorTotal
+                                            $procedimentoExecutado->appendChild($valorTotal);
+                                            $CalcHash .= trim(@$v['valor_total']);
+
+                                }
+                            }
+
+
+                            //Fim Nô de procedimentos
+                            //Inicio Nô de total
+                            //inicio No de procedimentos
+                            $valorTotal = $xml->createElement("ans:valorTotal"); //valorTotal
+                            $guiaResumoInternacao->appendChild($valorTotal);
+
+                                //$valorProcedimentos = $xml->createElement("ans:valorProcedimentos",$d_xml['valorProcedimentos']); //valorProcedimentos
+                                //$valorTotal->appendChild($valorProcedimentos);
+                                //$CalcHash .= $d_xml['valorProcedimentos'];
+
+                                $valorProcedimentos = $xml->createElement("ans:valorProcedimentos",$d_xml['valorProcedimentos']); //valorProcedimentos
+                                $valorTotal->appendChild($valorProcedimentos);
+                                $CalcHash .= $d_xml['valorProcedimentos'];
+                                if($d_xml['valorDiarias'] == '0.00'){
+                                    $d_xml['valorDiarias']=0;
+                                }
+                                $valorDiarias = $xml->createElement("ans:valorDiarias",$d_xml['valorDiarias']); //valorDiarias
+                                $valorTotal->appendChild($valorDiarias);
+                                $CalcHash .= $d_xml['valorDiarias'];
+
+                                if($d_xml['valorTaxasAlugueis'] == '0.00'){
+                                    $d_xml['valorTaxasAlugueis']=0;
+                                }
+
+                                $valorTaxasAlugueis = $xml->createElement("ans:valorTaxasAlugueis",$d_xml['valorTaxasAlugueis']); //valorTaxasAlugueis
+                                $valorTotal->appendChild($valorTaxasAlugueis);
+                                $CalcHash .= $d_xml['valorTaxasAlugueis'];
+
+                                if($d_xml['valorMateriais'] == '0.00'){
+                                    $d_xml['valorMateriais']=0;
+                                }
+
+
+                                $valorMateriais = $xml->createElement("ans:valorMateriais",$d_xml['valorMateriais']); //valorMateriais
+                                $valorTotal->appendChild($valorMateriais);
+                                $CalcHash .= $d_xml['valorMateriais'];
+
+                                if($d_xml['valorMedicamentos'] == '0.00'){
+                                    $d_xml['valorMedicamentos']=0;
+                                }
+
+
+                                $valorMedicamentos = $xml->createElement("ans:valorMedicamentos",$d_xml['valorMedicamentos']); //valorMedicamentos
+                                $valorTotal->appendChild($valorMedicamentos);
+                                $CalcHash .= $d_xml['valorMedicamentos'];
+
+                                if($d_xml['valorOPME'] == '0.00'){
+                                    $d_xml['valorOPME']=0;
+                                }
+
+
+                                $valorOPME = $xml->createElement("ans:valorOPME",$d_xml['valorOPME']); //valorOPME
+                                $valorTotal->appendChild($valorOPME);
+                                $CalcHash .= $d_xml['valorOPME'];
+
+                                if($d_xml['valorGasesMedicinais'] == '0.00'){
+                                    $d_xml['valorGasesMedicinais']=0;
+                                }
+
+
+                                $valorGasesMedicinais = $xml->createElement("ans:valorGasesMedicinais",$d_xml['valorGasesMedicinais']); //valorGasesMedicinais
+                                $valorTotal->appendChild($valorGasesMedicinais);
+                                $CalcHash .= $d_xml['valorGasesMedicinais'];
+
+                                $valorTotalGeral = $xml->createElement("ans:valorTotalGeral",$d_xml['valorTotalGeral']); //valorTotalGeral
+                                $valorTotal->appendChild($valorTotalGeral);
+                                $CalcHash .= $d_xml['valorTotalGeral'];
+
+                    }
                             /*
 
                     //profissionalExecutante
@@ -526,13 +545,20 @@ class GeradorXmlController extends Controller
 
                     //$xml->save("xml_tiss.xml");
                     $path = storage_path();
-                    echo $file = $path.'/app/public/xml/'.$_XML['numeroLote']."_".$_XML['hash'].'.xml';
-                    $xml->save($file);
+                    //$file = $path.'/app/public/xml/'.$_XML['numeroLote']."_".$_XML['hash'].'.xml';
+                    $nome_arquivo = Qlib::zerofill($_XML['numeroLote'],5).'.xml';
+                    $file = $path.'/app/public/xml/'.$nome_arquivo;
+                    $link = '/storage/xml/'.$nome_arquivo;
+                    $ret['file'] = $file;
+                    $ret['link'] = $link;
+                    if($xml->save($file)){
+                        $ret['exec']=true;
+                    }
 
 
                     # Imprime / Gera o xml em tela
                    // header('content-type: text/xml');
-                    print $xml->saveXML();
+                   // print $xml->saveXML();
 
         return $ret;
 
@@ -543,62 +569,62 @@ class GeradorXmlController extends Controller
         $arr_var = [];
 
         #Definindo as variáveis
-        $_XML['padrao_tiss'] = '3.05.00';
-        $_XML['numeroLote'] = '1';
+        $_XML['dados']['padrao_tiss'] = '3.05.00';
+        $_XML['dados']['numeroLote'] = '1';
 
         #Dados Operadora:
-        $_XML['registro_ans'] = '1111';
-        $_XML['numeroGuiaSolicitacaoInternacao'] = '1111';
+        $_XML['dados']['registro_ans'] = '1111';
+        $_XML['dados']['numeroGuiaSolicitacaoInternacao'] = '1111';
         #Dados Autorização
-        $_XML['numeroGuiaOperadora'] = '1111';
-        $_XML['dataAutorizacao'] = '1111';
+        $_XML['dados']['numeroGuiaOperadora'] = '1111';
+        $_XML['dados']['dataAutorizacao'] = '1111';
 
         #Dados Prestador:
-        $_XML['codigo_credenciamento'] = '12345';
-        $_XML['cnpj'] = '0000000000000';
-        $_XML['prestador'] = 'Hospital ABCD';
+        $_XML['dados']['codigo_credenciamento'] = '12345';
+        $_XML['dados']['cnpj'] = '0000000000000';
+        $_XML['dados']['prestador'] = 'Hospital ABCD';
 
         #Dados do atendimento e beneficiário
-        $_XML['data_hora'] = '03/04/2018 22:15:00';
-        $_XML['rn'] = 'N'; #Não
-        $_XML['tipo_atd'] = 'Ambulatorial';
-        $_XML['carater'] = 'E'; #Eletivo
-        $_XML['guia'] = '1111';
-        $_XML['senha'] = '2222';
-        $_XML['medico'] = 'Dr. Fabiano';
-        $_XML['crm'] = '0000';
-        $_XML['cbos'] = '';
+        $_XML['dados']['data_hora'] = '03/04/2018 22:15:00';
+        $_XML['dados']['rn'] = 'N'; #Não
+        $_XML['dados']['tipo_atd'] = 'Ambulatorial';
+        $_XML['dados']['carater'] = 'E'; #Eletivo
+        $_XML['dados']['guia'] = '1111';
+        $_XML['dados']['senha'] = '2222';
+        $_XML['dados']['medico'] = 'Dr. Fabiano';
+        $_XML['dados']['crm'] = '0000';
+        $_XML['dados']['cbos'] = '';
         #Dados do beneficiário
-        $_XML['nome'] = 'Fulano de Tal';
-        $_XML['dt_nascimento'] = '01/01/1980';
-        $_XML['carteira']  = '4444444444444444';
-        $_XML['validade'] = '31/12/2030';
+        $_XML['dados']['nome'] = 'Fulano de Tal';
+        $_XML['dados']['dt_nascimento'] = '01/01/1980';
+        $_XML['dados']['carteira']  = '4444444444444444';
+        $_XML['dados']['validade'] = '31/12/2030';
 
         #Dados da Fatura / Lote
-        $_XML['fatura_remessa'] = '123';
+        $_XML['dados']['fatura_remessa'] = '123';
 
         #Dados do procedimento realizado
-        $_XML['tabela'] = '22';
-        $_XML['procedimento_tuss'] = '10101012';
-        $_XML['descricao_proced'] = 'Consulta em consultório';
-        $_XML['valor_unitario'] = '500,00';
-        $_XML['qtde'] = '1';
-        $_XML['valor_total'] = '500,00';
+        $_XML['dados']['tabela'] = '22';
+        $_XML['dados']['procedimento_tuss'] = '10101012';
+        $_XML['dados']['descricao_proced'] = 'Consulta em consultório';
+        $_XML['dados']['valor_unitario'] = '500,00';
+        $_XML['dados']['qtde'] = '1';
+        $_XML['dados']['valor_total'] = '500,00';
 
-        $_XML['tipoTransacao'] = 'ENVIO_LOTE_GUIAS';
-        $_XML['sequencialTransacao'] = '6658';
-        $_XML['dataRegistroTransacao'] = '2018-01-18';
-        $_XML['horaRegistroTransacao'] = '10:00:00';
+        $_XML['dados']['tipoTransacao'] = 'ENVIO_LOTE_GUIAS';
+        $_XML['dados']['sequencialTransacao'] = '6658';
+        $_XML['dados']['dataRegistroTransacao'] = '2018-01-18';
+        $_XML['dados']['horaRegistroTransacao'] = '10:00:00';
 
-        # Utilize a variável $_XML['hash_dados'] para concatenar os dados e calcular o HASH antes do terceiro bloco
-        $_XML['hash_dados'] = '';
+        # Utilize a variável $_XML['dados']['hash_dados'] para concatenar os dados e calcular o HASH antes do terceiro bloco
+        $_XML['dados']['hash_dados'] = '';
 
-        #A variável $_XML['hash'] está nula pois deve ser calculada com os dados dos elementos(tags) do XML
-        $_XML['hash'] = 'calculo do HASH';
-        $_XML['registroANS'] = '45621';
-        $_XML['numeroGuiaPrestador'] = '789461';
+        #A variável $_XML['dados']['hash'] está nula pois deve ser calculada com os dados dos elementos(tags) do XML
+        $_XML['dados']['hash'] = 'calculo do HASH';
+        $_XML['dados']['registroANS'] = '45621';
+        $_XML['dados']['numeroGuiaPrestador'] = '789461';
 
-        //$_XML[''] = ''; // para criar novas variáveis apenas siga o padrão
+        //$_XML['dados'][''] = ''; // para criar novas variáveis apenas siga o padrão
         #versao XML e codificação
 
         $xml = new DOMDocument('1.0', 'UTF-8');;
@@ -639,19 +665,19 @@ class GeradorXmlController extends Controller
                 $cabecalho->appendChild($identificacaoTransacao);
 
                         # ans:tipoTransacao
-                        $tipoTransacao = $xml->createElement("ans:tipoTransacao", $_XML['tipoTransacao']);
+                        $tipoTransacao = $xml->createElement("ans:tipoTransacao", $_XML['dados']['tipoTransacao']);
                         $identificacaoTransacao->appendChild($tipoTransacao);
 
                         #sequencialTransacao
-                        $sequencialTransacao = $xml->createElement("ans:sequencialTransacao", $_XML['sequencialTransacao']);
+                        $sequencialTransacao = $xml->createElement("ans:sequencialTransacao", $_XML['dados']['sequencialTransacao']);
                         $identificacaoTransacao->appendChild($sequencialTransacao);
 
                         #dataRegistroTransacao
-                        $dataRegistroTransacao = $xml->createElement("ans:dataRegistroTransacao", $_XML['dataRegistroTransacao']);
+                        $dataRegistroTransacao = $xml->createElement("ans:dataRegistroTransacao", $_XML['dados']['dataRegistroTransacao']);
                         $identificacaoTransacao->appendChild($dataRegistroTransacao);
 
                         #horaRegistroTransacao
-                        $horaRegistroTransacao = $xml->createElement("ans:horaRegistroTransacao", $_XML['horaRegistroTransacao']);
+                        $horaRegistroTransacao = $xml->createElement("ans:horaRegistroTransacao", $_XML['dados']['horaRegistroTransacao']);
                         $identificacaoTransacao->appendChild($horaRegistroTransacao);
 
 
@@ -662,7 +688,7 @@ class GeradorXmlController extends Controller
                         // ans:mensagemTISS / ans:cabecalho / ans:origem / identificacaoPrestador
                         $identificacaoPrestador = $xml->createElement("ans:identificacaoPrestador");
                         $origem->appendChild($identificacaoPrestador);
-                            //$CNPJ = $xml->createElement("ans:CNPJ", $_XML['cnpj']);
+                            //$CNPJ = $xml->createElement("ans:CNPJ", $_XML['dados']['cnpj']);
                             //$identificacaoPrestador->appendChild($CNPJ);
 
 
@@ -671,11 +697,11 @@ class GeradorXmlController extends Controller
                 $cabecalho->appendChild($destino);
 
                         // ans:mensagemTISS / ans:cabecalho / ans:registroANS
-                        $registroANS = $xml->createElement("ans:registroANS", $_XML['registro_ans']);
+                        $registroANS = $xml->createElement("ans:registroANS", $_XML['dados']['registro_ans']);
                         $destino->appendChild($registroANS);
 
                 // ans:mensagemTISS / ans:cabecalho / ans:Padrao
-                $Padrao = $xml->createElement("ans:Padrao", $_XML['padrao_tiss']);
+                $Padrao = $xml->createElement("ans:Padrao", $_XML['dados']['padrao_tiss']);
                 $cabecalho->appendChild($Padrao);
 
 
@@ -689,7 +715,7 @@ class GeradorXmlController extends Controller
                 $prestadorParaOperadora->appendChild($loteGuias);
 
                     // ans:mensagemTISS / ans:prestadorParaOperadora / loteGuias / numeroLote
-                    $numeroLote = $xml->createElement("ans:numeroLote", $_XML['numeroLote']);
+                    $numeroLote = $xml->createElement("ans:numeroLote", $_XML['dados']['numeroLote']);
                     $loteGuias->appendChild($numeroLote);
 
                     // ans:mensagemTISS / ans:prestadorParaOperadora / loteGuias / guiasTISS
@@ -705,13 +731,13 @@ class GeradorXmlController extends Controller
                     $cabecalhoConsulta = $xml->createElement("ans:cabecalhoConsulta");
                     $guiaConsulta->appendChild($cabecalhoConsulta);
 
-                    $registroANS = $xml->createElement("ans:registroANS", $_XML['registroANS']); //registroANS
+                    $registroANS = $xml->createElement("ans:registroANS", $_XML['dados']['registroANS']); //registroANS
                     $cabecalhoConsulta->appendChild($registroANS);
 
-                    $registroANS = $xml->createElement("ans:numeroGuiaPrestador", $_XML['numeroGuiaPrestador']); //numeroGuiaPrestador
+                    $registroANS = $xml->createElement("ans:numeroGuiaPrestador", $_XML['dados']['numeroGuiaPrestador']); //numeroGuiaPrestador
                     $cabecalhoConsulta->appendChild($registroANS);
 
-                    $numeroGuiaOperadora = $xml->createElement("ans:numeroGuiaOperadora", $_XML['numeroGuiaOperadora']); //numeroGuiaOperadora
+                    $numeroGuiaOperadora = $xml->createElement("ans:numeroGuiaOperadora", $_XML['dados']['numeroGuiaOperadora']); //numeroGuiaOperadora
                     $guiaConsulta->appendChild($numeroGuiaOperadora);
 
                     $dadosBeneficiario = $xml->createElement("ans:dadosBeneficiario"); //dadosBeneficiario
@@ -772,22 +798,22 @@ class GeradorXmlController extends Controller
 
                     // Calculo o Hash - Você poderia gerar os dados, usar um (replace do PHP) para substituir as tags, e pegar apenas os dados
                     $xmlAqui = $xml->saveXML();
-                    $_XML['hash_dados'] = trim(strip_tags($xmlAqui));
-                    $_XML['hash_dados'] = preg_replace('/\s+/', '', $_XML['hash_dados']);
-                    $_XML['hash'] = md5($_XML['hash_dados']);
-                    //echo $_XML['hash'];exit;
+                    $_XML['dados']['hash_dados'] = trim(strip_tags($xmlAqui));
+                    $_XML['dados']['hash_dados'] = preg_replace('/\s+/', '', $_XML['dados']['hash_dados']);
+                    $_XML['dados']['hash'] = md5($_XML['dados']['hash_dados']);
+                    //echo $_XML['dados']['hash'];exit;
                         /* terceiro bloco */
                         // ans:mensagemTISS / ans:epilogo
                         $epilogo = $xml->createElement("ans:epilogo");
                         $mensagemTISS->appendChild($epilogo);
 
                             // ans:mensagemTISS / ans:epilogo / ans:hash
-                            $hash = $xml->createElement("ans:hash", $_XML['hash']);
+                            $hash = $xml->createElement("ans:hash", $_XML['dados']['hash']);
                             $epilogo->appendChild($hash);
 
                     # Comando para salvar/gerar o arquivo XML TISS
                     # Geralmente o nome do arquivo é o HASH que foi calculado ou número do lote, pois são informações únicas.
-                    # você pode usar as variáveis: $_XML['fatura_remessa'] . $_XML['hash']
+                    # você pode usar as variáveis: $_XML['dados']['fatura_remessa'] . $_XML['dados']['hash']
 
                     $xml->save("xml_tiss.xml");
 

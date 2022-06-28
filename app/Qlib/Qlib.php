@@ -313,7 +313,8 @@ class Qlib
                     $sql = "SELECT ".$ind_3['campo_enc']." FROM `".$ind_3['tab']."` WHERE ".$ind_3['campo_bus']." = '".$table[$i][$ind_2]."'";
                     $userinfo[$table[$i][$ind_2]] = $sql;
                 }else{
-                    if($type){
+                    if($type && $type!='encode'){
+                        // se tiver encode deve retornar os dados tambem codificados
                         if($type == 'data'){
                             /*Tipo de campo exibe*/
                             $userinfo[$table[$i][$ind_2]] = $table[$i][$ind] . '' . $leg . '' . Qlib::dataExibe($table[$i][$ind_3]);
@@ -325,7 +326,7 @@ class Qlib
                         $userinfo[$table[$i][$ind_2]] = $table[$i][$ind] . '' . $leg . '' . $table[$i][$ind_3];
                     }
                 }
-                if(isset($userinfo[$table[$i][$ind_2]]))
+                if(isset($userinfo[$table[$i][$ind_2]]) && $type=='encode')
                 $userinfo[$table[$i][$ind_2]] .= '@#'.Qlib::encodeArray($table[$i]);
             }
         }
