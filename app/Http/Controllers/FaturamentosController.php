@@ -377,7 +377,9 @@ class FaturamentosController extends Controller
                             ]);
                         }
                         $alte_lote = Faturamento::where('id',$salvarLote->id)->update([
-                            'config'=>Qlib::lib_array_json($ret),
+                            'config'=>Qlib::lib_array_json($geraGuia),
+                            'id_operadora'=>@$geraGuia['id_operadora'],
+                            'guias'=>@$geraGuia['guias'],
                         ]);
                         $ret['exec'] = true;
                         $ret['mes'] = 'Arquivo de lote gerado com sucesso!!';

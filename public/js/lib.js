@@ -2404,3 +2404,15 @@ function verificaCheckbox(sele){
     }
     return objs;
 }
+function print_guia(){
+
+    if(window.frames["frame_impressao"].focus()){
+        window.frames["frame_impressao"].focus();
+        window.frames["frame_impressao"].print();
+    }else{
+
+        var win = document.getElementById("frame_impressao").contentWindow;
+        mensagem = 'imprimir'
+        win.postMessage(mensagem,'https://sft.maisaqui.com.br')
+    }
+}

@@ -115,7 +115,7 @@
                                     <td class="campo_titulo">3-Nº da Guia de Solicitação de Internação</td>
                                 </tr>
                                 <tr>
-                                    <td class="campo_texto">{{$dados['config']['numeroGuiaSolicitacaoInternacao']}}</td>
+                                    <td class="campo_texto">{{@$dados['config']['numeroGuiaSolicitacaoInternacao']}}</td>
                                 </tr>
                             </table>
                         </td>
@@ -522,25 +522,25 @@
                         $linhasProced=10;
                     @endphp
                     @for ($i=1;$i<=$linhasProced;$i++)
-                        @if(isset($config['config']['procedimento'][$i]['item']))
+                        @if(isset($dados['config']['procedimento'][$i]['item']))
                         <tr>
                             <td class="celula_item" align="center" width="20">{{$i}}</td>
-                            <td class="celula_item" align="center" width="65">{{$config['config']['procedimento'][$i]['data']}}</td>
-                            <td class="celula_item" align="center" width="65">{{$config['config']['procedimento'][$i]['hora1']}}</td>
-                            <td class="celula_item" align="center" width="60">{{$config['config']['procedimento'][$i]['hora2']}}</td>
-                            <td class="celula_item" align="center" width="40">18</td>
-                            <td class="celula_item" align="center" width="70">36032-750</td>
-                            <td class="celula_item" align="left">TESTE</td>
-                            <td class="celula_item" align="center" width="40">12</td>
-                            <td class="celula_item" align="center" width="35"></td>
-                            <td class="celula_item" align="center" width="35"></td>
-                            <td class="celula_item" align="center" width="50">1.00</td>
-                            <td class="celula_item" align="center" width="80">15.24</td>
-                            <td class="celula_item" align="center" width="60">182.88</td>
+                            <td class="celula_item" align="center" width="65">{{App\Qlib\Qlib::dataExibe(@$dados['config']['procedimento'][$i]['data'])}}</td>
+                            <td class="celula_item" align="center" width="65">{{@$dados['config']['procedimento'][$i]['hora1']}}</td>
+                            <td class="celula_item" align="center" width="60">{{@$dados['config']['procedimento'][$i]['hora2']}}</td>
+                            <td class="celula_item" align="center" width="40">{{@$dados['config']['procedimento'][$i]['tabela']}}</td>
+                            <td class="celula_item" align="center" width="70">{{@$dados['config']['procedimento'][$i]['codigo']}}</td>
+                            <td class="celula_item" align="left">{{@$dados['config']['procedimento'][$i]['descricao']}}</td>
+                            <td class="celula_item" align="center" width="40">{{@$dados['config']['procedimento'][$i]['quantidade']}}</td>
+                            <td class="celula_item" align="center" width="35">{{@$dados['config']['procedimento'][$i]['via']}}</td>
+                            <td class="celula_item" align="center" width="35">{{@$dados['config']['procedimento'][$i]['tec']}}</td>
+                            <td class="celula_item" align="center" width="50">{{@$dados['config']['procedimento'][$i]['fator']}}</td>
+                            <td class="celula_item" align="center" width="80">{{@$dados['config']['procedimento'][$i]['valor_unitario']}}</td>
+                            <td class="celula_item" align="center" width="60">{{@$dados['config']['procedimento'][$i]['valor_total']}}</td>
                         </tr>
                         @else
                         <tr>
-                            <td class="celula_item" align="center" width="20">2</td>
+                            <td class="celula_item" align="center" width="20">{{$i}}</td>
                             <td class="celula_item" align="center" width="65">&nbsp;</td>
                             <td class="celula_item" align="center" width="65">&nbsp;</td>
                             <td class="celula_item" align="center" width="60">&nbsp;</td>
@@ -576,94 +576,36 @@
                         <td class="celula_item" align="center" width="30">UF</td>
                         <td class="celula_item" align="center" width="75">Código CBO</td>
                     </tr>
+                    @php
+                        $linhasExec=8;
+                    @endphp
+                    @for ($i=1;$i<=$linhasExec;$i++)
+                        @if(isset($dados['config']['executantes'][$i]['item']))
+                            <tr>
+                                <td class="celula_item" align="center" width="50">{{@$dados['config']['executantes'][$i]['item']}}</td>
+                                <td class="celula_item" align="center" width="70">{{@$dados['config']['executantes'][$i]['seq']}}</td>
+                                <td class="celula_item" align="left">{{@$dados['config']['executantes'][$i]['ex_nome']}}</td>
+                                <td class="celula_item" align="center" width="140">{{@$dados['config']['executantes'][$i]['grau_part']}}</td>
+                                <td class="celula_item" align="center" width="60">{{@$dados['config']['executantes'][$i]['codigo']}}</td>
+                                <td class="celula_item" align="center" width="95">{{@$dados['config']['executantes'][$i]['conselho']}}</td>
+                                <td class="celula_item" align="center" width="30">{{@$dados['config']['executantes'][$i]['conselho_uf']}}</td>
+                                <td class="celula_item" align="center" width="75">{{@$dados['config']['executantes'][$i]['conselho_numero']}}</td>
+                            </tr>
+                        @else
+                            <tr>
+                                <td class="celula_item" align="center" width="50">&nbsp;</td>
+                                <td class="celula_item" align="center" width="70">&nbsp;</td>
+                                <td class="celula_item" align="left">&nbsp;</td>
+                                <td class="celula_item" align="center" width="140">&nbsp;</td>
+                                <td class="celula_item" align="center" width="60">&nbsp;</td>
+                                <td class="celula_item" align="center" width="95">&nbsp;</td>
+                                <td class="celula_item" align="center" width="30">&nbsp;</td>
+                                <td class="celula_item" align="center" width="75">&nbsp;</td>
+                            </tr>
+                        @endif
+                    @endfor
 
-                    <tr>
-                        <td class="celula_item" align="center" width="50">1</td>
-                        <td class="celula_item" align="center" width="70">00</td>
-                        <td class="celula_item" align="left">CLINICA SUPERAR</td>
-                        <td class="celula_item" align="center" width="140">27058451001</td>
-                        <td class="celula_item" align="center" width="60">6</td>
-                        <td class="celula_item" align="center" width="95">42837</td>
-                        <td class="celula_item" align="center" width="30">MG</td>
-                        <td class="celula_item" align="center" width="75">225125</td>
-                    </tr>
 
-                    <tr>
-                        <td class="celula_item" align="center" width="50">&nbsp;</td>
-                        <td class="celula_item" align="center" width="70">&nbsp;</td>
-                        <td class="celula_item" align="left">&nbsp;</td>
-                        <td class="celula_item" align="center" width="140">&nbsp;</td>
-                        <td class="celula_item" align="center" width="60">&nbsp;</td>
-                        <td class="celula_item" align="center" width="95">&nbsp;</td>
-                        <td class="celula_item" align="center" width="30">&nbsp;</td>
-                        <td class="celula_item" align="center" width="75">&nbsp;</td>
-                    </tr>
-
-                    <tr>
-                        <td class="celula_item" align="center" width="50">&nbsp;</td>
-                        <td class="celula_item" align="center" width="70">&nbsp;</td>
-                        <td class="celula_item" align="left">&nbsp;</td>
-                        <td class="celula_item" align="center" width="140">&nbsp;</td>
-                        <td class="celula_item" align="center" width="60">&nbsp;</td>
-                        <td class="celula_item" align="center" width="95">&nbsp;</td>
-                        <td class="celula_item" align="center" width="30">&nbsp;</td>
-                        <td class="celula_item" align="center" width="75">&nbsp;</td>
-                    </tr>
-
-                    <tr>
-                        <td class="celula_item" align="center" width="50">&nbsp;</td>
-                        <td class="celula_item" align="center" width="70">&nbsp;</td>
-                        <td class="celula_item" align="left">&nbsp;</td>
-                        <td class="celula_item" align="center" width="140">&nbsp;</td>
-                        <td class="celula_item" align="center" width="60">&nbsp;</td>
-                        <td class="celula_item" align="center" width="95">&nbsp;</td>
-                        <td class="celula_item" align="center" width="30">&nbsp;</td>
-                        <td class="celula_item" align="center" width="75">&nbsp;</td>
-                    </tr>
-
-                    <tr>
-                        <td class="celula_item" align="center" width="50">&nbsp;</td>
-                        <td class="celula_item" align="center" width="70">&nbsp;</td>
-                        <td class="celula_item" align="left">&nbsp;</td>
-                        <td class="celula_item" align="center" width="140">&nbsp;</td>
-                        <td class="celula_item" align="center" width="60">&nbsp;</td>
-                        <td class="celula_item" align="center" width="95">&nbsp;</td>
-                        <td class="celula_item" align="center" width="30">&nbsp;</td>
-                        <td class="celula_item" align="center" width="75">&nbsp;</td>
-                    </tr>
-
-                    <tr>
-                        <td class="celula_item" align="center" width="50">&nbsp;</td>
-                        <td class="celula_item" align="center" width="70">&nbsp;</td>
-                        <td class="celula_item" align="left">&nbsp;</td>
-                        <td class="celula_item" align="center" width="140">&nbsp;</td>
-                        <td class="celula_item" align="center" width="60">&nbsp;</td>
-                        <td class="celula_item" align="center" width="95">&nbsp;</td>
-                        <td class="celula_item" align="center" width="30">&nbsp;</td>
-                        <td class="celula_item" align="center" width="75">&nbsp;</td>
-                    </tr>
-
-                    <tr>
-                        <td class="celula_item" align="center" width="50">&nbsp;</td>
-                        <td class="celula_item" align="center" width="70">&nbsp;</td>
-                        <td class="celula_item" align="left">&nbsp;</td>
-                        <td class="celula_item" align="center" width="140">&nbsp;</td>
-                        <td class="celula_item" align="center" width="60">&nbsp;</td>
-                        <td class="celula_item" align="center" width="95">&nbsp;</td>
-                        <td class="celula_item" align="center" width="30">&nbsp;</td>
-                        <td class="celula_item" align="center" width="75">&nbsp;</td>
-                    </tr>
-
-                    <tr>
-                        <td class="celula_item" align="center" width="50">&nbsp;</td>
-                        <td class="celula_item" align="center" width="70">&nbsp;</td>
-                        <td class="celula_item" align="left">&nbsp;</td>
-                        <td class="celula_item" align="center" width="140">&nbsp;</td>
-                        <td class="celula_item" align="center" width="60">&nbsp;</td>
-                        <td class="celula_item" align="center" width="95">&nbsp;</td>
-                        <td class="celula_item" align="center" width="30">&nbsp;</td>
-                        <td class="celula_item" align="center" width="75">&nbsp;</td>
-                    </tr>
 
                 </table>
                 <tr>
@@ -811,7 +753,7 @@
                                             <td class="campo_titulo">65-Observações</td>
                                         </tr>
                                         <tr>
-                                            <td class="campo_texto" height="80" valign="top"></td>
+                                            <td class="campo_texto" height="80" valign="top">{{@$dados['obs']}}</td>
                                         </tr>
                                     </table>
                                 </td>
@@ -820,9 +762,23 @@
                     </td>
                 </tr>
     </table>
+    <style>
+        button{
+            font-size: 1.3rem !important;
+        }
+    </style>
+    <div class="col-md-12 d-print-none " style="position: fixed;bottom:3px;z-index:2">
+        <button type="button" onclick="window.close();" class="btn btn-outline-danger">Fechar</button>
+        <button type="button" class="btn btn-outline-primary" onclick="window.print();">Imprimir</button>
+    </div>
+
     <div style="page-break-after:avoid;font-size:1;margin:0;border:0;"><span style="visibility: hidden;">&nbsp;</span></div>
+
     <script language="javascript">
-        parent.btn_print_3.style.display = 'none'
+        window.onload = function(){
+            window.print();
+        }
+        //parent.btn_print_3.style.display = 'none'
     </script>
     <BR>
     <BR>
@@ -836,5 +792,5 @@
 @endsection
 
 @section('js')
-    @include('qlib.jslib')
+    {{-- @include('qlib.jslib') --}}
 @endsection

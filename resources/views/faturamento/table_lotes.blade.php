@@ -23,20 +23,21 @@
     </thead>
     <tbody>
         @if (isset($guias) && is_object($guias))
+
             @foreach ($guias as $kt=>$vt)
             @php
                 $qtdGuias = 0;
                 $vtGuias = 0;
                 $link = false;
                 if($vt['config']){
-                    $gArq = isset($vt['config']['geraGuia'])?$vt['config']['geraGuia']:false;
+                    $gArq = isset($vt['config'])?$vt['config']:false;
                     $link = isset($gArq['link'])?$gArq['link']:false;
                     $xml = App\Qlib\Qlib::lib_json_array($gArq['dadosXml']);
                     if(isset($xml['dados'])){
                         if(is_array($xml['dados'])){
                             foreach ($xml['dados'] as $kto => $vto) {
                                 $qtdGuias ++;
-                                $vtGuias += $vto['valorTotalGeral'];
+                                $vtGuias += @$vto['valorTotalGeral'];
                             }
                         }
                     }

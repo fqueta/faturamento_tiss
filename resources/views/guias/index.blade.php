@@ -42,13 +42,14 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                {{
+                {{-- {{
                     App\Qlib\Qlib::listaTabela([
                     'campos_tabela'=>$campos_tabela,
                     'config'=>$config,
                     'dados'=>$dados,
                     'routa'=>$routa,
-                ])}}
+                ])}} --}}
+                @include('guias.listaTabela')
             </div>
         </div>
         <div class="card-footer d-print-none">
@@ -89,6 +90,11 @@
             $('[data-del="true"]').on('click',function(e){
                 e.preventDefault();
                 confirmDelete($(this));
+            });
+            $('[btn-print]').on('click',function(e){
+                e.preventDefault();
+                var href = $(this).attr('href');
+                abrirjanelaPadrao(href);
             });
             $('[name="filter[cpf]"],[name="filter[cpf_conjuge]"]').inputmask('999.999.999-99');
             $(' [order="true"] ').on('click',function(){

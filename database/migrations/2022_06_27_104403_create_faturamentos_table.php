@@ -20,6 +20,9 @@ class CreateFaturamentosTable extends Migration
             $table->string('nome',300)->nullable();
             $table->integer('id_operadora')->nullable();
             $table->string('mes')->nullable();
+            $table->string('protocolo')->nullable();
+            $table->longText('guias')->nullable();
+            $table->enum('enviado',['n','s']);
             $table->integer('ano')->nullable();
             $table->string('type',300)->nullable();
             $table->enum('ativo',['s','n']);
