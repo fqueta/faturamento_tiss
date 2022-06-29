@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             escolaridadeSeeder::class,
             estadocivilSeeder::class,
-            //bairroSeeder::class,
+            OperadoraSeeder::class,
             //QuadraSeeder::class,
             StateSeeder::class,
             tagSeeder::class,

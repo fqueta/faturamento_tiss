@@ -120,6 +120,23 @@
                             @endphp
                         </span>
                     </div>
+                    <div class="col-md-12">
+                        <label for="n-paciente">Operadora:</label>
+                        <span>
+                            @php
+                                $operadora = 'NÃO INFORMADO';
+                                if(isset($val->config['op_id'])){
+                                    $operadora = App\Qlib\Qlib::buscaValorDb([
+                                        'tab'=>'operadoras',
+                                        'campo_bus'=>'id',
+                                        'valor'=>$val->config['op_id'],
+                                        'select'=>'nome',
+                                    ]);
+                                }
+                                echo $operadora;
+                            @endphp
+                        </span>
+                    </div>
                 </td>
             </tr>
             @endforeach

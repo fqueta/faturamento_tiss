@@ -769,7 +769,7 @@
     </style>
     <div class="col-md-12 d-print-none " style="position: fixed;bottom:3px;z-index:2">
         <button type="button" onclick="window.close();" class="btn btn-outline-danger">Fechar</button>
-        <button type="button" class="btn btn-outline-primary" onclick="window.print();">Imprimir</button>
+        <button type="button" class="btn btn-primary" onclick="window.print();">Imprimir</button>
     </div>
 
     <div style="page-break-after:avoid;font-size:1;margin:0;border:0;"><span style="visibility: hidden;">&nbsp;</span></div>

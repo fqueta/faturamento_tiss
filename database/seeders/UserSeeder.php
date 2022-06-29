@@ -25,8 +25,8 @@ class UserSeeder extends Seeder
                 'id_permission' => '1',
             ],
             [
-                'name' => 'Usuario de teste',
-                'email' => 'teste@databrasil.app.br',
+                'name' => 'Clinica Superar',
+                'email' => 'clinicasuperar3@gmail.com',
                 'password' => Hash::make('mudar123'),
                 'status' => 'actived',
                 'profile' => 'admin',
