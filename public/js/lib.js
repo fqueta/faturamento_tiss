@@ -2113,7 +2113,7 @@ function alimenta_procedimento(){
         }else{
             tec = document.getElementById('procedimento_alimentador_tec').value;
         }
-        //document.getElementById('qtde_procedimento').value = linha;
+        document.getElementById('qtde_procedimento').value = linha;
         ref_linha = 0;
         if(num_procedimento){
             ref_linha = num_procedimento;
@@ -2128,7 +2128,7 @@ function alimenta_procedimento(){
 
             }
         }
-        nova_linha = '<tr id="linha_procedimento_'+linha+'">';
+        nova_linha = '<tr id="tr_contador_linha_'+linha+'">';
         nova_linha += '<td class="celula_item" align="center" width="20" id="td_contador_linha_'+linha+'">'+ref_linha+'</td>';
         nova_linha += '<td class="celula_item" align="center" width="65">'+inpu+''+document.getElementById('procedimento_alimentador_data').value+'</td>';
         nova_linha += '<td class="celula_item" align="center" width="65">'+hora1+'</td>';
@@ -2232,7 +2232,6 @@ function procedimento_remove_item(linha){
         //}
     }
     linha = document.getElementById('qtde_procedimento').value;
-
         total_procedimento = 0;
         for (var i=1;i<=linha;i++){
             //if (document.getElementById('procedimento_valorTotal_'+i).value!=''){
@@ -2295,7 +2294,7 @@ function alimenta_executante(){
             }
         }
 
-        nova_linha = '<table id="linha_executante_'+linha+'" width="100%" style="display:block"><tr>';
+        nova_linha = '<tr id="executor_linha_'+linha+'">';
         nova_linha += '<td class="celula_item" align="center" width="50">'+inpu+document.getElementById('executante_alimentador_seq').value+'</td>';
         nova_linha += '<td class="celula_item" align="center" width="70">'+document.getElementById('executante_alimentador_grau_part').value+'</td>';
         nova_linha += '<td class="celula_item" width="370">'+var_exec_nome+'</td>';
@@ -2305,7 +2304,7 @@ function alimenta_executante(){
         nova_linha += '<td class="celula_item" align="center" width="30">'+document.getElementById('executante_alimentador_conselho_uf').value+'</td>';
         nova_linha += '<td class="celula_item" align="center" width="75">'+document.getElementById('executante_alimentador_cbo').value+'</td>';
         nova_linha += '<td class="celula_item" align="center" width="30"><button type="button" class="btn btn-outline-danger" onclick="executante_remove_item(\''+linha+'\')"><i class="fa fa-times"></i></button></td>';
-        nova_linha += '</tr></table>';
+        nova_linha += '</tr>';
         document.getElementById('qtde_executante').value = linha;
         document.getElementById('demo_executantes').innerHTML+=nova_linha;
         document.getElementById('executante_alimentador_ex_id').value='';
