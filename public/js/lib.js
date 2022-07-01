@@ -2092,6 +2092,9 @@ function alimenta_procedimento(){
         if(!linha || typeof linha=='NaN'){
             linha = num_procedimento;
         }
+        if(linha){
+            linha = verificaId(linha,'tr_contador_linha_');
+        }
         linha += 1;
         if (document.getElementById('procedimento_alimentador_hora1').value==''){
             hora1 = '&nbsp;'
@@ -2116,7 +2119,7 @@ function alimenta_procedimento(){
         document.getElementById('qtde_procedimento').value = linha;
         ref_linha = 0;
         if(num_procedimento){
-            ref_linha = num_procedimento;
+            ref_linha = num_procedimento+1;
         }
         //nova_linha = '<table id="linha_procedimento_'+linha+'" width="100%" style="display:block"><tr>';
         var inpu = '<input type="hidden" name="config[procedimento]['+linha+'][item]" value="'+linha+'"/>';
@@ -2129,7 +2132,7 @@ function alimenta_procedimento(){
             }
         }
         nova_linha = '<tr id="tr_contador_linha_'+linha+'">';
-        nova_linha += '<td class="celula_item" align="center" width="20" id="td_contador_linha_'+linha+'">'+ref_linha+'</td>';
+        nova_linha += '<td class="celula_item" align="center" width="20">'+ref_linha+'</td>';
         nova_linha += '<td class="celula_item" align="center" width="65">'+inpu+''+document.getElementById('procedimento_alimentador_data').value+'</td>';
         nova_linha += '<td class="celula_item" align="center" width="65">'+hora1+'</td>';
         nova_linha += '<td class="celula_item" align="center" width="60">'+hora2+'</td>';
@@ -2220,6 +2223,17 @@ function calcula_total_geral(){
     }
     document.getElementById('total_geral').value = var_total_geral.toFixed(2);
 
+}
+function verificaId(id,compleId) {
+    if(typeof compleId =='undefined'){
+        compleId = 'tr_contador_linha_';
+    }
+	var ex = $('#'+compleId+id).html();
+	if(typeof ex !='undefined'){
+		id=id+1;
+		id = verificaId(id,compleId);
+	}
+	return id;
 }
 function procedimento_remove_item(linha){
     document.getElementById('tr_contador_linha_'+linha).remove();

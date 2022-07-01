@@ -575,7 +575,9 @@ class GuiasController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'nome' => ['required','string','unique:guias'],
+            'numero_guia' => ['required','string','unique:guias'],
+        ],[
+            'numero_guia.required' => ['Numero da guia já cadastrado']
         ]);
         $dados = $request->all();
         $ajax = isset($dados['ajax'])?$dados['ajax']:'n';
