@@ -529,9 +529,10 @@
                                 $tipo=2;
                             }
                         }
+                        //dd($dados['config']['procedimento']);
                     @endphp
-                    @for ($i=1;$i<=$linhasProced;$i++)
-                        @if($tipo==1)
+                    @if($tipo==1)
+                        @for ($i=1;$i<=$linhasProced;$i++)
                             @if(isset($dados['config']['procedimento'][$i]['item']) && !empty($dados['config']['procedimento'][$i]['descricao']))
                             <tr>
                                 <td class="celula_item" align="center" width="20">{{$i}}</td>
@@ -567,29 +568,33 @@
                             </tr>
 
                             @endif
-                        @elseif ($tipo==2)
-                            @if(!empty($dados['config']['procedimento'][$i]['descricao']))
-                            @php
-                                $lin++;
-                            @endphp
-                            <tr>
-                                <td class="celula_item" align="center" width="20">{{$lin}}</td>
-                                <td class="celula_item" align="center" width="65">{{App\Qlib\Qlib::dataExibe(@$dados['config']['procedimento'][$i]['data'])}}</td>
-                                <td class="celula_item" align="center" width="65">{{@$dados['config']['procedimento'][$i]['hora1']}}</td>
-                                <td class="celula_item" align="center" width="60">{{@$dados['config']['procedimento'][$i]['hora2']}}</td>
-                                <td class="celula_item" align="center" width="40">{{@$dados['config']['procedimento'][$i]['tabela']}}</td>
-                                <td class="celula_item" align="center" width="70">{{@$dados['config']['procedimento'][$i]['codigo']}}</td>
-                                <td class="celula_item" align="left">{{@$dados['config']['procedimento'][$i]['descricao']}}</td>
-                                <td class="celula_item" align="center" width="40">{{@$dados['config']['procedimento'][$i]['quantidade']}}</td>
-                                <td class="celula_item" align="center" width="35">{{@$dados['config']['procedimento'][$i]['via']}}</td>
-                                <td class="celula_item" align="center" width="35">{{@$dados['config']['procedimento'][$i]['tec']}}</td>
-                                <td class="celula_item" align="center" width="50">{{@$dados['config']['procedimento'][$i]['fator']}}</td>
-                                <td class="celula_item" align="center" width="80">{{@$dados['config']['procedimento'][$i]['valor_unitario']}}</td>
-                                <td class="celula_item" align="center" width="60">{{@$dados['config']['procedimento'][$i]['valor_total']}}</td>
-                            </tr>
+                        @endfor
+                    @elseif ($tipo==2)
+                        @foreach ($dados['config']['procedimento'] as $i=>$val)
+
+                            @if(!empty($val['descricao']))
+                                @php
+                                    $lin++;
+                                @endphp
+                                <tr>
+                                    <td class="celula_item" align="center" width="20">{{$lin}}</td>
+                                    <td class="celula_item" align="center" width="65">{{App\Qlib\Qlib::dataExibe(@$val['data'])}}</td>
+                                    <td class="celula_item" align="center" width="65">{{@$val['hora1']}}</td>
+                                    <td class="celula_item" align="center" width="60">{{@$val['hora2']}}</td>
+                                    <td class="celula_item" align="center" width="40">{{@$val['tabela']}}</td>
+                                    <td class="celula_item" align="center" width="70">{{@$val['codigo']}}</td>
+                                    <td class="celula_item" align="left">{{@$val['descricao']}}</td>
+                                    <td class="celula_item" align="center" width="40">{{@$val['quantidade']}}</td>
+                                    <td class="celula_item" align="center" width="35">{{@$val['via']}}</td>
+                                    <td class="celula_item" align="center" width="35">{{@$val['tec']}}</td>
+                                    <td class="celula_item" align="center" width="50">{{@$val['fator']}}</td>
+                                    <td class="celula_item" align="center" width="80">{{@$val['valor_unitario']}}</td>
+                                    <td class="celula_item" align="center" width="60">{{@$val['valor_total']}}</td>
+                                </tr>
                             @endif
-                        @endif
-                    @endfor
+                        @endforeach
+                    @endif
+
                 </table>
             </td>
         </tr>
