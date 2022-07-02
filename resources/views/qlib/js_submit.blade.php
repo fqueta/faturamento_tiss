@@ -6,9 +6,8 @@
                 // maybe disabling submit button
                 // then:
                 //sub(form);
-                $(form).submit(function(e){
-                    e.preventDefault();
-                    submitFormulario($("#{{$config['frm_id']}}"),function(res){
+                //alert('exetua');
+                submitFormulario($("#{{$config['frm_id']}}"),function(res){
 
                     let btn_press = $('#btn-press-salv').html();
                     if(res.exec){
@@ -52,8 +51,13 @@
                         alert('erros');
                         console.log(res.errors);
                     }
-                    });
                 });
+                /*
+                $(form).submit(function(e){
+                    e.preventDefault();
+
+                });
+                */
 
             }
         });
