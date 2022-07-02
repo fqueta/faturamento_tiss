@@ -844,6 +844,13 @@ function getAjax(config,funCall,funError){
             lib_funError(res);
         }
     }
+    if(config.type=='POST'){
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    }
     $.ajax({
         type: config.type,
         url: config.url,
@@ -2429,3 +2436,12 @@ function print_guia(){
         win.postMessage(mensagem,'https://sft.maisaqui.com.br')
     }
 }
+function download(url) {
+    const a = document.createElement('a')
+    a.href = url
+    a.download = url.split('/').pop()
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+}
+

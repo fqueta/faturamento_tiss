@@ -22,7 +22,7 @@ class FaturamentosController extends Controller
     public function __construct(User $user)
     {
         $this->middleware('auth');
-        $this->user = $user;
+        $this->user = Auth::user();
         $this->routa = 'faturamentos';
         $this->label = 'Faturamento';
         $this->type = isset($_GET['filter']['type'])?$_GET['filter']['type']:false;
@@ -350,23 +350,36 @@ class FaturamentosController extends Controller
         $ret['exec'] = false;
         $ret['mes'] = 'Erro ao Gerar lote';
         if($ids){
+            $user = Auth::user();
             $arr_id = explode('_',$ids);
             if(is_array($arr_id)){
                 $ac = new GeradorXmlController();
                 $mes = isset($_POST['mes'])?$_POST['mes']:date('m');
                 $ano = isset($_POST['ano'])?$_POST['ano']:date('Y');
                 $token = isset($_POST['token'])?$_POST['token']:uniqid();
+                $acao = isset($_POST['acao'])?$_POST['acao']:'cad';
                 $type = isset($_POST['type'])?$_POST['type']:'internaçao';
-                $nome = isset($_POST['nome'])?$_POST['nome']:'Lote salvo por '.$this->user->nome.' em '.date('d/m/Y');
-                $salvarLote = Faturamento::create([
-                    'mes'=>$mes,
-                    'ano'=>$ano,
-                    'token'=>$token,
-                    'nome'=>$nome,
-                    'type'=>$type,
-                ]);
-                if(isset($salvarLote->id)){
-                    $geraGuia = $ac->guiaResumoInternacao($arr_id,$salvarLote->id);
+                $id_lote = isset($_POST['id_lote'])?$_POST['id_lote']:false;
+                $nome = isset($_POST['nome'])?$_POST['nome']:'Lote salvo por '.$user->name.' em '.date('d/m/Y');
+                if($acao=='alt'){
+                    if($id_lote){
+                        //$dadosFatura = Faturamento::Find($id_lote);
+                        //if(!$dadosFatura);
+                    }else{
+                        return $ret;
+                    }
+                }elseif($acao=='cad'){
+                    $salvarLote = Faturamento::create([
+                        'mes'=>$mes,
+                        'ano'=>$ano,
+                        'token'=>$token,
+                        'nome'=>$nome,
+                        'type'=>$type,
+                    ]);
+                    $id_lote = $salvarLote->id;
+                }
+                if(isset($id_lote)){
+                    $geraGuia = $ac->guiaResumoInternacao($arr_id,$id_lote);
                     $ret['geraGuia'] = $geraGuia;
                     $ret['ids'] = $ids;
                     if($geraGuia['exec']){
@@ -376,7 +389,7 @@ class FaturamentosController extends Controller
                                 'lote'=>'s',
                             ]);
                         }
-                        $alte_lote = Faturamento::where('id',$salvarLote->id)->update([
+                        $alte_lote = Faturamento::where('id',$id_lote)->update([
                             'config'=>Qlib::lib_array_json($geraGuia),
                             'id_operadora'=>@$geraGuia['id_operadora'],
                             'guias'=>@$geraGuia['guias'],

@@ -62,7 +62,8 @@
                     {{$vt['mes']}}/{{$vt['ano']}}
                 </td>
                 <td>
-                    <a href="{{@$link}}" target="_blank" class="btn btn-secondary"  rel="noopener noreferrer" download="">{{__('Baixar XML')}}</a>
+                    {{-- <a href="{{@$link}}" target="_blank" class="btn btn-secondary" download="" rel="noopener noreferrer">{{__('Baixar XML')}}</a> --}}
+                    <button type="button"  onclick="atualizarFechamento('{{$vt['id']}}','{{implode('_',App\Qlib\Qlib::lib_json_array($vt['guias']))}}')" class="btn btn-secondary">{{__('Baixar XML')}}</button>
                 </td>
             </tr>
             @endforeach

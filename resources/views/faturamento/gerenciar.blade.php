@@ -213,6 +213,31 @@
                 }
             });
         }
+        function atualizarFechamento(id_lote,ids){
+            if(typeof id_lote == undefined){
+                id_lote==null;
+            }
+            if(typeof ids == undefined){
+                var msg = '<div class="row"><div id="modal-m" class="col-md-12 text-center"><p>Guias Inválidas entre em contato com o suporte</p></div></div>';
+                alerta(msg,'modal-mens','Atenção','',true);
+                return;
+            }
+            //var ids = verificaCheckbox('.table .checkbox:checked');
+            var d = 'id_lote='+id_lote+'&acao=alt';
+            getAjax({
+                url:"/faturamentos/gerar-lote/"+ids,
+                data: d,
+                type: 'POST'
+            },function(res){
+                $('#preload').fadeOut("fast");
+                var btna = '';
+                //var msg = '<div class="row"><div id="modal-m" class="col-md-12 text-center"><p>'+res.mes+'</p></div></div>';
+                //alerta(msg,'modal-mens','Alerta','',true);
+                if(res.exec && res.geraGuia.link){
+                    download(res.geraGuia.link);
+                }
+            });
+        }
         $(function(){
             $('[exportar-filter]').on('click',function(e){
                 e.preventDefault();

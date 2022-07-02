@@ -233,15 +233,15 @@ class GeradorXmlController extends Controller
                             $dadosAutorizacao = $xml->createElement("ans:dadosAutorizacao");
                             $guiaResumoInternacao->appendChild($dadosAutorizacao);
 
+                            $numeroGuiaOperadora = $xml->createElement("ans:numeroGuiaOperadora", $d_xml['numeroGuiaOperadora']); //numeroGuiaOperadora
+                            $dadosAutorizacao->appendChild($numeroGuiaOperadora);
+                            $CalcHash .= $d_xml['numeroGuiaOperadora'];
 
 
                             $dataAutorizacao = $xml->createElement("ans:dataAutorizacao", $d_xml['dataAutorizacao']); //dataAutorizacao
                             $dadosAutorizacao->appendChild($dataAutorizacao);
                             $CalcHash .= $d_xml['dataAutorizacao'];
 
-                            $numeroGuiaOperadora = $xml->createElement("ans:numeroGuiaOperadora", $d_xml['numeroGuiaOperadora']); //numeroGuiaOperadora
-                            $dadosAutorizacao->appendChild($numeroGuiaOperadora);
-                            $CalcHash .= $d_xml['numeroGuiaOperadora'];
 
 
                             $senha = $xml->createElement("ans:senha", $d_xml['senha']); //senha
@@ -269,10 +269,10 @@ class GeradorXmlController extends Controller
                             $dadosBeneficiario->appendChild($atendimentoRN);
                             $CalcHash .= $d_xml['atendimentoRN'];
 
-
-                            $nomeBeneficiario = $xml->createElement("ans:nomeBeneficiario", $d_xml['nomeBeneficiario']); //nomeBeneficiario
+                            $nomeB = Qlib::sanitizeString(@$d_xml['nomeBeneficiario']);
+                            $nomeBeneficiario = $xml->createElement("ans:nomeBeneficiario", $nomeB); //nomeBeneficiario
                             $dadosBeneficiario->appendChild($nomeBeneficiario);
-                            $CalcHash .= $d_xml['nomeBeneficiario'];
+                            $CalcHash .= $nomeB;
 
                             //contratadoExecutante
                             $contratadoExecutante = $xml->createElement("ans:contratadoExecutante");
@@ -364,16 +364,16 @@ class GeradorXmlController extends Controller
                                             $CalcHash .= trim(@$v['data']);
                                             if(!empty($v['hora1'])){
                                                 $v['hora1'] .= ':00';
+                                                $horaInicial = $xml->createElement("ans:horaInicial",@$v['hora1']); //horaInicial
+                                                $procedimentoExecutado->appendChild($horaInicial);
+                                                $CalcHash .= trim(@$v['hora1']);
                                             }
                                             if(!empty($v['hora2'])){
                                                 $v['hora2'] .= ':00';
+                                                $horaFinal = $xml->createElement("ans:horaFinal",@$v['hora2']); //horaFinal
+                                                $procedimentoExecutado->appendChild($horaFinal);
+                                                $CalcHash .= trim(@$v['hora2']);
                                             }
-                                            $horaInicial = $xml->createElement("ans:horaInicial",@$v['hora1']); //horaInicial
-                                            $procedimentoExecutado->appendChild($horaInicial);
-                                            $CalcHash .= trim(@$v['hora1']);
-                                            $horaFinal = $xml->createElement("ans:horaFinal",@$v['hora2']); //horaFinal
-                                            $procedimentoExecutado->appendChild($horaFinal);
-                                            $CalcHash .= trim(@$v['hora2']);
 
                                             $procedimento = $xml->createElement("ans:procedimento"); //procedimento
                                             $procedimentoExecutado->appendChild($procedimento);
@@ -394,14 +394,16 @@ class GeradorXmlController extends Controller
                                             $quantidadeExecutada = $xml->createElement("ans:quantidadeExecutada",@$v['quantidade']); //quantidadeExecutada
                                             $procedimentoExecutado->appendChild($quantidadeExecutada);
                                             $CalcHash .= trim(@$v['quantidade']);
-                                            $viaAcesso = $xml->createElement("ans:viaAcesso",@$v['via']); //viaAcesso
-                                            $procedimentoExecutado->appendChild($viaAcesso);
-                                            $CalcHash .= trim(@$v['via']);
-
-                                            $tecnicaUtilizada = $xml->createElement("ans:tecnicaUtilizada",@$v['tec']); //tecnicaUtilizada
-                                            $procedimentoExecutado->appendChild($tecnicaUtilizada);
-                                            $CalcHash .= trim(@$v['tec']);
-
+                                            if(!empty($v['via'])){
+                                                $viaAcesso = $xml->createElement("ans:viaAcesso",@$v['via']); //viaAcesso
+                                                $procedimentoExecutado->appendChild($viaAcesso);
+                                                $CalcHash .= trim(@$v['via']);
+                                            }
+                                            if(!empty($v['via'])){
+                                                $tecnicaUtilizada = $xml->createElement("ans:tecnicaUtilizada",@$v['tec']); //tecnicaUtilizada
+                                                $procedimentoExecutado->appendChild($tecnicaUtilizada);
+                                                $CalcHash .= trim(@$v['tec']);
+                                            }
                                             $reducaoAcrescimo = $xml->createElement("ans:reducaoAcrescimo",@$v['fator']); //reducaoAcrescimo
                                             $procedimentoExecutado->appendChild($reducaoAcrescimo);
                                             $CalcHash .= trim(@$v['fator']);

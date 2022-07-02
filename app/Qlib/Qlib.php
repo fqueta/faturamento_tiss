@@ -786,13 +786,14 @@ class Qlib
         return preg_replace(array("/(á|à|ã|â|ä)/","/(Á|À|Ã|Â|Ä)/","/(é|è|ê|ë)/","/(É|È|Ê|Ë)/","/(í|ì|î|ï)/","/(Í|Ì|Î|Ï)/","/(ó|ò|õ|ô|ö)/","/(Ó|Ò|Õ|Ô|Ö)/","/(ú|ù|û|ü)/","/(Ú|Ù|Û|Ü)/","/(ñ)/","/(Ñ)/"),explode(" ","a A e E i I o O u U n N"),$string);
     }
     static function sanitizeString($str) {
-        $str = preg_replace('/[áàãâä]/ui', 'a', $str);
-        $str = preg_replace('/[éèêë]/ui', 'e', $str);
-        $str = preg_replace('/[íìîï]/ui', 'i', $str);
-        $str = preg_replace('/[óòõôö]/ui', 'o', $str);
-        $str = preg_replace('/[úùûü]/ui', 'u', $str);
+        $str = preg_replace('/[áàãâä]/ui', 'A', $str);
+        $str = preg_replace('/[éèêë]/ui', 'E', $str);
+        $str = preg_replace('/[íìîï]/ui', 'I', $str);
+        $str = preg_replace('/[óòõôö]/ui', 'O', $str);
+        $str = preg_replace('/[úùûü]/ui', 'U', $str);
         $str = preg_replace('/[Ç]/ui', 'C', $str);
         $str = preg_replace('/[ç]/ui', 'c', $str);
+
         // $str = preg_replace('/[,(),;:|!"#$%&/=?~^><ªº-]/', '_', $str);
         //$str = preg_replace('/[^a-z0-9]/i', '_', $str);
         //$str = preg_replace('/_+/', '_', $str); // ideia do Bacco :)
