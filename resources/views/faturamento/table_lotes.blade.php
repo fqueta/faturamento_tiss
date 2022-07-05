@@ -37,7 +37,7 @@
                         if(is_array($xml['dados'])){
                             foreach ($xml['dados'] as $kto => $vto) {
                                 $qtdGuias ++;
-                                $vtGuias += @$vto['valorTotalGeral'];
+                                $vtGuias += @(double)$vto['valorTotalGeral'];
                             }
                         }
                     }

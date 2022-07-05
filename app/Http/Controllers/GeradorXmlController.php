@@ -434,10 +434,10 @@ class GeradorXmlController extends Controller
                                 //$valorProcedimentos = $xml->createElement("ans:valorProcedimentos",$d_xml['valorProcedimentos']); //valorProcedimentos
                                 //$valorTotal->appendChild($valorProcedimentos);
                                 //$CalcHash .= $d_xml['valorProcedimentos'];
-
-                                $valorProcedimentos = $xml->createElement("ans:valorProcedimentos",$d_xml['valorProcedimentos']); //valorProcedimentos
+                                $valorPr = str_replace(',','.',$d_xml['valorProcedimentos']);
+                                $valorProcedimentos = $xml->createElement("ans:valorProcedimentos",$valorPr); //valorProcedimentos
                                 $valorTotal->appendChild($valorProcedimentos);
-                                $CalcHash .= $d_xml['valorProcedimentos'];
+                                $CalcHash .= $valorPr;
                                 if($d_xml['valorDiarias'] == '0.00'){
                                     $d_xml['valorDiarias']=0;
                                 }
@@ -466,10 +466,11 @@ class GeradorXmlController extends Controller
                                     $d_xml['valorMedicamentos']=0;
                                 }
 
+                                $valorMed = str_replace(',','.',$d_xml['valorMedicamentos']);
 
-                                $valorMedicamentos = $xml->createElement("ans:valorMedicamentos",$d_xml['valorMedicamentos']); //valorMedicamentos
+                                $valorMedicamentos = $xml->createElement("ans:valorMedicamentos",$valorMed); //valorMedicamentos
                                 $valorTotal->appendChild($valorMedicamentos);
-                                $CalcHash .= $d_xml['valorMedicamentos'];
+                                $CalcHash .= $valorMed;
 
                                 if($d_xml['valorOPME'] == '0.00'){
                                     $d_xml['valorOPME']=0;
@@ -484,14 +485,14 @@ class GeradorXmlController extends Controller
                                     $d_xml['valorGasesMedicinais']=0;
                                 }
 
-
-                                $valorGasesMedicinais = $xml->createElement("ans:valorGasesMedicinais",$d_xml['valorGasesMedicinais']); //valorGasesMedicinais
+                                $valorGaMe = str_replace(',','.',$d_xml['valorGasesMedicinais']);
+                                $valorGasesMedicinais = $xml->createElement("ans:valorGasesMedicinais",$valorGaMe); //valorGasesMedicinais
                                 $valorTotal->appendChild($valorGasesMedicinais);
-                                $CalcHash .= $d_xml['valorGasesMedicinais'];
-
-                                $valorTotalGeral = $xml->createElement("ans:valorTotalGeral",$d_xml['valorTotalGeral']); //valorTotalGeral
+                                $CalcHash .= $valorGaMe;
+                                $valorTotGer = str_replace(',','.',$d_xml['valorTotalGeral']);
+                                $valorTotalGeral = $xml->createElement("ans:valorTotalGeral",$valorTotGer); //valorTotalGeral
                                 $valorTotal->appendChild($valorTotalGeral);
-                                $CalcHash .= $d_xml['valorTotalGeral'];
+                                $CalcHash .= $valorTotGer;
 
                     }
                             /*
