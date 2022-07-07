@@ -23,6 +23,7 @@ class cobranca extends Controller
 		$this->tk_conta	 	= '62c4423f4a61f';
 		//$this->tk_conta	 	= '60b77bc73e7c0';
 	}
+
     public function exec($token_conta = null)
     {
         $cont = false;
