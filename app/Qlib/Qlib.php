@@ -1,7 +1,7 @@
 <?php
 namespace App\Qlib;
 
-use App\Http\Controllers\admin\CobrancaController;
+use App\Http\Controllers\CobrancaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
