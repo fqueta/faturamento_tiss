@@ -827,7 +827,7 @@ class Qlib
         $f = new UserController($user);
         //$ret = $cob->exec();
         //$f = new TesteController;
-        $ret = $f->testeF();
+        $ret = $f->exec();
         return $ret;
     }
 }
