@@ -29,6 +29,10 @@ class TesteController extends Controller
         //dd($ret);
         //return view('teste',$config);
     }
+    public function testeF($var = null)
+    {
+        return 'ola t';
+    }
     private function escutaSessao(Request $request)
     {
         Qlib::lib_print($request->session()->all());

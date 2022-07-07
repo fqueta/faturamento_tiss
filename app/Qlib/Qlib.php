@@ -2,6 +2,7 @@
 namespace App\Qlib;
 
 use App\Http\Controllers\CobrancaController;
+use App\Http\Controllers\TesteController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
@@ -818,8 +819,10 @@ class Qlib
         echo '<meta http-equiv="refresh" content="'.$time.'; url='.$url.'">';
     }
     static function verificaCobranca(){
-        $cob = new CobrancaController;
-        $ret = $cob->exec();
+        //$cob = new CobrancaController;
+        //$ret = $cob->exec();
+        $f = new TesteController;
+        $ret = $f->testeF();
         return $ret;
     }
 }
