@@ -2151,7 +2151,7 @@ function alimenta_procedimento(ac,linha){
             if(num_procedimento){
                 ref_linha = num_procedimento+1;
             }
-            nova_linha = '<tr id="tr_contador_linha_'+linha+'">';
+            nova_linha = '<tr id="tr_contador_linha_'+linha+'" style="cursor: pointer" title="DOIS CLIQUES PARA EDITAR" ondblclick="editarProcedimento(\''+linha+'\')" onmouseover="btnEdit(this)" onmouseout="btnEdit(this,\'oc\')">';
         }else if(ac=='alt'){
             nova_linha = '';
             ref_linha = $('#tr_contador_linha_'+linha+' td:first').html();
