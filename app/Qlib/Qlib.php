@@ -1,6 +1,7 @@
 <?php
 namespace App\Qlib;
 
+use App\Http\Controllers\cobranca;
 use App\Http\Controllers\CobrancaController;
 use App\Http\Controllers\TesteController;
 use Illuminate\Http\Request;
@@ -820,9 +821,10 @@ class Qlib
     }
     static function verificaCobranca(){
         //$cob = new CobrancaController;
-        //$ret = $cob->exec();
-        $f = new TesteController;
-        $ret = $f->testeF();
+        $cob = new cobranca;
+        $ret = $cob->exec();
+        //$f = new TesteController;
+        //$ret = $f->testeF();
         return $ret;
     }
 }
