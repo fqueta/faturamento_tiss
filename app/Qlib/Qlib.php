@@ -1,5 +1,7 @@
 <?php
 namespace App\Qlib;
+
+use App\Http\Controllers\admin\CobrancaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
@@ -814,5 +816,10 @@ class Qlib
     }
     static function redirect($url,$time=10){
         echo '<meta http-equiv="refresh" content="'.$time.'; url='.$url.'">';
+    }
+    static function verificaCobranca(){
+        $cob = new CobrancaController;
+        $ret = $cob->exec();
+        return $ret;
     }
 }

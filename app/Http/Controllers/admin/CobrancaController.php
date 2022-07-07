@@ -27,7 +27,7 @@ class CobrancaController extends Controller
 	}
     public function exec($token_conta = null)
     {
-        $ret = false;
+        $cont = false;
         //if($token_conta){
             $verifica_fatura = $this->verifica_faturas(array('token_conta'=>$token_conta));
             if(isset($_GET['teste'])){
@@ -36,7 +36,7 @@ class CobrancaController extends Controller
             if($verifica_fatura['acao']=='alertar'){
                 if(Qlib::isAdmin()){
                     $cont = @$verifica_fatura['mens'];
-                    echo $cont;
+                    //echo $cont;
                 }
             }elseif($verifica_fatura['acao']=='suspender' || $verifica_fatura['acao']=='desativar'){
                 //Não terá acesso ao admin somente ao boleto e as faturas e o site estará desativado tbem
@@ -50,10 +50,11 @@ class CobrancaController extends Controller
                     Qlib::redirect('/'.$pagSusped,0);
                     die();
                 }
-                echo $cont;
+                //echo $cont;
 
             }
         //}
+        return $cont;
     }
 	public function clientes($config=false){
 		$ret = false;

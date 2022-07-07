@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\admin\CobrancaController;
 use App\Models\User;
 use App\Models\relatorio;
 use App\Models\Assistencia;
