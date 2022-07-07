@@ -2183,7 +2183,6 @@ function alimenta_procedimento(ac,linha){
             for (var i=1;i<=linha;i++){
                 try {
                     var sel = '[name="config[procedimento]['+i+'][valor_total]"]';
-                    alert(sel);
                     var valT = document.querySelector(sel).value;
                     if (valT!=''){
                         total_procedimento += parseFloat(valT);
