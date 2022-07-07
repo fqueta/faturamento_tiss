@@ -346,4 +346,8 @@ class UserController extends Controller
         }
         return $ret;
     }
+    public function testeF($var = null)
+    {
+        return 'ola user';
+    }
 }
