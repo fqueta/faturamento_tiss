@@ -30,6 +30,12 @@ class UserController extends Controller
         $this->label = 'Usuários';
         $this->view = 'padrao';
     }
+    public function credenciais(){
+		$this->access_token = 'NWM5OGMyZGRiOTAzMS41ZmQwZGQyNTUzZGI0LjQx';
+		$this->url 		 	= 'https://api.ctloja.com.br/v1';
+		$this->tk_conta	 	= '62c4423f4a61f';
+		//$this->tk_conta	 	= '60b77bc73e7c0';
+	}
     public function queryUsers($get=false,$config=false)
     {
         $ret = false;
@@ -350,4 +356,59 @@ class UserController extends Controller
     {
         return 'ola user';
     }
+    public function verifica_faturas($config=false,$cache=true){
+		$ret['exec'] = false;
+		$ret['cache'] = false;
+		//exemplo de uso
+		/*
+		$this = new apictloja;
+		$ret = $this->verifica_faturas(array('token_conta'=>''));
+		Qlib::lib_print($ret);
+		*/
+		$token = isset($config['token_conta'])?$config['token_conta']:$this->tk_conta;
+
+		if($token){
+            $ver_sess = session('verifica_faturas');
+            //Qlib::lib_print($ver_sess);
+
+			if(isset($ver_sess['exec'])&&$ver_sess['exec'] && $cache){
+				$arr_response = $ver_sess;
+				$ret['cache'] = true;
+			}else{
+
+				$curl = curl_init();
+
+				curl_setopt_array($curl, array(
+				  CURLOPT_URL => $this->url.'/verifica_faturas/'.$token,
+				  CURLOPT_RETURNTRANSFER => true,
+				  CURLOPT_ENCODING => '',
+				  CURLOPT_MAXREDIRS => 10,
+				  CURLOPT_TIMEOUT => 0,
+				  CURLOPT_FOLLOWLOCATION => true,
+				  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+				  CURLOPT_CUSTOMREQUEST => 'GET',
+				  CURLOPT_HTTPHEADER => array(
+					'Access-Token: '.$this->access_token
+				  ),
+				));
+				$response = curl_exec($curl);
+				curl_close($curl);
+				$arr_response = json_decode($response,true);
+				//$ret['arr_response'] = $arr_response;
+			}
+			if(isset($arr_response['exec'])){
+				$ret['exec'] = $arr_response['exec'];
+				$ret['acao'] = $arr_response['acao'];
+                session(['verifica_faturas'=>$arr_response]);
+				//$ver_sess=$arr_response;
+			}
+			if(isset($arr_response['mens'])){
+				$ret['mens'] = $arr_response['mens'];
+			}
+			$ret['token'] = $token;
+		}else{
+			$ret['mens'] = Qlib::formatMensagemInfo('Configuração ou token inválido','danger');
+		}
+        return $ret;
+	}
 }
