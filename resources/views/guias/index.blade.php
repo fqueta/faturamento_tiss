@@ -8,6 +8,7 @@
 @section('content')
   <!--<p>Selecione os publicadores do seu familia para enviar o relatorio para o secretário</p>-->
   <div class="row">
+    @include('admin.partes.header')
       @include('qlib.config_exibe')
       <div class="col-md-12 mens">
     </div>

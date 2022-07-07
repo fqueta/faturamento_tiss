@@ -30,6 +30,9 @@
             var funCall = function(res){};
             initSelector($(this));
         });
+        $('[fachar-alerta-fatura="true"]').on('click',function(){
+            fecharAlertaFatura('{{route('alerta.cobranca.fechar')}}');
+        });
 
         $('.select2').select2();
         $(document).on('select2:open', () => {

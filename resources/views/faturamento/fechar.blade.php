@@ -6,7 +6,7 @@
     <h3>{{$titulo}}</h3>
 @stop
 @section('content')
-  <!--<p>Selecione os publicadores do seu familia para enviar o relatorio para o secretário</p>-->
+    @include('admin.partes.header')
   <style media="print">
       #DataTables_Table_0_wrapper .row:first-child{
           display: none;

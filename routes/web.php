@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\admin\CobrancaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\admin\UserPermissions;
@@ -84,6 +85,10 @@ Route::prefix('faturamentos')->group(function(){
     Route::post('/gerar-lote/{id}',[FaturamentosController::class,'gerarLote'])->name('faturamento.gerar.lote');
     Route::post('/fechar-lote/{id}',[FaturamentosController::class,'salvarLote'])->name('faturamento.salvar.lote');
     Route::get('/gerenciar-lote',[FaturamentosController::class,'gerenciarLote'])->name('faturamento.gerenciar');
+});
+Route::get('/suspenso',[CobrancaController::class,'suspenso'])->name('cobranca.suspenso');
+Route::prefix('cobranca')->group(function(){
+    Route::get('/fechar',[CobrancaController::class,'pararAlertaFaturaVencida'])->name('alerta.cobranca.fechar');
 });
 /*
 Route::prefix('familias')->group(function(){

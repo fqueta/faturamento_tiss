@@ -799,4 +799,20 @@ class Qlib
         //$str = preg_replace('/_+/', '_', $str); // ideia do Bacco :)
         return $str;
     }
+    /**
+     * Verifica se o usuario logado tem permissao de admin ou alguma expessífica
+     */
+    static function isAdmin($perm_admin = 2)
+    {
+        $user = Auth::user();
+
+        if($user->id_permission<=$perm_admin){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    static function redirect($url,$time=10){
+        echo '<meta http-equiv="refresh" content="'.$time.'; url='.$url.'">';
+    }
 }

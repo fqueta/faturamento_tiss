@@ -52,8 +52,16 @@
                                             }
                                         }
                                     @endphp
-                                    <tr id="tr_contador_linha_{{@$vt['item']}}">
-                                        <td class="celula_item" align="center" width="20" >{{@$i}}</td>
+                                    <tr id="tr_contador_linha_{{@$vt['item']}}" style="cursor: pointer" title="DOIS CLIQUES PARA EDITAR" ondblclick="editarProcedimento('{{@$vt['item']}}')" onmouseover="btnEdit(this)" onmouseout="btnEdit(this,'oc')">
+                                        <td class="celula_item" align="center" width="20" >
+                                            {{@$i}}
+                                            <span class="btnEditar" style="position: absolute;left: 5px;display:none">
+                                                <button title="Clique para editar" type="button" class="btn btn-link" onclick="editarProcedimento('{{@$vt['item']}}')">
+                                                    {{-- <i class="fas fa-pen" aria-hidden="true"></i> --}}
+                                                    Editar
+                                                </button>
+                                            </span>
+                                        </td>
                                         <td class="celula_item" align="center" width="65">{!!$inpu!!}{{App\Qlib\Qlib::dataExibe(@$vt['data'])}}</td>
                                         <td class="celula_item" align="center" width="65">{{@$vt['hora1']}}</td>
                                         <td class="celula_item" align="center" width="60">{{@$vt['hora2']}}</td>
@@ -80,7 +88,7 @@
             </div>
         </div>
         <div class="card-footer text-right">
-            <button type="button" title="" class="btn btn-outline-primary" data-toggle="modal" data-target="#add-procedimento">
+            <button type="button" title="" class="btn btn-outline-primary" data-toggle="modal" onclick="telaAdicionarProcedimentos()" data-target="#add-procedimento">
                 <i class="fa fa-plus" aria-hidden="true"></i> Adicionar procedimento
             </button>
         </div>
@@ -143,7 +151,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__('Fechar')}}</button>
-                <button type="button" class="btn btn-primary" onclick="alimenta_procedimento()" title="{{__('Adicionar procedimento nesta guia')}}"><i class="fas fa-plus"></i> {{__('Adicionar')}}</button>
+                <button type="button" id="btn-add-procedimento" class="btn btn-primary" onclick="alimenta_procedimento()" title="{{__('Adicionar procedimento nesta guia')}}"><i class="fas fa-plus"></i> {{__('Adicionar')}}</button>
+                <button type="button" id="btn-upd-procedimento" class="btn btn-primary" style="display: none;" onclick="alimenta_procedimento()" title="{{__('Editar procedimento nesta guia')}}"><i class="fas fa-plus"></i> {{__('Editar')}}</button>
             </div>
         </div>
     </div>

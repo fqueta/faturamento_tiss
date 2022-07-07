@@ -16,16 +16,22 @@ class TesteController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
 
         $user = Auth::user();
         //$doc = new LotesController($user);
-
-        $ac = new GeradorXmlController();
-        $ret = $ac->guiaResumoInternacao(['1','2','3'],5);
-        dd($ret);
+        $this->escutaSessao($request);
+        $request->session()->put('verifica_faturas.acao','liberar');
+        //$request->session()->put('nome','Patricia');
+        //$ac = new GeradorXmlController();
+        //$ret = $ac->guiaResumoInternacao(['1','2','3'],5);
+        //dd($ret);
         //return view('teste',$config);
+    }
+    private function escutaSessao(Request $request)
+    {
+        Qlib::lib_print($request->session()->all());
     }
     public function ajax(){
         $limit = isset($_GET['limit']) ?$_GET['limit'] : 50;

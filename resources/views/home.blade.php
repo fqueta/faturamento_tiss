@@ -9,10 +9,10 @@
     </div><!-- /.col -->
     <div class="col-sm-6 text-right">
         <div class="btn-group" role="group" aria-label="actions">
-            @can('create','familias')
-                <!--<a href="route('familias.create')}}" class="btn btn-primary"><i class="fa fa-plus"></i> Novo cadastro</a>-->
+            @can('create','guias')
+                <!--<a href="route('guias.create')}}" class="btn btn-primary"><i class="fa fa-plus"></i> Novo cadastro</a>-->
             @endcan
-            <!--<a href="route('familias.index')}}" class="btn btn-secondary"><i class="fa fa-list"></i> Ver cadastros</a>
+            <!--<a href="route('guias.index')}}" class="btn btn-secondary"><i class="fa fa-list"></i> Ver cadastros</a>
             <a href="route('relatorios.social')}}" class="btn btn-dark"><i class="fa fa-chart-bar"></i> Ver relatórios</a>-->
         </div>
     </div><!-- /.col -->
@@ -20,11 +20,11 @@
 @stop
 
 @section('content')
-<!--<p>Welcome to this beautiful admin panel.</p>-->
-@can('ler','familias')
+@include('admin.partes.header')
+@can('ler','guias')
 <div class="row card-top">
-    @if (isset($config['c_familias']['cards_home']))
-    @foreach ($config['c_familias']['cards_home'] as $k=>$v)
+    @if (isset($config['c_guias']['cards_home']))
+    @foreach ($config['c_guias']['cards_home'] as $k=>$v)
     <div class="col-lg-{{$v['lg']}} col-{{$v['xs']}}">
                 <!-- small box -->
                 <div class="small-box bg-{{$v['color']}}" title="{{$v['obs']}}">
@@ -44,14 +44,14 @@
     </div>
 
     <div class="row mb-5">
-        @if (isset($config['c_familias']['progresso']))
+        @if (isset($config['c_guias']['progresso']))
         <div class="col-md-5">
             <div class="card">
                 <div class="card-header">
                     <strong>Progresso dos cadastros</strong>
                 </div>
                 <div class="card-body">
-                    @foreach ($config['c_familias']['progresso'] as $k=>$v)
+                    @foreach ($config['c_guias']['progresso'] as $k=>$v)
                         <div class="progress-group">
                             {{$v['label']}}
                             <span class="float-right"><b>{{$v['total']}}</b>/{{$v['geral']}}</span>
@@ -71,6 +71,7 @@
         </div>
     </div>
     @else
+
     <div class="col-md-12">
 
         <h3>Seja bem vindo para ter acesso entre em contato com o suporte</h3>

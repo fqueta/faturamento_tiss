@@ -6,6 +6,8 @@
     <h3>{{$titulo}}</h3>
 @stop
 @section('content')
+@include('admin.partes.header')
+
 <div class="row">
     <div class="col-md-12 mens">
     </div>
