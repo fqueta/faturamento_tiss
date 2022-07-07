@@ -820,11 +820,11 @@ class Qlib
         echo '<meta http-equiv="refresh" content="'.$time.'; url='.$url.'">';
     }
     static function verificaCobranca(){
-        //$cob = new CobrancaController;
-        $cob = new cobranca;
-        $ret = $cob->exec();
+        $f = new CobrancaController;
+        //$cob = new cobranca;
+        //$ret = $cob->exec();
         //$f = new TesteController;
-        //$ret = $f->testeF();
+        $ret = $f->testeF();
         return $ret;
     }
 }
