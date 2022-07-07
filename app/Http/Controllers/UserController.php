@@ -452,4 +452,9 @@ class UserController extends Controller
 		}
         return $ret;
 	}
+    public function pararAlertaFaturaVencida(Request $request){
+        $request->session()->put('verifica_faturas.acao','liberar');
+        $ret['exec']=true;
+		return $ret;
+	}
 }

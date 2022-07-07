@@ -88,7 +88,7 @@ Route::prefix('faturamentos')->group(function(){
 });
 Route::get('/suspenso',[CobrancaController::class,'suspenso'])->name('cobranca.suspenso');
 Route::prefix('cobranca')->group(function(){
-    Route::get('/fechar',[CobrancaController::class,'pararAlertaFaturaVencida'])->name('alerta.cobranca.fechar');
+    Route::get('/fechar',[UserController::class,'pararAlertaFaturaVencida'])->name('alerta.cobranca.fechar');
 });
 /*
 Route::prefix('familias')->group(function(){
