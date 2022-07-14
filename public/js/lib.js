@@ -2051,6 +2051,35 @@ function procedimento_alimentador_total(){
     var_valorTotal = var_valorTotal.toFixed(2);
     document.getElementById('procedimento_alimentador_valor_total').value = var_valorTotal ;
 }
+function despesa_alimentador_total(){
+
+    if(document.getElementById('despesa_alimentador_quantidade').value==''){
+        var_quantidade = 0;
+    }else{
+        var_quantidade = document.getElementById('despesa_alimentador_quantidade').value;
+    }
+    if(document.getElementById('despesa_alimentador_fator').value==''){
+        var_fator = 1;
+        document.getElementById('despesa_alimentador_fator').value = '1.00';
+    }else{
+        var_fator = document.getElementById('despesa_alimentador_fator').value;
+    }
+    if(document.getElementById('despesa_alimentador_valor_unitario').value==''){
+        var_valorUnitario = 0;
+    }else{
+        var_valorUnitario = document.getElementById('despesa_alimentador_valor_unitario').value;
+    }
+    if(var_valorUnitario){
+        var_valorUnitario = var_valorUnitario.replace('R$','');
+        var_valorUnitario = var_valorUnitario.replace('.','');
+        var_valorUnitario = var_valorUnitario.replace(',','.');
+    }
+
+    //console.log(var_valorUnitario);
+    var_valorTotal = var_quantidade * var_fator * var_valorUnitario;
+    var_valorTotal = var_valorTotal.toFixed(2);
+    document.getElementById('despesa_alimentador_valor_total').value = var_valorTotal ;
+}
 function upcase(e,r){
     var1 = e.keyCode;
     var2 = r.value.toUpperCase();
@@ -2212,6 +2241,187 @@ function alimenta_procedimento(ac,linha){
         $('#add-procedimento').modal('hide');
     }
 }
+function alimenta_despesas(ac,linha){
+    if(typeof ac=='undefined'){
+        ac='cad';
+    }
+    if(typeof linha=='undefined'){
+        linha='';
+    }
+    despesa_alimentador_total();
+    erro = '0';
+    if (document.getElementById('despesa_alimentador_tipo').value==''){
+        document.getElementById('despesa_alimentador_tipo').style.backgroundColor='#ff5555';
+        erro = '1';
+    }
+    if (document.getElementById('despesa_alimentador_data').value==''){
+        document.getElementById('despesa_alimentador_data').style.backgroundColor='#ff5555';
+        erro = '1';
+    }
+    if (document.getElementById('despesa_alimentador_tabela').value==''){
+        document.getElementById('despesa_alimentador_tabela').style.backgroundColor='#ff5555';
+        erro = '1';
+    }
+    if (document.getElementById('despesa_alimentador_codigo').value==''){
+        document.getElementById('despesa_alimentador_codigo').style.backgroundColor='#ff5555';
+        erro = '1';
+    }
+    if (document.getElementById('despesa_alimentador_descricao').value==''){
+        document.getElementById('despesa_alimentador_descricao').style.backgroundColor='#ff5555';
+        erro = '1';
+    }
+    if (document.getElementById('despesa_alimentador_quantidade').value==''){
+        document.getElementById('despesa_alimentador_quantidade').style.backgroundColor='#ff5555';
+        erro = '1';
+    }
+    if (document.getElementById('despesa_alimentador_unidade').value==''){
+        document.getElementById('despesa_alimentador_unidade').style.backgroundColor='#ff5555';
+        erro = '1';
+    }
+    if (document.getElementById('despesa_alimentador_fator').value==''){
+        document.getElementById('despesa_alimentador_fator').style.backgroundColor='#ff5555';
+        erro = '1';
+    }
+    if (document.getElementById('despesa_alimentador_valor_unitario').value==''){
+        document.getElementById('despesa_alimentador_valor_unitario').style.backgroundColor='#ff5555';
+        erro = '1';
+    }
+    if (document.getElementById('despesa_alimentador_valor_total').value==''){
+        document.getElementById('despesa_alimentador_valor_total').style.backgroundColor='#ff5555';
+        erro = '1';
+    }
+
+    if (erro == '0'){
+        if(ac=='cad'){
+            //linha = parseFloat(document.getElementById('qtde_despesa').value);
+            var num_despesa = $('#demo_despesas tr').length;
+            var linha = num_despesa;
+            if(!linha || typeof linha=='NaN'){
+                linha = num_despesa;
+            }
+            if(linha){
+                linha = verificaId(linha,'tr_despesa_linha_');
+            }
+            linha += 1;
+        }
+        // if(ac=='alt'){
+        //     linha=1;
+        // }
+        if (document.getElementById('despesa_alimentador_hora1').value==''){
+            hora1 = '&nbsp;'
+        }else{
+            hora1 = document.getElementById('despesa_alimentador_hora1').value;
+        }
+        if (document.getElementById('despesa_alimentador_hora2').value==''){
+            hora2 = '&nbsp;'
+        }else{
+            hora2 = document.getElementById('despesa_alimentador_hora2').value;
+        }
+        // if (document.getElementById('despesa_alimentador_via').value==''){
+        //     via = '&nbsp;'
+        // }else{
+        //     via = document.getElementById('despesa_alimentador_via').value;
+        // }
+        // if (document.getElementById('despesa_alimentador_tec').value==''){
+        //     tec = '&nbsp;'
+        // }else{
+        //     tec = document.getElementById('despesa_alimentador_tec').value;
+        // }
+        document.getElementById('qtde_despesa').value = linha;
+        //nova_linha = '<table id="linha_despesa_'+linha+'" width="100%" style="display:block"><tr>';
+        var inpu = '<input type="hidden" name="config[despesa]['+linha+'][item]" value="'+linha+'"/>';
+        var arr_campos = ['tipo','data','hora1','hora2','anvisa','fabricante','autorizacao','tabela','codigo','descricao','quantidade','fator','valor_unitario','valor_total'];
+
+        let tipoDescp = document.getElementById('despesa_alimentador_tipo').value;
+        if(arr_campos.length>0){
+            for (let i = 0; i < arr_campos.length; i++) {
+                const element = arr_campos[i];
+                inpu += '<input type="hidden" class="tipo-'+element+'-'+tipoDescp+'" name="config[despesas]['+linha+']['+element+']" value="'+document.getElementById('despesa_alimentador_'+element).value+'"/>';
+
+            }
+        }
+        if(ac=='cad'){
+            ref_linha = 0;
+            if(num_despesa){
+                ref_linha = num_despesa+1;
+            }
+            if(ref_linha==0){
+                ref_linha++;
+            }
+            nova_linha = '<tr id="tr_despesa_linha_'+linha+'" style="cursor: pointer" title="DOIS CLIQUES PARA EDITAR" ondblclick="editarProcedimento(\''+linha+'\')" onmouseover="btnEdit(this)" onmouseout="btnEdit(this,\'oc\')">';
+        }else if(ac=='alt'){
+            nova_linha = '';
+            ref_linha = $('#tr_despesa_linha_'+linha+' td:first').html();
+        }
+        let dat = dataExibe(document.getElementById('despesa_alimentador_data').value);
+        let nomeTipo = $("#despesa_alimentador_tipo option:selected").text();
+        nova_linha += '<td class="celula_item" align="center" width="20">'+ref_linha+'</td>';
+        nova_linha += '<td class="celula_item" align="center" width="40">'+nomeTipo+'</td>';
+        nova_linha += '<td class="celula_item" align="center" width="65">'+inpu+''+dat+'</td>';
+        nova_linha += '<td class="celula_item" align="center" width="65">'+hora1+'</td>';
+        nova_linha += '<td class="celula_item" align="center" width="60">'+hora2+'</td>';
+        nova_linha += '<td class="celula_item" align="center" width="40">'+document.getElementById('despesa_alimentador_tabela').value+'</td>';
+        nova_linha += '<td class="celula_item" align="center" width="70">'+document.getElementById('despesa_alimentador_codigo').value+'</td>';
+        nova_linha += '<td class="celula_item" width="240">'+document.getElementById('despesa_alimentador_descricao').value+'</td>';
+        nova_linha += '<td class="celula_item" align="center" width="40">'+document.getElementById('despesa_alimentador_quantidade').value+'</td>';
+        nova_linha += '<td class="celula_item" align="center" width="50">'+document.getElementById('despesa_alimentador_fator').value+'</td>';
+        nova_linha += '<td class="celula_item" align="right" width="80">'+document.getElementById('despesa_alimentador_valor_unitario').value+'</td>';
+        nova_linha += '<td class="celula_item" align="right" width="60">'+document.getElementById('despesa_alimentador_valor_total').value+'</td>';
+        nova_linha += '<td class="celula_item" align="center" width="30"><button type="button" class="btn btn-outline-danger" onclick="despesas_remove_item(\''+linha+'\',\''+tipoDescp+'\')"><i class="fa fa-times"></i></button></td>';
+        if(ac=='cad'){
+            nova_linha += '</tr>';
+            document.getElementById('demo_despesas').innerHTML+=nova_linha;
+            $('#tr_despesa_linha_'+linha).addClass('table-info');
+        }else if(ac=='alt'){
+            $('#tr_despesa_linha_'+linha).html(nova_linha).addClass('table-info');
+        }
+
+            total_despesa = 0;
+            $.each($('.tipo-valor_total-'+tipoDescp),function(v,i){
+                try {
+                    var valT = $(this).val();
+                    if (valT!=''){
+                        total_despesa += parseFloat(valT);
+                    }
+                } catch (e) {
+                    console.log(e);
+                }
+            });
+            // for (var i=1;i<=linha;i++){
+            //     try {
+            //         var sel = '[name="config[despesa]['+i+'][valor_total]"]';
+            //         var valT = document.querySelector(sel).value;
+            //         if (valT!=''){
+            //             total_despesa += parseFloat(valT);
+            //         }
+            //     } catch (e) {
+            //         console.log(e);
+            //     }
+            // }
+            total_despesa = total_despesa.toFixed(2);
+            exibeTotalDespesa(total_despesa,tipoDescp);
+
+        //document.getElementById('despesa_alimentador_item_novo').value='';
+        document.getElementById('despesa_alimentador_data').value='';
+        document.getElementById('despesa_alimentador_hora1').value='';
+        document.getElementById('despesa_alimentador_hora2').value='';
+        document.getElementById('despesa_alimentador_tabela').value='';
+        document.getElementById('despesa_alimentador_codigo').value='';
+        document.getElementById('despesa_alimentador_descricao').value='';
+        document.getElementById('despesa_alimentador_quantidade').value='';
+        document.getElementById('despesa_alimentador_anvisa').value='';
+        document.getElementById('despesa_alimentador_unidade').value='';
+        document.getElementById('despesa_alimentador_tipo').value='';
+        document.getElementById('despesa_alimentador_autorizacao').value='';
+        document.getElementById('despesa_alimentador_fabricante').value='';
+        document.getElementById('despesa_alimentador_fator').value='';
+        document.getElementById('despesa_alimentador_valor_unitario').value='';
+        document.getElementById('despesa_alimentador_valor_total').value='';
+        document.getElementById('despesa_alimentador_tabela').value=document.getElementById('tabela_padrao').value;
+        //calcula_total_geral();
+        $('#add-despesa').modal('hide');
+    }
+}
 function calcula_total_geral(){
 
     var_total_geral = 0;
@@ -2294,6 +2504,56 @@ function procedimento_remove_item(linha){
         document.getElementById('total_procedimentos').value = total_procedimento;
         calcula_total_geral();
 
+}
+function despesas_remove_item(linha,tipoDescp){
+    if(typeof tipoDescp=='undefined'){
+        tipoDescp='';
+    }
+    document.getElementById('tr_despesa_linha_'+linha).remove();
+    //qtde_linhas = $('#demo_despesas tr').length;
+    //contador_linha = 0;
+    // for (var i=1;i<=qtde_linhas;i++){
+    //     contador_linha += 1;
+    //     //if(document.getElementById('linha_procedimento_'+i).style.display=='block'){
+    //         //document.getElementById('td_contador_linha_'+i).innerHTML=contador_linha
+    //     //}
+    // }
+    linha = document.getElementById('qtde_procedimento').value;
+    total_despesa = 0;
+    $.each($('.tipo-valor_total-'+tipoDescp),function(v,i){
+        try {
+            var valT = $(this).val();
+            if (valT!=''){
+                total_despesa += parseFloat(valT);
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    });
+    // for (var i=1;i<=linha;i++){
+    //     //if (document.getElementById('procedimento_valorTotal_'+i).value!=''){
+    //         //total_despesa += parseFloat(document.getElementById('procedimento_valorTotal_'+i).value);
+    //     //}
+    //     try {
+    //         var sel = '[name="config[procedimento]['+i+'][valor_total]"]';
+    //         if (document.querySelector(sel).value!=''){
+    //             total_despesa += parseFloat(document.querySelector(sel).value);
+    //         }
+    //     } catch (e) {
+    //         console.log(e);
+    //     }
+    // }
+    total_despesa = total_despesa.toFixed(2);
+    exibeTotalDespesa(total_despesa,tipoDescp);
+    //document.getElementById('total_despesas').value = total_despesa;
+
+}
+function exibeTotalDespesa(total,tipo){
+    var arr_cp = {"1":"total_gases", "2": "total_medicamentos", "3": "total_materiais", "5": "total_diarias", "7": "total_taxas", "8": "total_opme"};
+    if(tid=arr_cp[tipo]){
+        document.getElementById(tid).value = total;
+    }
+    calcula_total_geral();
 }
 function alimenta_executante(){
     erro = '0';

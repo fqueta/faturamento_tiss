@@ -169,9 +169,9 @@ class GuiasController extends Controller
                     'exibe_busca'=>true,
                     'option_select'=>true,
                 ],
-                'procedimento[reducaoAcrescimo]'  =>['label'=>'43-Fator Red/Acrésc','id'=>'procedimento_alimentador_fator','active'=>false,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'onkeypress=return(currencyFormat(this,\'\',\'.\',4,event)) onkeyup=procedimento_alimentador_total()','tam'=>'2','cp_busca'=>'','title'=>'Obrigatório. Quando não houver redução ou acréscimo sobre o valor do procedimento, o campo deve ser preenchido com 1,00.'],
-                'procedimento[valorUnitario]'  =>['label'=>'44-Valor Unitário','id'=>'procedimento_alimentador_valor_unitario','active'=>false,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'onfocus=this.style.backgroundColor=\'#ffffff\' onkeyup=procedimento_alimentador_total()','tam'=>'2','class'=>'moeda','cp_busca'=>'','title'=>'Obrigatório. Quando não houver redução ou acréscimo sobre o valor do procedimento, o campo deve ser preenchido com 1,00.'],
-                'procedimento[valorTotal]'  =>['label'=>'45-Valor Total','id'=>'procedimento_alimentador_valor_total','active'=>false,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','class'=>'','event'=>' onkeyup=procedimento_alimentador_total()','tam'=>'2','cp_busca'=>'','title'=>'Valor total do procedimento realizado, considerando a quantidade de procedimentos realizados, o valor unitário e o fator de redução ou acréscimo'],
+                'procedimento[reducaoAcrescimo]'  =>['label'=>'43-Fator Red/Acrésc','id'=>'procedimento_alimentador_fator','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'onkeypress=return(currencyFormat(this,\'\',\'.\',4,event)) onkeyup=procedimento_alimentador_total()','tam'=>'2','cp_busca'=>'','title'=>'Obrigatório. Quando não houver redução ou acréscimo sobre o valor do procedimento, o campo deve ser preenchido com 1,00.'],
+                'procedimento[valorUnitario]'  =>['label'=>'44-Valor Unitário','id'=>'procedimento_alimentador_valor_unitario','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'onfocus=this.style.backgroundColor=\'#ffffff\' onkeyup=procedimento_alimentador_total()','tam'=>'2','class'=>'moeda','cp_busca'=>'','title'=>'Obrigatório. Quando não houver redução ou acréscimo sobre o valor do procedimento, o campo deve ser preenchido com 1,00.'],
+                'procedimento[valorTotal]'  =>['label'=>'45-Valor Total','id'=>'procedimento_alimentador_valor_total','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','class'=>'','event'=>' onkeyup=procedimento_alimentador_total()','tam'=>'2','cp_busca'=>'','title'=>'Valor total do procedimento realizado, considerando a quantidade de procedimentos realizados, o valor unitário e o fator de redução ou acréscimo'],
 
             ];
             $arrSeq = range(0,100);
@@ -250,6 +250,68 @@ class GuiasController extends Controller
                 'executor[uf_conselho]'=>['label'=>'UF','active'=>true,'placeholder'=>'','id'=>'executante_alimentador_conselho_uf','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'disabled','tam'=>'1'],
                 'executor[cbo]'=>['label'=>'Cód. CBO','active'=>true,'placeholder'=>'','id'=>'executante_alimentador_cbo','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'disabled','tam'=>'3'],
 
+
+            ];
+            $arr_Paineldespesas = [
+                'despesas[codigoDespesa]'=>[
+                    'label'=>'Código',
+                    'active'=>false,
+                    'id'=>'despesa_alimentador_tipo',
+                    'type'=>'select',
+                    'arr_opc'=>Qlib::sql_array("SELECT value,nome FROM tags WHERE ativo='s' AND pai='7'",'nome','value','','','encode'),
+                    'exibe_busca'=>'d-block',
+                    'event'=>'onfocus=this.style.backgroundColor=\'#ffffff\'',
+                    'tam'=>'3',
+                    'class'=>'',
+                    'title'=>'Código da natureza da despesa, conforme tabela de domínio nº 25.',
+                    'exibe_busca'=>false,
+                    'option_select'=>true,
+                    'cp_busca'=>'config][codigoDespesa',
+                ],
+                'despesas[data]'        =>['label'=>'Data execução','active'=>false,'placeholder'=>'','type'=>'date','id'=>'despesa_alimentador_data','exibe_busca'=>'d-block','event'=>'onfocus=this.style.backgroundColor=\'#ffffff\'','tam'=>'2','cp_busca'=>'','title'=>''],
+                'despesas[horaInicio]'  =>['label'=>'Hora Início','id'=>'despesa_alimentador_hora1','active'=>false,'placeholder'=>'Preenchimento condicionado. Deve ser preenchido  quando o item de despesa admitir cobrança mensurável em horas.','type'=>'time','exibe_busca'=>'d-block','event'=>'onfocus=this.style.backgroundColor=\'#ffffff\'','tam'=>'2','cp_busca'=>'','title'=>''],
+                'despesas[horaFim]'     =>['label'=>'Hora Fim','id'=>'despesa_alimentador_hora2','active'=>false,'placeholder'=>'','type'=>'time','exibe_busca'=>'d-block','event'=>'onfocus=this.style.backgroundColor=\'#ffffff\'','tam'=>'2','cp_busca'=>'','title'=>'Preenchimento condicionado. Deve ser preenchido  quando o item de despesa admitir cobrança mensurável em horas.'],
+                'despesas[tabela_cobranca]'=>[
+                    'label'=>'Tabela',
+                    'active'=>false,
+                    'id'=>'despesa_alimentador_tabela',
+                    'type'=>'select',
+                    'arr_opc'=>Qlib::sql_array("SELECT value,nome FROM tags WHERE ativo='s' AND pai='4'",'nome','value','','','encode'),
+                    'exibe_busca'=>'d-block',
+                    'event'=>'onfocus=this.style.backgroundColor=\'#ffffff\'',
+                    'tam'=>'3',
+                    'class'=>'',
+                    'title'=>'Código da tabela utilizada para identificar os despesas realizados ou itens assistenciais utilizados, conforme tabela de domínio nº 87.',
+                    'exibe_busca'=>true,
+                    'option_select'=>true,
+                    'cp_busca'=>'config][tabela_cobranca',
+                ],
+                'despesas[codigo]'  =>['label'=>'Código do despesa','id'=>'despesa_alimentador_codigo','active'=>false,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'onfocus=this.style.backgroundColor=\'#ffffff\'','tam'=>'3','cp_busca'=>'','title'=>'Código do item assistencial das despesas realizadas, conforme tabela utilizada'],
+                'despesas[descricao]'  =>['label'=>'Descrição','id'=>'despesa_alimentador_descricao','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'onkeyup=upcase(event,this) onfocus=this.style.backgroundColor=\'#ffffff\'','tam'=>'9','cp_busca'=>'','title'=>''],
+                'despesas[unidade_medida]'=>[
+                    'label'=>'Unidade de medida',
+                    'active'=>false,
+                    'id'=>'despesa_alimentador_unidade',
+                    'type'=>'select',
+                    'arr_opc'=>Qlib::sql_array("SELECT value,nome FROM tags WHERE ativo='s' AND pai='8'",'nome','value'),
+                    'exibe_busca'=>'d-block',
+                    'event'=>'onfocus=this.style.backgroundColor=\'#ffffff\'',
+                    'tam'=>'4',
+                    'class'=>'',
+                    'title'=>'Código da unidade de medida, conforme tabela de domínio nº 60.',
+                    'exibe_busca'=>true,
+                    'option_select'=>true,
+                    'cp_busca'=>'config][unidade_medida',
+                ],
+                'despesas[qde]'  =>['label'=>'Quantidade','id'=>'despesa_alimentador_quantidade','active'=>false,'placeholder'=>'','type'=>'number','exibe_busca'=>'d-block','event'=>'onfocus=this.style.backgroundColor=\'#ffffff\' onchange=despesa_alimentador_total()','tam'=>'2','cp_busca'=>'','title'=>'Código identificador do despesa realizado pelo prestador, conforme tabela de domínio.'],
+                'despesas[reducaoAcrescimo]'  =>['label'=>'Fator Red/Acrésc','id'=>'despesa_alimentador_fator','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'onkeypress=return(currencyFormat(this,\'\',\'.\',4,event)) onkeyup=despesa_alimentador_total()','tam'=>'2','cp_busca'=>'','title'=>'Obrigatório. Quando não houver redução ou acréscimo sobre o valor do despesa, o campo deve ser preenchido com 1,00.'],
+                'despesas[valorUnitario]'  =>['label'=>'Valor Unitário','id'=>'despesa_alimentador_valor_unitario','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','event'=>'onfocus=this.style.backgroundColor=\'#ffffff\' onkeyup=despesa_alimentador_total()','tam'=>'2','class'=>'moeda','cp_busca'=>'','title'=>'Obrigatório. Nos casos em que esse valor não possa ser definido previamente por força contratual, o campo será preenchido com zero'],
+                'despesas[valorTotal]'  =>['label'=>'Valor Total','id'=>'despesa_alimentador_valor_total','active'=>false,'placeholder'=>'','type'=>'text','exibe_busca'=>'d-block','class'=>'','event'=>' onkeyup=despesa_alimentador_total()','tam'=>'2','cp_busca'=>'','title'=>'Valor total do despesa realizado, considerando a quantidade de despesas realizados, o valor unitário e o fator de redução ou acréscimo'],
+                //'despesas[valorTotal]'  =>['label'=>'Valor Total','id'=>'despesa_alimentador_valor_total','active'=>false,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','class'=>'','event'=>' onkeyup=despesa_alimentador_total()','tam'=>'2','cp_busca'=>'','title'=>'Valor total do despesa realizado, considerando a quantidade de despesas realizados, o valor unitário e o fator de redução ou acréscimo'],
+                'despesas[anvisa]'  =>['label'=>'Registro ANVISA do material','id'=>'despesa_alimentador_anvisa','active'=>false,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','class'=>'','event'=>'','tam'=>'4','cp_busca'=>'','title'=>'Condicionado. Deve ser preenchido em caso de cobrança de órteses, próteses e materiais especiais, quando for utilizado código de material ainda não cadastrado na TUSS.'],
+                'despesas[referencia_fabricante]'  =>['label'=>'Código de referência do material no fabricante','id'=>'despesa_alimentador_fabricante','active'=>false,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','class'=>'','event'=>'','tam'=>'4','cp_busca'=>'','title'=>'Condicionado. Deve ser preenchido quando se tratar de órteses, próteses e materiais especiais, quando for utilizado código de material ainda não cadastrado na TUSS.'],
+                'despesas[autorizacao]'  =>['label'=>'Autorização de funcionamento','id'=>'despesa_alimentador_autorizacao','active'=>false,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','class'=>'','event'=>'','tam'=>'4','cp_busca'=>'','title'=>'Condicionado. Deve ser preenchido em caso de cobrança de órteses, próteses e materiais especiais que foram adquiridos
+                pelo prestador solicitante'],
 
             ];
             return [
@@ -455,7 +517,10 @@ class GuiasController extends Controller
                 'painel1'=>['label'=>'Procedimentos e Exames Realizados','active'=>false,'tam'=>'12','script'=>'guias.procedimentos','type'=>'html','class_div'=>'px-0','dados'=>$arr_PainelProssedimentos],
                 'sep5'=>['label'=>'Identificação da Equipe','active'=>false,'tam'=>'12','script'=>'<h5>Identificação da Equipe</h5>','type'=>'html_script','class_div'=>'bg-secondary'],
                 'painel2'=>['label'=>'linsta de executantes','active'=>false,'tam'=>'12','script'=>'guias.executantes','type'=>'html','class_div'=>'','dados'=>$arr_Painelexecutantes],
+                'sep6'=>['label'=>'Outras despesas','active'=>false,'tam'=>'12','script'=>'<h5>Outras despesas</h5>','type'=>'html_script','class_div'=>'bg-secondary'],
+                'painel3'=>['label'=>'Outras despesas','active'=>false,'tam'=>'12','script'=>'guias.despesas','type'=>'html','class_div'=>'','dados'=>$arr_Paineldespesas],
                 'config[qtdProcedimentos]'=>['label'=>'quantidade de procedimentos','id'=>'qtde_procedimento','active'=>false,'placeholder'=>'','type'=>'hidden','exibe_busca'=>'d-block','event'=>'','tam'=>'3','cp_busca'=>'config][qtdProcedimentos','title'=>''],
+                'config[qtdDespesas]'=>['label'=>'quantidade de despesas','id'=>'qtde_despesa','active'=>false,'placeholder'=>'','type'=>'hidden','exibe_busca'=>'d-block','event'=>'','tam'=>'3','cp_busca'=>'config][qtdDespesas','title'=>''],
                 'config[qtdExecutantes]'=>['label'=>'quantidade de executantes','id'=>'qtde_executante','active'=>false,'placeholder'=>'','type'=>'hidden','exibe_busca'=>'d-block','event'=>'','tam'=>'3','cp_busca'=>'config][qtdExecutantes','title'=>''],
                 'config[tabela_padrao]'=>['label'=>'tabela_padrao','id'=>'tabela_padrao','active'=>false,'placeholder'=>'','type'=>'hidden','exibe_busca'=>'d-block','event'=>' ','tam'=>'3','cp_busca'=>'config][tabela_padrao','title'=>'Valor total de todos os procedimentos realizados'],
                 'config[valorProcedimentos]'=>['label'=>'54-Total de Procedimentos (R$)','id'=>'total_procedimentos','active'=>false,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'required ','tam'=>'3','cp_busca'=>'config][valorProcedimentos','title'=>'Valor total de todos os procedimentos realizados'],
@@ -662,7 +727,7 @@ class GuiasController extends Controller
         $dados = $request->all();
         $ajax = isset($dados['ajax'])?$dados['ajax']:'n';
         foreach ($dados as $key => $value) {
-            if($key!='_method'&&$key!='_token'&&$key!='ac'&&$key!='ajax'&&$key!='procedimento'&&$key!='executante'){
+            if($key!='_method'&&$key!='_token'&&$key!='ac'&&$key!='ajax'&&$key!='procedimento'&&$key!='despesas'&&$key!='executante'){
                 if($key=='data_batismo' || $key=='data_nasci'){
                     if($value=='0000-00-00' || $value=='00/00/0000'){
                     }else{
