@@ -67,6 +67,9 @@ class GeradorXmlController extends Controller
             'tipoInternacao'=>'tipoInternacao',
             'regimeInternacao'=>'regimeInternacao',
             'diagnostico'=>'CID10Principal',
+            'diagnostico2'=>'CID10_2',
+            'diagnostico3'=>'CID10_3',
+            'diagnostico4'=>'CID10_4',
             'indicadorAcidente'=>'indicadorAcidente',
             'motivoEncerramento'=>'motivoEncerramento',
             'valorProcedimentos'=>'valorProcedimentos',
@@ -78,8 +81,8 @@ class GeradorXmlController extends Controller
             'valorGasesMedicinais'=>'valorGasesMedicinais',
             'valorTotalGeral'=>'valorTotalGeral',
             'procedimento'=>'procedimento',
+            'despesas'=>'despesas',
         ];
-
         $i=0;
         if($tipo=='arr'){
             foreach ($dadosGuia as $k1 => $va1) {
@@ -90,6 +93,8 @@ class GeradorXmlController extends Controller
                         $_XML['dados'][$k1][$key] = isset($va1[$val])?$va1[$val]:false;
                     }elseif($key=='procedimento'){
                         $_XML['dados'][$k1]['procedimentos'] = $va1['config'][$val];
+                    }elseif($key=='despesas'){
+                        $_XML['dados'][$k1]['despesas'] = $va1['config'][$val];
                     }elseif($key=='horaInicioFaturamento' || $key=='horaFinalFaturamento' || $key=='horaInicial' || $key=='horaFinal'){
                         $_XML['dados'][$k1][$key] = $va1['config'][$val].':00';
                     }else{
@@ -207,6 +212,7 @@ class GeradorXmlController extends Controller
                     if(!isset($_XML['dados'])){
                         return 'dados insuficientes';
                     }
+                    //dd($_XML);
                     foreach ($_XML['dados'] as $key => $d_xml) {
                         $guiaResumoInternacao = $xml->createElement("ans:guiaResumoInternacao");
 
@@ -337,6 +343,21 @@ class GeradorXmlController extends Controller
                                     $diagnostico = $xml->createElement("ans:diagnostico",$d_xml['diagnostico']); //diagnostico
                                     $dadosSaidaInternacao->appendChild($diagnostico);
                                     $CalcHash .= $d_xml['diagnostico'];
+                                }
+                                if(isset($d_xml['diagnostico2']) && !empty($d_xml['diagnostico2'])){
+                                    $diagnostico2 = $xml->createElement("ans:diagnostico",$d_xml['diagnostico2']); //diagnostico2
+                                    $dadosSaidaInternacao->appendChild($diagnostico2);
+                                    $CalcHash .= $d_xml['diagnostico2'];
+                                }
+                                if(isset($d_xml['diagnostico3']) && !empty($d_xml['diagnostico3'])){
+                                    $diagnostico3 = $xml->createElement("ans:diagnostico",$d_xml['diagnostico3']); //diagnostico3
+                                    $dadosSaidaInternacao->appendChild($diagnostico3);
+                                    $CalcHash .= $d_xml['diagnostico3'];
+                                }
+                                if(isset($d_xml['diagnostico4']) && !empty($d_xml['diagnostico4'])){
+                                    $diagnostico4 = $xml->createElement("ans:diagnostico",$d_xml['diagnostico4']); //diagnostico4
+                                    $dadosSaidaInternacao->appendChild($diagnostico4);
+                                    $CalcHash .= $d_xml['diagnostico4'];
                                 }
 
                                 $indicadorAcidente = $xml->createElement("ans:indicadorAcidente",$d_xml['indicadorAcidente']); //indicadorAcidente
@@ -493,6 +514,101 @@ class GeradorXmlController extends Controller
                                 $valorTotalGeral = $xml->createElement("ans:valorTotalGeral",$valorTotGer); //valorTotalGeral
                                 $valorTotal->appendChild($valorTotalGeral);
                                 $CalcHash .= $valorTotGer;
+
+                                $outrasDespesas = $xml->createElement("ans:outrasDespesas"); //outrasDespesas
+                                $guiaResumoInternacao->appendChild($outrasDespesas);
+                                if(isset($d_xml['despesas']) && is_array($d_xml['despesas'])){
+                                    foreach ($d_xml['despesas'] as $key => $v) {
+                                                //listagem de despesas
+                                                $despesa = $xml->createElement("ans:despesa"); //despesa
+                                                $outrasDespesas->appendChild($despesa);
+                                                //elementos
+
+                                                $sequencialItem = $xml->createElement("ans:sequencialItem",@$key); //sequencialItem
+                                                $despesa->appendChild($sequencialItem);
+                                                $CalcHash .= trim(@$key);
+                                                $codDesp = Qlib::zerofill(@$v['tipo'],2);
+                                                $codigoDespesa = $xml->createElement("ans:codigoDespesa",$codDesp); //codigoDespesa
+                                                $despesa->appendChild($codigoDespesa);
+                                                $CalcHash .= trim($codDesp);
+
+                                                $servicosExecutados = $xml->createElement("ans:servicosExecutados"); //servicosExecutados
+                                                $despesa->appendChild($servicosExecutados);
+
+                                                    $dataExecucao = $xml->createElement("ans:dataExecucao",@$v['data']); //dataExecucao
+                                                    $servicosExecutados->appendChild($dataExecucao);
+                                                    $CalcHash .= trim(@$v['data']);
+                                                    if(!empty($v['hora1'])){
+                                                        $v['hora1'] .= ':00';
+                                                        $horaInicial = $xml->createElement("ans:horaInicial",@$v['hora1']); //horaInicial
+                                                        $servicosExecutados->appendChild($horaInicial);
+                                                        $CalcHash .= trim(@$v['hora1']);
+                                                    }
+                                                    if(!empty($v['hora2'])){
+                                                        $v['hora2'] .= ':00';
+                                                        $horaFinal = $xml->createElement("ans:horaFinal",@$v['hora2']); //horaFinal
+                                                        $servicosExecutados->appendChild($horaFinal);
+                                                        $CalcHash .= trim(@$v['hora2']);
+                                                    }
+
+                                                    $codigoTabela = $xml->createElement("ans:codigoTabela",@$v['tabela']); //despesa
+                                                    $servicosExecutados->appendChild($codigoTabela);
+                                                    $CalcHash .= trim(@$v['tabela']);
+
+                                                    $codigoProcedimento = $xml->createElement("ans:codigoProcedimento",@$v['codigo']); //despesa
+                                                    $servicosExecutados->appendChild($codigoProcedimento);
+                                                    $CalcHash .= trim(@$v['codigo']);
+
+                                                    $quantidadeExecutada = $xml->createElement("ans:quantidadeExecutada",@$v['quantidade']); //quantidadeExecutada
+                                                    $servicosExecutados->appendChild($quantidadeExecutada);
+                                                    $CalcHash .= trim(@$v['quantidade']);
+                                                    $unid = trim(Qlib::zerofill(@$v['unidade'],3));
+                                                    $unidadeMedida = $xml->createElement("ans:unidadeMedida",$unid); //unidadeMedida
+                                                    $servicosExecutados->appendChild($unidadeMedida);
+                                                    $CalcHash .= $unid;
+
+
+                                                    $reducaoAcrescimo = $xml->createElement("ans:reducaoAcrescimo",@$v['fator']); //reducaoAcrescimo
+                                                    $servicosExecutados->appendChild($reducaoAcrescimo);
+                                                    $CalcHash .= trim(@$v['fator']);
+
+                                                    $v['valor_unitario'] = str_replace('R$','',@$v['valor_unitario']);
+                                                    $v['valor_unitario'] = str_replace('.','',@$v['valor_unitario']);
+                                                    $v['valor_unitario'] = str_replace(',','.',@$v['valor_unitario']);
+                                                    $v['valor_unitario'] = trim(@$v['valor_unitario']);
+
+                                                    $valorUnitario = $xml->createElement("ans:valorUnitario",@$v['valor_unitario']); //valorUnitario
+                                                    $servicosExecutados->appendChild($valorUnitario);
+                                                    $CalcHash .= @$v['valor_unitario'];
+
+                                                    $valorTotal = $xml->createElement("ans:valorTotal",@$v['valor_total']); //valorTotal
+                                                    $servicosExecutados->appendChild($valorTotal);
+                                                    $CalcHash .= trim(@$v['valor_total']);
+
+                                                    $desc = Qlib::sanitizeString(@$v['descricao']);
+                                                    $descricaoProcedimento = $xml->createElement("ans:descricaoProcedimento",$desc); //despesa
+                                                    $servicosExecutados->appendChild($descricaoProcedimento);
+                                                    $CalcHash .= trim($desc);
+                                                    if(isset($v['anvisa'])&&!empty($v['anvisa'])){
+                                                        $registroANVISA = $xml->createElement("ans:registroANVISA",@$v['anvisa']); //registroANVISA
+                                                        $servicosExecutados->appendChild($registroANVISA);
+                                                        $CalcHash .= trim(@$v['anvisa']);
+                                                    }
+                                                    if(isset($v['anvisa'])&&!empty($v['anvisa'])){
+                                                        $codigoRefFabricante = $xml->createElement("ans:codigoRefFabricante",@$v['anvisa']); //codigoRefFabricante
+                                                        $servicosExecutados->appendChild($codigoRefFabricante);
+                                                        $CalcHash .= trim(@$v['anvisa']);
+                                                    }
+                                                    if(isset($v['autorizacao'])&&!empty($v['autorizacao'])){
+                                                        $autorizacaoFuncionamento = $xml->createElement("ans:autorizacaoFuncionamento",@$v['autorizacao']); //autorizacaoFuncionamento
+                                                        $servicosExecutados->appendChild($autorizacaoFuncionamento);
+                                                        $CalcHash .= trim(@$v['autorizacao']);
+                                                    }
+
+                                                //Fim nô serviços executados.
+
+                                    }
+                                }
 
                     }
                             /*

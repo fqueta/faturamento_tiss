@@ -21,12 +21,12 @@ class TesteController extends Controller
 
         $user = Auth::user();
         //$doc = new LotesController($user);
-        $this->escutaSessao($request);
-        $request->session()->put('verifica_faturas.acao','liberar');
+        //$this->escutaSessao($request);
+        //$request->session()->put('verifica_faturas.acao','liberar');
         //$request->session()->put('nome','Patricia');
-        //$ac = new GeradorXmlController();
-        //$ret = $ac->guiaResumoInternacao(['1','2','3'],5);
-        //dd($ret);
+        $ac = new GeradorXmlController();
+        $ret = $ac->guiaResumoInternacao(['8'],3);
+        dd($ret);
         //return view('teste',$config);
     }
     public function testeF($var = null)

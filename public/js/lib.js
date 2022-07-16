@@ -2241,12 +2241,14 @@ function alimenta_procedimento(ac,linha){
         $('#add-procedimento').modal('hide');
     }
 }
-function alimenta_despesas(ac,linha){
+function alimenta_despesas(ac,linha,tipoDescp){
     if(typeof ac=='undefined'){
         ac='cad';
+        var tipoDescp = document.getElementById('despesa_alimentador_tipo').value;
     }
     if(typeof linha=='undefined'){
         linha='';
+        //var tipoDescp = document.getElementById('despesa_alimentador_tipo').value;
     }
     despesa_alimentador_total();
     erro = '0';
@@ -2304,9 +2306,9 @@ function alimenta_despesas(ac,linha){
             }
             linha += 1;
         }
-        // if(ac=='alt'){
+         if(ac=='alt'){
         //     linha=1;
-        // }
+         }
         if (document.getElementById('despesa_alimentador_hora1').value==''){
             hora1 = '&nbsp;'
         }else{
@@ -2317,22 +2319,26 @@ function alimenta_despesas(ac,linha){
         }else{
             hora2 = document.getElementById('despesa_alimentador_hora2').value;
         }
-        // if (document.getElementById('despesa_alimentador_via').value==''){
-        //     via = '&nbsp;'
-        // }else{
-        //     via = document.getElementById('despesa_alimentador_via').value;
-        // }
-        // if (document.getElementById('despesa_alimentador_tec').value==''){
-        //     tec = '&nbsp;'
-        // }else{
-        //     tec = document.getElementById('despesa_alimentador_tec').value;
-        // }
+        if (document.getElementById('despesa_alimentador_anvisa').value==''){
+            anvisa = '&nbsp;'
+        }else{
+            anvisa = document.getElementById('despesa_alimentador_anvisa').value;
+        }
+        if (document.getElementById('despesa_alimentador_fabricante').value==''){
+            fabricante = '&nbsp;'
+        }else{
+            fabricante = document.getElementById('despesa_alimentador_fabricante').value;
+        }
+        if (document.getElementById('despesa_alimentador_autorizacao').value==''){
+            autorizacao = '&nbsp;'
+        }else{
+            autorizacao = document.getElementById('despesa_alimentador_autorizacao').value;
+        }
         document.getElementById('qtde_despesa').value = linha;
         //nova_linha = '<table id="linha_despesa_'+linha+'" width="100%" style="display:block"><tr>';
         var inpu = '<input type="hidden" name="config[despesa]['+linha+'][item]" value="'+linha+'"/>';
-        var arr_campos = ['tipo','data','hora1','hora2','anvisa','fabricante','autorizacao','tabela','codigo','descricao','quantidade','fator','valor_unitario','valor_total'];
+        var arr_campos = ['tipo','data','hora1','hora2','unidade','anvisa','fabricante','autorizacao','tabela','codigo','descricao','quantidade','fator','valor_unitario','valor_total'];
 
-        let tipoDescp = document.getElementById('despesa_alimentador_tipo').value;
         if(arr_campos.length>0){
             for (let i = 0; i < arr_campos.length; i++) {
                 const element = arr_campos[i];
@@ -2348,28 +2354,49 @@ function alimenta_despesas(ac,linha){
             if(ref_linha==0){
                 ref_linha++;
             }
-            nova_linha = '<tr id="tr_despesa_linha_'+linha+'" style="cursor: pointer" title="DOIS CLIQUES PARA EDITAR" ondblclick="editarProcedimento(\''+linha+'\')" onmouseover="btnEdit(this)" onmouseout="btnEdit(this,\'oc\')">';
+            //nova_linha = '<tr id="tr_despesa_linha_'+linha+'" style="cursor: pointer" title="DOIS CLIQUES PARA EDITAR" ondblclick="editarProcedimento(\''+linha+'\')" onmouseover="btnEdit(this)" onmouseout="btnEdit(this,\'oc\')">';
+            nova_linha = '<table id="tr_despesa_linha_'+linha+'" ondblclick="editarProcedimento(\''+linha+'\')" width="100%" class="mt-1">';
         }else if(ac=='alt'){
             nova_linha = '';
             ref_linha = $('#tr_despesa_linha_'+linha+' td:first').html();
         }
         let dat = dataExibe(document.getElementById('despesa_alimentador_data').value);
         let nomeTipo = $("#despesa_alimentador_tipo option:selected").text();
-        nova_linha += '<td class="celula_item" align="center" width="20">'+ref_linha+'</td>';
-        nova_linha += '<td class="celula_item" align="center" width="40">'+nomeTipo+'</td>';
-        nova_linha += '<td class="celula_item" align="center" width="65">'+inpu+''+dat+'</td>';
-        nova_linha += '<td class="celula_item" align="center" width="65">'+hora1+'</td>';
-        nova_linha += '<td class="celula_item" align="center" width="60">'+hora2+'</td>';
-        nova_linha += '<td class="celula_item" align="center" width="40">'+document.getElementById('despesa_alimentador_tabela').value+'</td>';
-        nova_linha += '<td class="celula_item" align="center" width="70">'+document.getElementById('despesa_alimentador_codigo').value+'</td>';
-        nova_linha += '<td class="celula_item" width="240">'+document.getElementById('despesa_alimentador_descricao').value+'</td>';
-        nova_linha += '<td class="celula_item" align="center" width="40">'+document.getElementById('despesa_alimentador_quantidade').value+'</td>';
-        nova_linha += '<td class="celula_item" align="center" width="50">'+document.getElementById('despesa_alimentador_fator').value+'</td>';
-        nova_linha += '<td class="celula_item" align="right" width="80">'+document.getElementById('despesa_alimentador_valor_unitario').value+'</td>';
-        nova_linha += '<td class="celula_item" align="right" width="60">'+document.getElementById('despesa_alimentador_valor_total').value+'</td>';
-        nova_linha += '<td class="celula_item" align="center" width="30"><button type="button" class="btn btn-outline-danger" onclick="despesas_remove_item(\''+linha+'\',\''+tipoDescp+'\')"><i class="fa fa-times"></i></button></td>';
+
+        //nova_linha = '';
+		nova_linha += '<tr><td class="celula_item" width="125"><font class="font-tab" style="font-size:9px">CD</font><div align="left">'+nomeTipo+'</div></td>';
+		nova_linha += '<td class="celula_item" width="75"><font class="font-tab" style="font-size:9px">Data</font><div align="right">'+inpu+''+dat+'</div></td>';
+		nova_linha += '<td class="celula_item" width="50"><font class="font-tab" style="font-size:9px">Hora Inicial</font><div align="right">'+hora1+'</div></td>';
+		nova_linha += '<td class="celula_item" width="50"><font class="font-tab" style="font-size:9px">Hora Final</font><div align="right">'+hora2+'</div></td>';
+		nova_linha += '<td class="celula_item" width="35"><font class="font-tab" style="font-size:9px">Tabela</font><div align="right">'+document.getElementById('despesa_alimentador_tabela').value+'</div></td>';
+		nova_linha += '<td class="celula_item"><font class="font-tab" style="font-size:9px">Código</font><div align="right">'+document.getElementById('despesa_alimentador_codigo').value+'</div></td>';
+		nova_linha += '<td class="celula_item" width="35"><font class="font-tab" style="font-size:9px">Qtde</font><div align="right">'+document.getElementById('despesa_alimentador_quantidade').value+'</div></td>';
+		nova_linha += '<td class="celula_item" width="70"><font class="font-tab" style="font-size:9px">Fator Red/Acres.</font><div align="right">'+document.getElementById('despesa_alimentador_fator').value+'</div></td>';
+		nova_linha += '<td class="celula_item" width="55"><font class="font-tab" style="font-size:9px">V. Unitário</font><div align="right">'+document.getElementById('despesa_alimentador_valor_unitario').value+'</div></td>';
+		nova_linha += '<td class="celula_item" width="55"><font class="font-tab" style="font-size:9px">Valor Total</font><div align="right">'+document.getElementById('despesa_alimentador_valor_total').value+'</div></td>';
+		nova_linha += '<td class="celula_item"><font class="font-tab" style="font-size:9px">Registro ANVISA</font><div align="right">'+anvisa+'</div></td>';
+		nova_linha += '<td class="celula_item"><font class="font-tab" style="font-size:9px">Ref. Fabricante</font><div align="right">'+fabricante+'</div></td>';
+		nova_linha += '<td class="celula_item" align="center" width="30" rowspan="2"><button type="button" class="btn btn-outline-danger" onclick="despesas_remove_item(\''+linha+'\',\''+tipoDescp+'\')"><i class="fa fa-times"></i></button><button type="button" class="btn btn-outline-secondary" title="Editar" onclick="editarDespesa(\''+linha+'\',\''+tipoDescp+'\')"><i class="fa fa-pen"></i></button></td></tr><tr>';
+		nova_linha += '<td class="celula_item" colspan="3"><font class="font-tab" style="font-size:9px">Nº Autorização</font><div align="right">'+autorizacao+'</div></td>';
+		nova_linha += '<td class="celula_item" colspan="9" width="780"><font class="font-tab" style="font-size:9px">Descrição</font><div align="left">'+document.getElementById('despesa_alimentador_descricao').value+'</div></td>';
+		nova_linha += '</tr>';
+
+        // nova_linha += '<td class="celula_item" align="center" width="20">'+ref_linha+'</td>';
+        // nova_linha += '<td class="celula_item" align="center" width="40">'+nomeTipo+'</td>';
+        // nova_linha += '<td class="celula_item" align="center" width="65">'+inpu+''+dat+'</td>';
+        // nova_linha += '<td class="celula_item" align="center" width="65">'+hora1+'</td>';
+        // nova_linha += '<td class="celula_item" align="center" width="60">'+hora2+'</td>';
+        // nova_linha += '<td class="celula_item" align="center" width="40">'+document.getElementById('despesa_alimentador_tabela').value+'</td>';
+        // nova_linha += '<td class="celula_item" align="center" width="70">'+document.getElementById('despesa_alimentador_codigo').value+'</td>';
+        // nova_linha += '<td class="celula_item" width="240">'+document.getElementById('despesa_alimentador_descricao').value+'</td>';
+        // nova_linha += '<td class="celula_item" align="center" width="40">'+document.getElementById('despesa_alimentador_quantidade').value+'</td>';
+        // nova_linha += '<td class="celula_item" align="center" width="50">'+document.getElementById('despesa_alimentador_fator').value+'</td>';
+        // nova_linha += '<td class="celula_item" align="right" width="80">'+document.getElementById('despesa_alimentador_valor_unitario').value+'</td>';
+        // nova_linha += '<td class="celula_item" align="right" width="60">'+document.getElementById('despesa_alimentador_valor_total').value+'</td>';
+        // nova_linha += '<td class="celula_item" align="center" width="30"><button type="button" class="btn btn-outline-danger" onclick="despesas_remove_item(\''+linha+'\',\''+tipoDescp+'\')"><i class="fa fa-times"></i></button></td>';
         if(ac=='cad'){
-            nova_linha += '</tr>';
+            //nova_linha += '</tr>';
+            nova_linha += '</table>';
             document.getElementById('demo_despesas').innerHTML+=nova_linha;
             $('#tr_despesa_linha_'+linha).addClass('table-info');
         }else if(ac=='alt'){
@@ -2419,7 +2446,7 @@ function alimenta_despesas(ac,linha){
         document.getElementById('despesa_alimentador_valor_total').value='';
         document.getElementById('despesa_alimentador_tabela').value=document.getElementById('tabela_padrao').value;
         //calcula_total_geral();
-        $('#add-despesa').modal('hide');
+        $('#add-despesas').modal('hide');
     }
 }
 function calcula_total_geral(){
@@ -2743,25 +2770,12 @@ function fecharAlertaFatura(url){
 }
 function editarProcedimento(lin){
     var arr = ['item','data','hora1','hora2','via','tec','tabela','codigo','descricao','quantidade','fator','valor_unitario','valor_total'];
-    /*var arr = {
-        item:'item',
-        data:'data',
-        horaInicio:'hora1',
-    }*/
     $('#add-procedimento').modal('show');
-    /*$.each(arr,function(v,k){
-        //console.log('k:'+k+'v: '+v);
-    });*/
     try {
-
         for (let i = 0; i < arr.length; i++) {
             const v = arr[i];
             var val = $('#tr_contador_linha_'+lin+' [name="config[procedimento]['+lin+']['+v+']"]').val();
-            //if(v=='valor_unitario'){
-                val=val.replace('R$','');
-                //val=val.replace(',','.');
-                //alert(val);
-            //}
+            val=val.replace('R$','');
             $('#procedimento_alimentador_'+v).val(val);
         }
         $('#btn-add-procedimento').hide();
@@ -2771,9 +2785,33 @@ function editarProcedimento(lin){
         console.log(e);
     }
 }
+function editarDespesa(lin,tipo){
+    var arr = ['tipo','data','hora1','hora2','tabela','codigo','descricao','quantidade','fator','valor_unitario','valor_total','unidade','anvisa','fabricante','autorizacao'];
+    $('#add-despesas').modal('show');
+    var sel=[];
+    try {
+        for (let i = 0; i < arr.length; i++) {
+            const v = arr[i];
+            sel[i] = '#tr_despesa_linha_'+lin+' [name="config[despesas]['+lin+']['+v+']"]';
+            var val = $(sel[i]).val();
+            val=val.replace('R$','');
+            $('#despesa_alimentador_'+v).val(val);
+        }
+        //console.log(sel);
+        $('#btn-add-despesas').hide();
+        $('#btn-upd-despesas').show().attr('onclick','alimenta_despesas("alt","'+lin+'","'+tipo+'")');
+
+    } catch (e) {
+        console.log(e);
+    }
+}
 function telaAdicionarProcedimentos(){
     $('#btn-add-procedimento').show();
     $('#btn-upd-procedimento').hide();
+}
+function telaAdicionarDespesas(){
+    $('#btn-add-despesa').show();
+    $('#btn-upd-despesa').hide();
 }
 function dataExibe(data){
     rs=false;
