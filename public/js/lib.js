@@ -2241,11 +2241,11 @@ function alimenta_procedimento(ac,linha){
         $('#add-procedimento').modal('hide');
     }
 }
-function alimenta_despesas(ac,linha,tipoDescp){
+function alimenta_despesas(ac,linha,tipoDesAnt){
     if(typeof ac=='undefined'){
         ac='cad';
-        var tipoDescp = document.getElementById('despesa_alimentador_tipo').value;
     }
+    var tipoDescp = document.getElementById('despesa_alimentador_tipo').value;
     if(typeof linha=='undefined'){
         linha='';
         //var tipoDescp = document.getElementById('despesa_alimentador_tipo').value;
@@ -2401,6 +2401,24 @@ function alimenta_despesas(ac,linha,tipoDescp){
             $('#tr_despesa_linha_'+linha).addClass('table-info');
         }else if(ac=='alt'){
             $('#tr_despesa_linha_'+linha).html(nova_linha).addClass('table-info');
+            if(typeof tipoDesAnt == 'undefined'){
+                tipoDesAnt = '';
+            }
+            if(tipoDesAnt!='' && tipoDesAnt!=tipoDescp){
+                var total_despesaAnt = 0;
+                $.each($('.tipo-valor_total-'+tipoDesAnt),function(v,i){
+                    try {
+                        var valT = $(this).val();
+                        if (valT!=''){
+                            total_despesaAnt += parseFloat(valT);
+                        }
+                    } catch (e) {
+                        console.log(e);
+                    }
+                });
+                total_despesaAnt = total_despesaAnt.toFixed(2);
+                exibeTotalDespesa(total_despesaAnt,tipoDesAnt);
+            }
         }
 
             total_despesa = 0;
@@ -2426,7 +2444,7 @@ function alimenta_despesas(ac,linha,tipoDescp){
             //     }
             // }
             total_despesa = total_despesa.toFixed(2);
-            exibeTotalDespesa(total_despesa,tipoDescp);
+            exibeTotalDespesa(total_despesa,tipoDescp,tipoDesAnt);
 
         //document.getElementById('despesa_alimentador_item_novo').value='';
         document.getElementById('despesa_alimentador_data').value='';
@@ -2557,25 +2575,28 @@ function despesas_remove_item(linha,tipoDescp){
             console.log(e);
         }
     });
-    // for (var i=1;i<=linha;i++){
-    //     //if (document.getElementById('procedimento_valorTotal_'+i).value!=''){
-    //         //total_despesa += parseFloat(document.getElementById('procedimento_valorTotal_'+i).value);
-    //     //}
-    //     try {
-    //         var sel = '[name="config[procedimento]['+i+'][valor_total]"]';
-    //         if (document.querySelector(sel).value!=''){
-    //             total_despesa += parseFloat(document.querySelector(sel).value);
-    //         }
-    //     } catch (e) {
-    //         console.log(e);
-    //     }
-    // }
-    total_despesa = total_despesa.toFixed(2);
-    exibeTotalDespesa(total_despesa,tipoDescp);
-    //document.getElementById('total_despesas').value = total_despesa;
+    if(typeof tipoDesAnt == 'undefined'){
+        tipoDesAnt = '';
+    }
+    if(tipoDesAnt && tipoDesAnt!=tipoDescp){
+        $.each($('.tipo-valor_total-'+tipoDesAnt),function(v,i){
+            try {
+                var valT = $(this).val();
+                if (valT!=''){
+                    total_despesaAnt += parseFloat(valT);
+                }
+            } catch (e) {
+                console.log(e);
+            }
+        });
+    }else{
+        total_despesa = total_despesa.toFixed(2);
+        exibeTotalDespesa(total_despesa,tipoDescp);
+
+    }
 
 }
-function exibeTotalDespesa(total,tipo){
+function exibeTotalDespesa(total,tipo,tipoDesAnt){
     var arr_cp = {"1":"total_gases", "2": "total_medicamentos", "3": "total_materiais", "5": "total_diarias", "7": "total_taxas", "8": "total_opme"};
     if(tid=arr_cp[tipo]){
         document.getElementById(tid).value = total;
@@ -2810,8 +2831,8 @@ function telaAdicionarProcedimentos(){
     $('#btn-upd-procedimento').hide();
 }
 function telaAdicionarDespesas(){
-    $('#btn-add-despesa').show();
-    $('#btn-upd-despesa').hide();
+    $('#btn-add-despesas').show();
+    $('#btn-upd-despesas').hide();
 }
 function dataExibe(data){
     rs=false;
