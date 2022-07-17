@@ -515,9 +515,9 @@ class GeradorXmlController extends Controller
                                 $valorTotal->appendChild($valorTotalGeral);
                                 $CalcHash .= $valorTotGer;
 
-                                $outrasDespesas = $xml->createElement("ans:outrasDespesas"); //outrasDespesas
-                                $guiaResumoInternacao->appendChild($outrasDespesas);
                                 if(isset($d_xml['despesas']) && is_array($d_xml['despesas'])){
+                                    $outrasDespesas = $xml->createElement("ans:outrasDespesas"); //outrasDespesas
+                                    $guiaResumoInternacao->appendChild($outrasDespesas);
                                     foreach ($d_xml['despesas'] as $key => $v) {
                                                 //listagem de despesas
                                                 $despesa = $xml->createElement("ans:despesa"); //despesa
