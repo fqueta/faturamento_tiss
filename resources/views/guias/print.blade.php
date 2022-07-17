@@ -801,13 +801,16 @@
                 </tr>
     </table>
     <style>
-        button{
+        .btn{
             font-size: 1.3rem !important;
         }
     </style>
-    <div class="col-md-12 d-print-none " style="position: fixed;bottom:3px;z-index:2">
+    <div class="col-md-12 d-print-none " style="position: fixed;bottom:3px;z-index:2;background-color:#ffffff">
         <button type="button" onclick="window.close();" class="btn btn-outline-danger">Fechar</button>
         <button type="button" class="btn btn-primary" onclick="window.print();">Imprimir</button>
+        @if (isset($dados['config']['despesas']))
+            <a href="{{route('guias.print.anexo',['id'=>$dados['id']])}}" class="btn btn-outline-primary" title="Imprimir Anexo">Anexo</a>
+        @endif
     </div>
 
     <div style="page-break-after:avoid;font-size:1;margin:0;border:0;"><span style="visibility: hidden;">&nbsp;</span></div>

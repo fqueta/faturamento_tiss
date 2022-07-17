@@ -70,6 +70,7 @@ Route::prefix('guias')->group(function(){
         'internacao' => 'id'
     ]]);
     Route::get('/print/{id}',[GuiasController::class,'print'])->name('guias.print');
+    Route::get('/print-anexo/{id}',[GuiasController::class,'printAnexo'])->name('guias.print.anexo');
 
 });
 Route::prefix('profissionais')->group(function(){

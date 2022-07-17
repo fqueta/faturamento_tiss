@@ -517,7 +517,7 @@ class GuiasController extends Controller
                 'painel1'=>['label'=>'Procedimentos e Exames Realizados','active'=>false,'tam'=>'12','script'=>'guias.procedimentos','type'=>'html','class_div'=>'px-0','dados'=>$arr_PainelProssedimentos],
                 'sep5'=>['label'=>'Identificação da Equipe','active'=>false,'tam'=>'12','script'=>'<h5>Identificação da Equipe</h5>','type'=>'html_script','class_div'=>'bg-secondary'],
                 'painel2'=>['label'=>'linsta de executantes','active'=>false,'tam'=>'12','script'=>'guias.executantes','type'=>'html','class_div'=>'','dados'=>$arr_Painelexecutantes],
-                'sep6'=>['label'=>'Outras despesas','active'=>false,'tam'=>'12','script'=>'<h5>Outras despesas</h5>','type'=>'html_script','class_div'=>'bg-secondary'],
+                'sep6'=>['label'=>'Outras despesas','active'=>false,'tam'=>'12','script'=>'<h5>Anexo de Outras Despesas</h5>','type'=>'html_script','class_div'=>'bg-secondary'],
                 'painel3'=>['label'=>'Outras despesas','active'=>false,'tam'=>'12','script'=>'guias.despesas','type'=>'html','class_div'=>'','dados'=>$arr_Paineldespesas],
                 'config[qtdProcedimentos]'=>['label'=>'quantidade de procedimentos','id'=>'qtde_procedimento','active'=>false,'placeholder'=>'','type'=>'hidden','exibe_busca'=>'d-block','event'=>'','tam'=>'3','cp_busca'=>'config][qtdProcedimentos','title'=>''],
                 'config[qtdDespesas]'=>['label'=>'quantidade de despesas','id'=>'qtde_despesa','active'=>false,'placeholder'=>'','type'=>'hidden','exibe_busca'=>'d-block','event'=>'','tam'=>'3','cp_busca'=>'config][qtdDespesas','title'=>''],
@@ -813,5 +813,20 @@ class GuiasController extends Controller
             }
         }
         return view('guias.print', $ret);
+    }
+    public function printAnexo($id = null)
+    {
+        $ret=false;
+        if($id){
+            $d = Guia::FindOrFail($id);
+            if($d['config']){
+                $d['config'] = Qlib::lib_json_array($d['config']);
+                $ret['dados'] = $d;
+                //$ret['arr_peradoras'] = Qlib::sql_array("SELECT id,nome,registro,config FROM operadoras WHERE ativo='s'",'registro','id','nome',' | ','encode');
+                $dados_operadora = Operadora::Find(@$d['config']['op_id']);
+                $ret['dados_operadora'] = $dados_operadora;
+            }
+        }
+        return view('guias.print_despesas', $ret);
     }
 }

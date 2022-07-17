@@ -7,9 +7,12 @@
     height: 25px;
     background-color: #ffffff;
 }
+.celula_item div{
+    color: rgba(0, 0, 255, 0.795);
+}
 .font-tab{
     font-weight: bold;
-    color: blue;
+    color: #333333;
 }
 </style>
     <div class="card">
