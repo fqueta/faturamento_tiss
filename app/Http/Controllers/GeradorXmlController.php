@@ -91,9 +91,9 @@ class GeradorXmlController extends Controller
                         $_XML['dados'][$k1][$key] = isset($va1[$val])?$va1[$val]:false;
                     }elseif($key=='nomeBeneficiario'){
                         $_XML['dados'][$k1][$key] = isset($va1[$val])?$va1[$val]:false;
-                    }elseif($key=='procedimento'){
+                    }elseif($key=='procedimento'&&isset($va1['config'][$val])){
                         $_XML['dados'][$k1]['procedimentos'] = $va1['config'][$val];
-                    }elseif($key=='despesas'){
+                    }elseif($key=='despesas'&&isset($va1['config'][$val])){
                         $_XML['dados'][$k1]['despesas'] = $va1['config'][$val];
                     }elseif($key=='horaInicioFaturamento' || $key=='horaFinalFaturamento' || $key=='horaInicial' || $key=='horaFinal'){
                         $_XML['dados'][$k1][$key] = $va1['config'][$val].':00';
