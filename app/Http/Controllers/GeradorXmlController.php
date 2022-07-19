@@ -462,32 +462,34 @@ class GeradorXmlController extends Controller
                                 if($d_xml['valorDiarias'] == '0.00'){
                                     $d_xml['valorDiarias']=0;
                                 }
-                                $valorDiarias = $xml->createElement("ans:valorDiarias",$d_xml['valorDiarias']); //valorDiarias
+                                $vld = Qlib::precoBanco($d_xml['valorDiarias']);
+                                $valorDiarias = $xml->createElement("ans:valorDiarias",str_replace(',','.',$vld)); //valorDiarias
                                 $valorTotal->appendChild($valorDiarias);
-                                $CalcHash .= $d_xml['valorDiarias'];
+                                $CalcHash .= $vld;
 
                                 if($d_xml['valorTaxasAlugueis'] == '0.00'){
                                     $d_xml['valorTaxasAlugueis']=0;
                                 }
-
-                                $valorTaxasAlugueis = $xml->createElement("ans:valorTaxasAlugueis",$d_xml['valorTaxasAlugueis']); //valorTaxasAlugueis
+                                $vlta = Qlib::precoBanco($d_xml['valorTaxasAlugueis']);
+                                $valorTaxasAlugueis = $xml->createElement("ans:valorTaxasAlugueis",$vlta); //valorTaxasAlugueis
                                 $valorTotal->appendChild($valorTaxasAlugueis);
-                                $CalcHash .= $d_xml['valorTaxasAlugueis'];
+                                $CalcHash .= $vlta;
 
                                 if($d_xml['valorMateriais'] == '0.00'){
                                     $d_xml['valorMateriais']=0;
                                 }
 
+                                $vlM = Qlib::precoBanco($d_xml['valorMateriais']);
 
-                                $valorMateriais = $xml->createElement("ans:valorMateriais",$d_xml['valorMateriais']); //valorMateriais
+                                $valorMateriais = $xml->createElement("ans:valorMateriais",$vlM); //valorMateriais
                                 $valorTotal->appendChild($valorMateriais);
-                                $CalcHash .= $d_xml['valorMateriais'];
+                                $CalcHash .= $vlM;
 
                                 if($d_xml['valorMedicamentos'] == '0.00'){
                                     $d_xml['valorMedicamentos']=0;
                                 }
 
-                                $valorMed = str_replace(',','.',$d_xml['valorMedicamentos']);
+                                $valorMed = Qlib::precoBanco($d_xml['valorMedicamentos']);
 
                                 $valorMedicamentos = $xml->createElement("ans:valorMedicamentos",$valorMed); //valorMedicamentos
                                 $valorTotal->appendChild($valorMedicamentos);
@@ -497,20 +499,21 @@ class GeradorXmlController extends Controller
                                     $d_xml['valorOPME']=0;
                                 }
 
+                                $vOP = Qlib::precoBanco($d_xml['valorOPME']);
 
-                                $valorOPME = $xml->createElement("ans:valorOPME",$d_xml['valorOPME']); //valorOPME
+                                $valorOPME = $xml->createElement("ans:valorOPME",Qlib::precoBanco($vOP)); //valorOPME
                                 $valorTotal->appendChild($valorOPME);
-                                $CalcHash .= $d_xml['valorOPME'];
+                                $CalcHash .= $vOP;
 
                                 if($d_xml['valorGasesMedicinais'] == '0.00'){
                                     $d_xml['valorGasesMedicinais']=0;
                                 }
 
-                                $valorGaMe = str_replace(',','.',$d_xml['valorGasesMedicinais']);
+                                $valorGaMe = str_replace(',','.',Qlib::precoBanco($d_xml['valorGasesMedicinais']));
                                 $valorGasesMedicinais = $xml->createElement("ans:valorGasesMedicinais",$valorGaMe); //valorGasesMedicinais
                                 $valorTotal->appendChild($valorGasesMedicinais);
                                 $CalcHash .= $valorGaMe;
-                                $valorTotGer = str_replace(',','.',$d_xml['valorTotalGeral']);
+                                $valorTotGer = Qlib::precoBanco($d_xml['valorTotalGeral']);
                                 $valorTotalGeral = $xml->createElement("ans:valorTotalGeral",$valorTotGer); //valorTotalGeral
                                 $valorTotal->appendChild($valorTotalGeral);
                                 $CalcHash .= $valorTotGer;
