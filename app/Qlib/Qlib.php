@@ -825,8 +825,6 @@ class Qlib
         //$f = new CobrancaController;
         $user = Auth::user();
         $f = new UserController($user);
-        //$ret = $cob->exec();
-        //$f = new TesteController;
         $ret = $f->exec();
         return $ret;
     }

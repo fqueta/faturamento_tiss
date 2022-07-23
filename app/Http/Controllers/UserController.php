@@ -24,8 +24,8 @@ class UserController extends Controller
     public $view;
 
     public $access_token;
-	public $url;
 	public $url_plataforma;
+	public $url;
 	public $tk_conta;
 	public $seg1;
 
@@ -362,10 +362,6 @@ class UserController extends Controller
         }
         return $ret;
     }
-    public function testeF($var = null)
-    {
-        return 'ola user';
-    }
     public function exec($token_conta = null)
     {
         $cont = false;
@@ -457,4 +453,8 @@ class UserController extends Controller
         $ret['exec']=true;
 		return $ret;
 	}
+    public function suspenso()
+    {
+        return view('admin.suspenso');
+    }
 }

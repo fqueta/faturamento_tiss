@@ -87,7 +87,7 @@ Route::prefix('faturamentos')->group(function(){
     Route::post('/fechar-lote/{id}',[FaturamentosController::class,'salvarLote'])->name('faturamento.salvar.lote');
     Route::get('/gerenciar-lote',[FaturamentosController::class,'gerenciarLote'])->name('faturamento.gerenciar');
 });
-Route::get('/suspenso',[CobrancaController::class,'suspenso'])->name('cobranca.suspenso');
+Route::get('/suspenso',[UserController::class,'suspenso'])->name('cobranca.suspenso');
 Route::prefix('cobranca')->group(function(){
     Route::get('/fechar',[UserController::class,'pararAlertaFaturaVencida'])->name('alerta.cobranca.fechar');
 });

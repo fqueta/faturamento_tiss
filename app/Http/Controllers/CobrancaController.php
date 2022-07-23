@@ -28,38 +28,6 @@ class CobrancaController extends Controller
     {
         return 'ola cob';
     }
-
-    // public function exec($token_conta = null)
-    // {
-    //     $cont = false;
-    //     //if($token_conta){
-    //         $verifica_fatura = $this->verifica_faturas(array('token_conta'=>$token_conta));
-    //         if(isset($_GET['teste'])){
-    //             Qlib::lib_print($verifica_fatura);
-    //         }
-    //         if($verifica_fatura['acao']=='alertar'){
-    //             if(Qlib::isAdmin()){
-    //                 $cont = @$verifica_fatura['mens'];
-    //                 //echo $cont;
-    //             }
-    //         }elseif($verifica_fatura['acao']=='suspender' || $verifica_fatura['acao']=='desativar'){
-    //             //Não terá acesso ao admin somente ao boleto e as faturas e o site estará desativado tbem
-    //             if(Qlib::isAdmin(3)){
-    //                 $cont = @$verifica_fatura['mens'];
-    //             }else{
-    //                 $cont = Qlib::formatMensagemInfo('Sistema temporariamente suspenso entre em contato com o administrador','danger');
-    //             }
-    //             $pagSusped = 'suspenso';
-    //             if($this->seg1!=$pagSusped){
-    //                 Qlib::redirect('/'.$pagSusped,0);
-    //                 die();
-    //             }
-    //             //echo $cont;
-
-    //         }
-    //     //}
-    //     return $cont;
-    // }
 	public function clientes($config=false){
 		$ret = false;
 		if($config){
