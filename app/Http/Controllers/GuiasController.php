@@ -597,6 +597,13 @@ class GuiasController extends Controller
         $queryGuia = $this->queryGuia($_GET);
         $queryGuia['config']['exibe'] = 'html';
         $routa = $this->routa;
+        //REGISTRAR EVENTO DE LOGIN
+        $regev = Qlib::regEvent(['action'=>'index','tab'=>'guias','config'=>[
+            'obs'=>'Listou guias',
+            'link'=>$routa,
+            ]
+        ]);
+
         return view($this->view.'.index',[
             'dados'=>$queryGuia['guia'],
             'title'=>$title,
@@ -629,6 +636,12 @@ class GuiasController extends Controller
             'token'=>uniqid(),
         ];
         $campos = $this->campos();
+        $regev = Qlib::regEvent(['action'=>'create','tab'=>'guias','config'=>[
+            'obs'=>'Abriou tela de cadastro',
+            'link'=>$this->routa,
+            ]
+        ]);
+
         return view($this->view.'.createedit',[
             'config'=>$config,
             'title'=>$title,
@@ -658,6 +671,11 @@ class GuiasController extends Controller
             'exec'=>true,
             'dados'=>$dados
         ];
+        $regev = Qlib::regEvent(['action'=>'store','tab'=>'guias','config'=>[
+            'obs'=>'Cadastro guia Id '.$salvar->id,
+            'link'=>$this->routa,
+            ]
+        ]);
 
         if($ajax=='s'){
             $ret['return'] = route($route).'?idCad='.$salvar->id;
@@ -670,7 +688,12 @@ class GuiasController extends Controller
 
     public function show($id)
     {
-        //
+        $regev = Qlib::regEvent(['action'=>'show','tab'=>'guias','config'=>[
+            'obs'=>'Visualizou guia Id: '.$id,
+            'link'=>$this->routa,
+            ]
+        ]);
+
     }
 
     public function edit($guia,User $user)
@@ -709,6 +732,12 @@ class GuiasController extends Controller
                 'campos'=>$campos,
                 'exec'=>true,
             ];
+            $regev = Qlib::regEvent(['action'=>'edit','tab'=>'guias','config'=>[
+                'obs'=>'Abriu para edição Id: '.$id,
+                'link'=>$this->routa,
+                ]
+            ]);
+
             return view($this->view.'.createedit',$ret);
         }else{
             $ret = [
@@ -768,6 +797,12 @@ class GuiasController extends Controller
                 'color'=>'danger',
             ];
         }
+        $regev = Qlib::regEvent(['action'=>'update','tab'=>'guias','config'=>[
+            'obs'=>'Atualizou guia Id: '.$id,
+            'link'=>$this->routa,
+            ]
+        ]);
+
         if($ajax=='s'){
             $ret['return'] = route($route).'?idCad='.$id;
             return response()->json($ret);
@@ -792,6 +827,12 @@ class GuiasController extends Controller
         }
 
         Guia::where('id',$id)->delete();
+        $regev = Qlib::regEvent(['action'=>'delete','tab'=>'guias','config'=>[
+            'obs'=>'Deletou guia Id: '.$id,
+            'link'=>$this->routa,
+            ]
+        ]);
+
         if($ajax=='s'){
             $ret = response()->json(['mens'=>__('Registro '.$id.' deletado com sucesso!'),'color'=>'success','return'=>route($this->routa.'.index')]);
         }else{
