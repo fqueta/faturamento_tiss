@@ -16,6 +16,10 @@ class EventController extends Controller
         $user = Auth::user();
         $this->user = $user;
     }
+    function index(){
+        $list = Event::where('excluido','n')->where('deletado','n')->OrderBy('id','desc')->get();
+        dd($list);
+    }
     function store($config=false){
         $user = $this->user;
         $ret =false;
