@@ -775,6 +775,7 @@ class Qlib
      */
     static function regEvent($config=false)
     {
+        return true;
         $ev = new EventController;
         $ret = $ev->store($config);
     }
