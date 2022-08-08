@@ -1,11 +1,7 @@
 <?php
 namespace App\Qlib;
 
-use app\Http\Controllers\admin\EventController;
-use App\Http\Controllers\BeneficiariosController;
-use App\Http\Controllers\cobranca;
-use App\Http\Controllers\CobrancaController;
-use App\Http\Controllers\TesteController;
+use App\Http\Controllers\admin\EventController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
