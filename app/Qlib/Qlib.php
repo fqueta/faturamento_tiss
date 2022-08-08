@@ -3,6 +3,7 @@ namespace App\Qlib;
 
 use App\Http\Controllers\admin\EventController;
 use App\Http\Controllers\UserController;
+use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
@@ -775,9 +776,25 @@ class Qlib
      */
     static function regEvent($config=false)
     {
-        return true;
-        $ev = new EventController;
-        $ret = $ev->store($config);
+        //return true;
+        //$ev = new EventController;
+        $user = Auth::user();
+        $ret =false;
+        if(isset($config['action']) && isset($config['action'])){
+            $action = isset($config['action'])?$config['action']:false;
+            $tab = isset($config['tab'])?$config['tab']:false;
+            $conf = isset($config['config'])?$config['config']:[];
+            $ret = Event::create([
+                'token'=>uniqid(),
+                'user_id'=>$user->id,
+                'action'=>$action,
+                'tab'=>$tab,
+                'config'=>Qlib::lib_array_json($conf),
+            ]);
+        }
+        return $ret;
+
+        //$ret = $ev->store($config);
     }
     /***
      * Busca um tipo de routa padrão do sistema
