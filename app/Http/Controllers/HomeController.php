@@ -56,6 +56,12 @@ class HomeController extends Controller
             'c_familias'=>$dadosFamilias,
             'mapa'=>$dadosMp,
         ];
+        //REGISTRAR EVENTO DE LOGIN
+        $regev = Qlib::regEvent(['action'=>'index','tab'=>'painel','config'=>[
+            'obs'=>'Acesso painel',
+            'link'=>route('home'),
+            ]
+        ]);
         return view('home',[
             'config'=>$config,
         ]);

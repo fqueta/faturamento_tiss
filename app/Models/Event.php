@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
-class Tag extends Model
+class Event extends Model
 {
     use HasFactory,Notifiable;
     protected $casts = [
@@ -14,14 +14,14 @@ class Tag extends Model
     ];
     protected $fillable = [
         'token',
-        'nome',
-        'ativo',
-        'autor',
-        'ordem',
-        'obs',
+        'user_id',
+        'action',
+        'tab',
+        'config',
         'excluido',
         'reg_excluido',
         'deletado',
-        'reg_deletado'
+        'reg_deletado',
     ];
+
 }

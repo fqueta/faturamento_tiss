@@ -1,6 +1,7 @@
 <?php
 namespace App\Qlib;
 
+use App\Http\Controllers\admin\EventController;
 use App\Http\Controllers\BeneficiariosController;
 use App\Http\Controllers\cobranca;
 use App\Http\Controllers\CobrancaController;
@@ -772,6 +773,15 @@ class Qlib
         }
         return $ret;
     }
+    /**
+     * Registra eventos no sistema
+     * @return bool;
+     */
+    static function regEvent($config=false)
+    {
+        $ev = new EventController;
+        $ret = $ev->store($config);
+    }
     /***
      * Busca um tipo de routa padrão do sistema
      * Ex.: routa que será aberta ao logar
@@ -786,6 +796,11 @@ class Qlib
         $id_permission = auth()->user()->id_permission;
         $dPermission = Permission::FindOrFail($id_permission);
         $ret = isset($dPermission['redirect_login']) ? $dPermission['redirect_login']:'/';
+        //REGISTRAR EVENTO DE LOGIN
+        $regev = Qlib::regEvent(['action'=>'login','tab'=>'user','config'=>[
+            'obs'=>'Usuáro logou no sistema',
+            ]
+        ]);
         return $ret;
     }
     static function tirarAcentos($string){
