@@ -1,7 +1,7 @@
 <?php
 namespace App\Qlib;
 
-use App\Http\Controllers\admin\EventController;
+use app\Http\Controllers\admin\EventController;
 use App\Http\Controllers\BeneficiariosController;
 use App\Http\Controllers\cobranca;
 use App\Http\Controllers\CobrancaController;
