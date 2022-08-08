@@ -784,6 +784,7 @@ class Qlib
             $action = isset($config['action'])?$config['action']:false;
             $tab = isset($config['tab'])?$config['tab']:false;
             $conf = isset($config['config'])?$config['config']:[];
+            $conf['IP'] = Qlib::get_client_ip();
             $ret = Event::create([
                 'token'=>uniqid(),
                 'user_id'=>$user->id,
@@ -856,5 +857,23 @@ class Qlib
         $f = new UserController($user);
         $ret = $f->exec();
         return $ret;
+    }
+    static function get_client_ip() {
+        $ipaddress = '';
+        if (isset($_SERVER['HTTP_CLIENT_IP']))
+            $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+        else if(isset($_SERVER['HTTP_X_FORWARDED_FOR']))
+            $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        else if(isset($_SERVER['HTTP_X_FORWARDED']))
+            $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+        else if(isset($_SERVER['HTTP_FORWARDED_FOR']))
+            $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+        else if(isset($_SERVER['HTTP_FORWARDED']))
+            $ipaddress = $_SERVER['HTTP_FORWARDED'];
+        else if(isset($_SERVER['REMOTE_ADDR']))
+            $ipaddress = $_SERVER['REMOTE_ADDR'];
+        else
+            $ipaddress = 'UNKNOWN';
+        return $ipaddress;
     }
 }
