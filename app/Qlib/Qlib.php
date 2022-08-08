@@ -1,7 +1,7 @@
 <?php
 namespace App\Qlib;
 
-use App\Http\Controllers\admin\EventController;
+use \App\Http\Controllers\admin\EventController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
