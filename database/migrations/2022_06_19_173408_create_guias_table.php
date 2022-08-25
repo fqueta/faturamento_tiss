@@ -18,6 +18,7 @@ class CreateGuiasTable extends Migration
             $table->timestamps();
             $table->string('token',100)->nullable();
             $table->string('nome',300)->nullable();
+            $table->integer('id_cliente')->nullable();
             $table->string('numero_guia')->nullable();
             $table->string('type',300)->nullable();
             $table->enum('ativo',['s','n']);

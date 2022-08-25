@@ -8,6 +8,7 @@ use App\Models\Guia;
 use App\Qlib\Qlib;
 use App\Models\User;
 use App\Models\_upload;
+use App\Models\Beneficiario;
 use App\Models\Operadora;
 use Illuminate\Support\Facades\Auth;
 
@@ -655,7 +656,7 @@ class GuiasController extends Controller
         $validatedData = $request->validate([
             'numero_guia' => ['required','string','unique:guias'],
         ],[
-            'numero_guia.required' => ['Numero da guia já cadastrado']
+            'numero_guia.unique' => 'Este número de guia já está cadastrado'
         ]);
         $dados = $request->all();
         $ajax = isset($dados['ajax'])?$dados['ajax']:'n';
@@ -671,6 +672,10 @@ class GuiasController extends Controller
             'exec'=>true,
             'dados'=>$dados
         ];
+        if(isset($salvar['id']) && ($id=$salvar['id'])){
+            //$dgia = Guia::Find($id);
+            $ret['verificaSalvaCliente'] = $this->verificaSalvaCliente($id,$salvar);
+        }
         $regev = Qlib::regEvent(['action'=>'store','tab'=>'guias','config'=>[
             'obs'=>'Cadastro guia Id '.$salvar->id,
             'link'=>$this->routa,
@@ -788,6 +793,10 @@ class GuiasController extends Controller
                 'idCad'=>$id,
                 'return'=>$route,
             ];
+            if($atualizar){
+                $dgia = Guia::Find($id);
+                $ret['verificaSalvaCliente'] = $this->verificaSalvaCliente($id,$dgia);
+            }
         }else{
             $route = $this->routa.'.edit';
             $ret = [
@@ -810,7 +819,38 @@ class GuiasController extends Controller
             return redirect()->route($route,$ret);
         }
     }
-
+    /**
+     * METODO DE VERIFICAÇÃO E INCLUSÃO AUTOMATICA NA BASE DADE DADOS DE PACIENTES.
+     *  @return Array()
+     */
+    public function verificaSalvaCliente($id,$config=false){
+        if(!isset($config['id_cliente'])){
+            $dguia = Guia::Find($id);
+        }else{
+            $dguia = $config;
+        }
+        $ret['exec'] = false;
+        $salvar=false;
+        if($dguia['id_cliente']==null && isset($dguia['nome'])){
+            //efetura consulta do nome e salva se não encontrar;
+            $nome = trim($dguia['nome']);
+            $dBeneficiario = Beneficiario::where('nome','=',$nome)->get();
+            if($dBeneficiario->count()==0){
+                $salvar = Beneficiario::create([
+                    'nome'=>$dguia['nome'],
+                    'config'=>$dguia['config'],
+                ]);
+            }else{
+                if(isset($dBeneficiario[0]['id'])&&$dBeneficiario[0]['id']>0);
+                $salvar['id'] = $dBeneficiario[0]['id'];
+            }
+        }
+        if(isset($salvar['id']) && $salvar['id']>0 && isset($dguia['id'])){
+            $ret['atualizar'] = Guia::where('id',$dguia['id'])->update(['id_cliente'=>$salvar['id']]);
+            $ret['exec'] = true;
+        }
+        return $ret;
+    }
     public function destroy($id,Request $request)
     {
         $this->authorize('delete', $this->url);

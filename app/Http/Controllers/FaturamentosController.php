@@ -376,7 +376,7 @@ class FaturamentosController extends Controller
                         'nome'=>$nome,
                         'type'=>$type,
                     ]);
-                    $id_lote = $salvarLote->id;
+                    $id_lote = isset($salvarLote['id'])?$salvarLote['id']:$salvarLote->id;
                 }
                 if(isset($id_lote)){
                     $geraGuia = $ac->guiaResumoInternacao($arr_id,$id_lote);
@@ -385,7 +385,7 @@ class FaturamentosController extends Controller
                     if($geraGuia['exec']){
                         foreach ($arr_id as $kg => $vg) {
                             $ret['upd_gia'][$kg] = Guia::where('id',$vg)->update([
-                                'id_lote'=>$vg,
+                                'id_lote'=>$id_lote,
                                 'lote'=>'s',
                             ]);
                         }

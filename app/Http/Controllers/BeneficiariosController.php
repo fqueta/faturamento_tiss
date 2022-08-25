@@ -143,15 +143,15 @@ class BeneficiariosController extends Controller
             ],*/
             'nome'=>['label'=>'Nome da Beneficiario','active'=>true,'placeholder'=>'Ex.: José Jorge','type'=>'text','exibe_busca'=>'d-block','event'=>'','tam'=>'12'],
             //'config[nacionalidade]'=>['label'=>'Nacionalidade','active'=>false,'js'=>true,'type'=>'text','exibe_busca'=>'d-block','event'=>'','tam'=>'4','placeholder'=>'','cp_busca'=>'config][nacionalidade'],
-            'config[rg]'=>['label'=>'RG','active'=>true,'type'=>'tel','tam'=>'3','exibe_busca'=>'d-block','event'=>'','cp_busca'=>'config][rg'],
+            'config[rg]'=>['label'=>'RG','active'=>false,'type'=>'tel','tam'=>'3','exibe_busca'=>'d-block','event'=>'','cp_busca'=>'config][rg'],
             'cpf'=>['label'=>'CPF','active'=>true,'type'=>'tel','exibe_busca'=>'d-block','event'=>'mask-cpf','tam'=>'3'],
             'config[telefone]'=>['label'=>'Telefone1','active'=>true,'type'=>'tel','tam'=>'3','exibe_busca'=>'d-block','event'=>'onblur=mask(this,clientes_mascaraTelefone); onkeypress=mask(this,clientes_mascaraTelefone);','cp_busca'=>'config][telefone'],
-            'config[telefone2]'=>['label'=>'Telefone2','active'=>true,'type'=>'tel','tam'=>'3','exibe_busca'=>'d-block','event'=>'onblur=mask(this,clientes_mascaraTelefone); onkeypress=mask(this,clientes_mascaraTelefone);','cp_busca'=>'config][telefone2'],
-            'config[nascimento]'=>['label'=>'Nascimento','cp_busca'=>'config][nascimento','active'=>true,'type'=>'date','tam'=>'3','exibe_busca'=>'d-block','event'=>'mask-data'],
-            'config[profissao]'=>['label'=>'Profissão','active'=>true,'type'=>'text','tam'=>'3','exibe_busca'=>'d-block','event'=>'','cp_busca'=>'config][profissao'],
+            'config[telefone2]'=>['label'=>'Telefone2','active'=>false,'type'=>'tel','tam'=>'3','exibe_busca'=>'d-block','event'=>'onblur=mask(this,clientes_mascaraTelefone); onkeypress=mask(this,clientes_mascaraTelefone);','cp_busca'=>'config][telefone2'],
+            'config[nascimento]'=>['label'=>'Nascimento','cp_busca'=>'config][nascimento','active'=>false,'type'=>'date','tam'=>'3','exibe_busca'=>'d-block','event'=>'mask-data'],
+            'config[profissao]'=>['label'=>'Profissão','active'=>false,'type'=>'text','tam'=>'3','exibe_busca'=>'d-block','event'=>'','cp_busca'=>'config][profissao'],
             'sexo'=>[
                 'label'=>'Sexo',
-                'active'=>true,
+                'active'=>false,
                 'type'=>'select',
                 'arr_opc'=>['m'=>'Masculino','f'=>'Feminino'],
                 'event'=>'',
@@ -162,7 +162,7 @@ class BeneficiariosController extends Controller
             ],
             'config[escolaridade]'=>[
                 'label'=>'Escolaridade',
-                'active'=>true,
+                'active'=>false,
                 'type'=>'selector',
                 'data_selector'=>[
                     'campos'=>$escolaridade->campos(),
@@ -212,8 +212,10 @@ class BeneficiariosController extends Controller
                 'option_select'=>true,
                 'cp_busca'=>'config][operadora',
             ],
-            'config[numero_carteira_operadora]'=>['label'=>'Número da Carteira da Operadora','cp_busca'=>'config][numero_carteira_operadora','active'=>true,'type'=>'tel','tam'=>'3','exibe_busca'=>'d-block','event'=>''],
-            'config[numero_cns]'=>['label'=>'Número da CNS','cp_busca'=>'config][numero_cns','active'=>true,'type'=>'text','tam'=>'3','exibe_busca'=>'d-block','event'=>''],
+            'config[numeroCarteira]'=>['label'=>'Número da Carteira da Operadora','active'=>true,'placeholder'=>'','type'=>'text_upcase','exibe_busca'=>'d-block','event'=>'required maxlength=20','tam'=>'3','cp_busca'=>'config][numeroCarteira',],
+            'config[validadeCarteira]'=>['label'=>'Validade da Carteira','active'=>true,'placeholder'=>'','type'=>'date','exibe_busca'=>'d-block','event'=>'','tam'=>'3','cp_busca'=>'config][validadeCarteira','title'=>'Preenchimento Condicionado. Deve ser preenchido somente na utilização da contingência em papel quando a operadora exigir autorização prévia para procedimentos ambulatoriais e tal autorização não puder ser obtida.'],
+            //'config[numero_carteira_operadora]'=>['label'=>'Número da Carteira da Operadora','cp_busca'=>'config][numero_carteira_operadora','active'=>true,'type'=>'tel','tam'=>'3','exibe_busca'=>'d-block','event'=>''],
+            //'config[numero_cns]'=>['label'=>'Número da CNS','cp_busca'=>'config][numero_cns','active'=>false,'type'=>'text','tam'=>'3','exibe_busca'=>'d-block','event'=>''],
             /*
             'config[mae]'=>['label'=>'Mãe','cp_busca'=>'config][mae','active'=>true,'type'=>'text','tam'=>'12','exibe_busca'=>'d-block','event'=>''],
             'config[pai]'=>['label'=>'Pai','cp_busca'=>'config][pai','active'=>true,'type'=>'text','tam'=>'12','exibe_busca'=>'d-block','event'=>''],
@@ -244,7 +246,7 @@ class BeneficiariosController extends Controller
                 ],
             ],*/
             'obs'=>['label'=>'Observação','active'=>false,'type'=>'textarea','exibe_busca'=>'d-block','event'=>'','tam'=>'12'],
-            'ativo'=>['label'=>'Liberar','active'=>true,'type'=>'chave_checkbox','value'=>'s','valor_padrao'=>'s','exibe_busca'=>'d-block','event'=>'','tam'=>'3','arr_opc'=>['s'=>'Sim','n'=>'Não']],
+            'ativo'=>['label'=>'Liberar','active'=>false,'type'=>'chave_checkbox','value'=>'s','valor_padrao'=>'s','exibe_busca'=>'d-block','event'=>'','tam'=>'3','arr_opc'=>['s'=>'Sim','n'=>'Não']],
         ];
     }
     public function campos_parceiro(){
