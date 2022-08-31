@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Guia;
+use App\Models\Operadora;
 use App\Qlib\Qlib;
 use DOMDocument;
 use Illuminate\Http\Request;
@@ -36,11 +37,18 @@ class GeradorXmlController extends Controller
         // }else{
         //     return $ret;
         // }
+        $versao_tiss = '3.05.00';
+        if(isset($dadosGuia[0]['config']['select_operadora']) && ($id_op=$dadosGuia[0]['config']['select_operadora'])){
+            $dOp = Operadora::find($id_op);
+            $dOp['config'] = Qlib::lib_json_array($dOp['config']);
+            $versao_tiss = isset($dOp['config']['versao_tiss'])?$dOp['config']['versao_tiss']:false;
+        }
+
         $_XML['tipoTransacao']          = 'ENVIO_LOTE_GUIAS';
         $_XML['sequencialTransacao']    = $id_lote;
         $_XML['dataRegistroTransacao']  = date('Y-m-d');
         $_XML['horaRegistroTransacao']  = date('H:i:s');
-        $_XML['padrao_tiss']            = '3.05.00';
+        $_XML['padrao_tiss']            = $versao_tiss;
         $_XML['numeroLote']            = $id_lote;
         $arr_var = [
             'cnpj'=>'codigoNaOperadora',
