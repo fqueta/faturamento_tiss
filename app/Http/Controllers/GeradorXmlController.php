@@ -38,6 +38,7 @@ class GeradorXmlController extends Controller
         //     return $ret;
         // }
         $versao_tiss = '3.05.00';
+        $ver_referencia = '3.03.03';
         if(isset($dadosGuia[0]['config']['select_operadora']) && ($id_op=$dadosGuia[0]['config']['select_operadora'])){
             $dOp = Operadora::find($id_op);
             $dOp['config'] = Qlib::lib_json_array($dOp['config']);
@@ -385,7 +386,7 @@ class GeradorXmlController extends Controller
                                             $procedimentoExecutado = $xml->createElement("ans:procedimentoExecutado"); //procedimentoExecutado
                                             $procedimentosExecutados->appendChild($procedimentoExecutado);
                                             //elementos
-                                            if($num_versao>(double)'3.03.03'){
+                                            if($num_versao>(double)$ver_referencia){
                                                 $sequencialItem = $xml->createElement("ans:sequencialItem",@$v['item']); //sequencialItem
                                                 $procedimentoExecutado->appendChild($sequencialItem);
                                                 $CalcHash .= trim(@$v['item']);
@@ -536,7 +537,7 @@ class GeradorXmlController extends Controller
                                                 $despesa = $xml->createElement("ans:despesa"); //despesa
                                                 $outrasDespesas->appendChild($despesa);
                                                 //elementos
-                                                if($num_versao>(double)'3.03.03'){
+                                                if($num_versao>(double)$ver_referencia){
                                                     $sequencialItem = $xml->createElement("ans:sequencialItem",@$key); //sequencialItem
                                                     $despesa->appendChild($sequencialItem);
                                                     $CalcHash .= trim(@$key);
