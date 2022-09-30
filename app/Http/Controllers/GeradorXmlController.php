@@ -43,7 +43,8 @@ class GeradorXmlController extends Controller
             $dOp['config'] = Qlib::lib_json_array($dOp['config']);
             $versao_tiss = isset($dOp['config']['versao_tiss'])?$dOp['config']['versao_tiss']:false;
         }
-
+        $doc_versao = str_replace('.','_',$versao_tiss);
+        $num_versao = (double)$versao_tiss;
         $_XML['tipoTransacao']          = 'ENVIO_LOTE_GUIAS';
         $_XML['sequencialTransacao']    = $id_lote;
         $_XML['dataRegistroTransacao']  = date('Y-m-d');
@@ -136,7 +137,7 @@ class GeradorXmlController extends Controller
             //$xml->createAttribute('xsi:schemaLocation');
             //$xml->setAttribute('xsi:schemaLocation');
             $domAttribute = $xml->createAttribute('xsi:schemaLocation');
-            $domAttribute->value = 'http://www.ans.gov.br/padroes/tiss/schemas tissV3_05_00.xsd';
+            $domAttribute->value = 'http://www.ans.gov.br/padroes/tiss/schemas tissV'.$doc_versao.'.xsd';
             $mensagemTISS->appendChild($domAttribute);
         // Value for the created attribute
 
@@ -384,10 +385,11 @@ class GeradorXmlController extends Controller
                                             $procedimentoExecutado = $xml->createElement("ans:procedimentoExecutado"); //procedimentoExecutado
                                             $procedimentosExecutados->appendChild($procedimentoExecutado);
                                             //elementos
-
-                                            $sequencialItem = $xml->createElement("ans:sequencialItem",@$v['item']); //sequencialItem
-                                            $procedimentoExecutado->appendChild($sequencialItem);
-                                            $CalcHash .= trim(@$v['item']);
+                                            if($num_versao>(double)'3.03.03'){
+                                                $sequencialItem = $xml->createElement("ans:sequencialItem",@$v['item']); //sequencialItem
+                                                $procedimentoExecutado->appendChild($sequencialItem);
+                                                $CalcHash .= trim(@$v['item']);
+                                            }
                                             $dataExecucao = $xml->createElement("ans:dataExecucao",@$v['data']); //dataExecucao
                                             $procedimentoExecutado->appendChild($dataExecucao);
                                             $CalcHash .= trim(@$v['data']);
@@ -534,10 +536,11 @@ class GeradorXmlController extends Controller
                                                 $despesa = $xml->createElement("ans:despesa"); //despesa
                                                 $outrasDespesas->appendChild($despesa);
                                                 //elementos
-
-                                                $sequencialItem = $xml->createElement("ans:sequencialItem",@$key); //sequencialItem
-                                                $despesa->appendChild($sequencialItem);
-                                                $CalcHash .= trim(@$key);
+                                                if($num_versao>(double)'3.03.03'){
+                                                    $sequencialItem = $xml->createElement("ans:sequencialItem",@$key); //sequencialItem
+                                                    $despesa->appendChild($sequencialItem);
+                                                    $CalcHash .= trim(@$key);
+                                                }
                                                 $codDesp = Qlib::zerofill(@$v['tipo'],2);
                                                 $codigoDespesa = $xml->createElement("ans:codigoDespesa",$codDesp); //codigoDespesa
                                                 $despesa->appendChild($codigoDespesa);
