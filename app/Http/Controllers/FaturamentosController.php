@@ -455,6 +455,11 @@ class FaturamentosController extends Controller
                         }
                         $ret['lista'][$k] = $guia;
                 }
+            }else{
+                $data['excluido'] ='s';
+                $data['reg_excluido'] =['motivo'=>'Excluido por remoção de guias'];
+                $ret['atualiza_lote'] = Faturamento::where('id',$id_lote)->update($data);
+                $ret['excluir_lote'] = true;
             }
         }
         return $ret;
