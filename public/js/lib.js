@@ -2746,10 +2746,13 @@ function escolhe_operadora(){
         //verifica_versao_tiss(arr_val.id);
     }
 }
-function verificaCheckbox(sele){
+function verificaCheckbox(sele,mens){
     var objs = coleta_checked($(sele));
+    if(typeof mens == 'undefined'){
+        mens = 'É necessário selecionar uma guia para fechar um lote.';
+    }
     if(objs=='' || typeof objs=='undefinid'){
-        var msg = '<div class="row"><div id="modal-m" class="col-md-12 text-center"><p>É necessário selecionar uma guia para fechar um lote.</p></div></div>';
+        var msg = '<div class="row"><div id="modal-m" class="col-md-12 text-center"><p>'+mens+'</p></div></div>';
         alerta(msg,'modal-faturamento-erro','Alerta','',true);
         return false;
     }
@@ -2865,4 +2868,96 @@ function btnEdit(obj,ev){
         obj.querySelector('.btnEditar').style.display='none';
     }
 }
+function lib_listaGuiasLote(arr_lista){
+    try {
+        var tm1 = '<table class="table"><thead><tr><th>#</th><th>Número da Guia</th><th>Paciente</th><th>valor</th><th class="text-right">...</th></tr></thead><tbody>{body}</tboby></table>';
+        var tm2 = '<tr id="tr-{id}"><td><input type="checkbox" class="lote-{lote}" name="ck_id" value="{id}"></td><td>{numero_guia}</td><td>{nome}</td><td>{valor}</td><td class="text-right">{acao}</td></tr>';
+        var body = '';
+        for (let i = 0; i < arr_lista.length; i++) {
+            const el = arr_lista[i];
+            body += tm2.replaceAll('{nome}',el.nome);
+            body = body.replaceAll('{numero_guia}',el.numero_guia);
+            body = body.replaceAll('{id}',el.id);
+            var valor = number_format(el.config.valorTotalGeral,2,',','.');
+            var link = '/guias/'+el.type+'/'+el.id+'/edit';
+            var acao = '<a href="'+link+'" class="btn btn-secondary" target="_BLANK">Abrir Guia</a>';
+            body = body.replaceAll('{valor}',valor);
+            body = body.replaceAll('{lote}',el.id_lote);
+            body = body.replaceAll('{acao}',acao);
+        }
+        var ret = tm1.replaceAll('{body}',body);
+        return ret;
+    } catch (e) {
+        console.log(e);
+    }
+}
+function lib_removerGuiasLote(id_lote){
+    if(typeof id_lote == 'undefined'){
+        return ;
+    }
+    var class_check = '.lote-'+id_lote;
+    var ids = verificaCheckbox(class_check+':checked','É necessário selecionar uma guia para remover do lote.');
+    if(ids){
+        getAjax({
+            url:"/faturamentos/remover-guias-lote/"+ids,
+            data: {
+                id_lote:id_lote,
+            },
+            type: 'POST'
+        },function(res){
+            $('#preload').fadeOut("fast");
+            // var btna = '';
+            // var msg = '<div class="row"><div id="modal-m" class="col-md-12 text-center"><p>'+res.mes+'</p></div></div>';
+            // alerta(msg,'modal-mens','Alerta','',true);
+            if(res.exec){
+                try {
+                    lib_formatMensagem('.mens',res.mens);
+                    if(ar = res.arr_id){
+                        for (let i = 0; i < ar.length; i++) {
+                            const el = ar[i];
+                            $('#tr-'+el).remove();
+                        }
+                    }
+                    if(res.excluir_lote){
+                        $('[tr-id-lote="'+id_lote+'"]').remove();
+                        $('#modal-ger-lote').modal('hide');
+                    }
+                } catch (e) {
+                    console.log(e);
+                }
+                //$('#modal-ger-lote').modal('hide');
+                // btna = '<p><a href="'+res.geraGuia.link+'" class="btn btn-secondary" target="_BLANK" download>Baixar Arquivo XML de Lote</a> <a href="{{route('faturamento.gerenciar')}}" class="btn btn-primary">Gerenciar Lote</a></p>';
+                // $(btna).insertAfter('#modal-mens .modal-footer button');
+                // $('#facharLote').modal('hide');
+                // $('#lista-guias tbody').html('');
+                //$('#modal-mens [data-dismiss="modal"]').on('click',function(){
 
+                //});
+            }
+        });
+    }
+    console.log(ids);
+}
+function number_format (number, decimals, dec_point, thousands_sep) {
+    // Strip all characters but numerical ones.
+    number = (number + '').replace(/[^0-9+\-Ee.]/g, '');
+    var n = !isFinite(+number) ? 0 : +number,
+        prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
+        sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
+        dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
+        s = '',
+        toFixedFix = function (n, prec) {
+            var k = Math.pow(10, prec);
+            return '' + Math.round(n * k) / k;
+        };
+    // Fix for IE parseFloat(0.55).toFixed(0) = 0;
+    s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
+    if (s[0].length > 3) {
+        s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
+    }
+    if ((s[1] || '').length < prec) {
+        s[1] = s[1] || '';
+        s[1] += new Array(prec - s[1].length + 1).join('0');
+    }
+    return s.join(dec);
+}

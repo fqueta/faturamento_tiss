@@ -25,8 +25,10 @@ class TesteController extends Controller
         //$request->session()->put('verifica_faturas.acao','liberar');
         //$request->session()->put('nome','Patricia');
         $ac = new GeradorXmlController();
-        $ret = $ac->guiaResumoInternacao(['8'],3);
+        $ret = $ac->guiaResumoInternacao(['8'],8);
         dd($ret);
+        // $ret = (new FaturamentosController())->guiasLote(8);
+        // dd($ret);
         //return view('teste',$config);
     }
     public function testeF($var = null)

@@ -19,7 +19,7 @@ class FaturamentosController extends Controller
     public $view;
     public $tab;
     public $type;
-    public function __construct(User $user)
+    public function __construct()
     {
         $this->middleware('auth');
         $this->user = Auth::user();
@@ -405,7 +405,7 @@ class FaturamentosController extends Controller
         }
         return $ret;
     }
-    function gerenciarLote(){
+    public function gerenciarLote(){
         $title = __('Fechamentos de guias');
         $titulo = $title;
         //$GuiasController = new GuiasController($this->user);
@@ -434,5 +434,91 @@ class FaturamentosController extends Controller
 
         ];
         return view('faturamento.gerenciar',$ret);
+    }
+    public function listarLote(Request $request,$id){
+        $arr_id = false;
+        if($id){
+            $arr_id = explode('_',$id);
+        }
+        $get = $request->all();
+        $ret['exec'] = false;
+        $ret['lista'] = false;
+        $ret['get'] = $get;
+        if(is_array($arr_id) && ($id_lote=$get['id_lote'])){
+            $guias = $this->guiasLote($id_lote);
+            if($guias['exec'] && ($g = $guias['guias'])){
+                foreach ($g as $k => $guia) {
+                        $ret['exec'] = true;
+                        //$guia = Guia::Find($v);
+                        if(isset($guia['config'])){
+                            $guia['config'] = Qlib::lib_json_array($guia['config']);
+                        }
+                        $ret['lista'][$k] = $guia;
+                }
+            }
+        }
+        return $ret;
+    }
+    public function removerGuiasLote(Request $request,$id){
+        $get = $request->all();
+        $arr_id = false;
+        $ret['exec']=false;
+        if($id){
+            $arr_id = explode('_',$id);
+        }
+        $ret['arr_id'] = $arr_id;
+        if(isset($get['id_lote']) && ($id_lote=$get['id_lote'])){
+            // $dF = Faturamento::Find($id_lote);
+            //$guias_fatura = Qlib::lib_json_array($dF['guias']);
+            $guias_fatura = $this->guiasLote($id_lote);
+            if(is_array($arr_id)){
+                foreach ($arr_id as $k => $v) {
+                    $ret['atualiza'][$k] = Guia::where('id',$v)->update(['lote'=>'n','id_lote'=>0]);
+                }
+            }
+            $ret['arr_id_pos'] = $arr_id;
+            $guias_rest = [];
+            $i=0;
+            foreach ($guias_fatura as $key => $value) {
+                $guias_rest[$i] = $value;
+                $i++;
+            }
+
+            $data = ['guias'=>$guias_rest];
+            $guias = $this->guiasLote($id_lote);
+            $ret['excluir_lote'] = false;
+            if(!$guias['exec']){
+                $data['excluido'] ='s';
+                $data['reg_excluido'] =['motivo'=>'Excluido por remoção de guias'];
+                $ret['atualiza_lote'] = Faturamento::where('id',$id_lote)->update($data);
+                $ret['excluir_lote'] = true;
+            }
+            //if($ret['atualiza_lote']){
+                $ret['exec'] = true;
+                $ret['mes'] = 'Removido com sucesso';
+            //}
+            // $ret['data'] = $data;
+        }
+        //dd($ret);
+        return $ret;
+    }
+    public function guiasLote($id_lote = null)
+    {
+        $ret['guias'] = false;
+        $ret['exec'] = false;
+        if($id_lote){
+            $guias = Guia::where('id_lote','=',$id_lote)->where('lote','=','s')->get();
+            if($guias->count()>0){
+                $ret['exec'] = true;
+                //foreach ($guias as $k => $v) {
+                    //$guias[$k]['config'] = @$v['config'];
+                    //dd($v['config']);
+                //}
+            }
+            $ret['guias'] = $guias;
+
+
+        }
+        return $ret;
     }
 }

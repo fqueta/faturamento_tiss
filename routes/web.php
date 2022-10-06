@@ -85,7 +85,9 @@ Route::prefix('faturamentos')->group(function(){
     Route::get('/fechar-lote',[FaturamentosController::class,'fechar'])->name('faturamento.fechar');
     Route::post('/gerar-lote/{id}',[FaturamentosController::class,'gerarLote'])->name('faturamento.gerar.lote');
     Route::post('/fechar-lote/{id}',[FaturamentosController::class,'salvarLote'])->name('faturamento.salvar.lote');
+    Route::post('/remover-guias-lote/{id}',[FaturamentosController::class,'removerGuiasLote'])->name('faturamento.remover.guias.lote');
     Route::get('/gerenciar-lote',[FaturamentosController::class,'gerenciarLote'])->name('faturamento.gerenciar');
+    Route::get('/listar-lote/{id}',[FaturamentosController::class,'listarLote'])->name('faturamento.listar');
 });
 Route::get('/suspenso',[UserController::class,'suspenso'])->name('cobranca.suspenso');
 Route::prefix('cobranca')->group(function(){

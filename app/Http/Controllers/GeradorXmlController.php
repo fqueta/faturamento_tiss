@@ -18,18 +18,24 @@ class GeradorXmlController extends Controller
         $ret['exec'] = false;
         $dadosGuia = false;
         $tipo = 'str';
-
-        if(is_array($idGuia)){
+        $guiasLote = (new FaturamentosController())->guiasLote($id_lote);
+        if($guiasLote['exec'] && $guiasLote['guias']){
             $tipo = 'arr';
-            foreach ($idGuia as $key => $value) {
-                if($value){
-                    $dadosGuia[$key] = Guia::FindOrFail($value);
-                    $dadosGuia[$key]['config'] = Qlib::lib_json_array(@$dadosGuia[$key]['config']);
-                }
-            }
+            $dadosGuia = $guiasLote['guias'];
         }else{
-            $dadosGuia = Guia::FindOrFail($idGuia);
+            if(is_array($idGuia)){
+                $tipo = 'arr';
+                foreach ($idGuia as $key => $value) {
+                    if($value){
+                        $dadosGuia[$key] = Guia::FindOrFail($value);
+                        $dadosGuia[$key]['config'] = Qlib::lib_json_array(@$dadosGuia[$key]['config']);
+                    }
+                }
+            }else{
+                $dadosGuia = Guia::FindOrFail($idGuia);
+            }
         }
+        //dd($dadosGuia);
         $CalcHash=false;
         // if(isset($dadosGuia['config'])&&!empty($dadosGuia['config'])){
         //     $dadosGuia['config'] = Qlib::lib_json_array($dadosGuia['config']);

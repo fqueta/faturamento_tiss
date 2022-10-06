@@ -44,7 +44,7 @@
                 }
 
             @endphp
-            <tr>
+            <tr tr-id-lote="{{$vt['id']}}">
                 <td>
                     <input type="checkbox" class="checkbox" name="check-{{$vt['id']}}" value="{{$vt['id']}}">
                 </td>
@@ -63,7 +63,8 @@
                 </td>
                 <td>
                     {{-- <a href="{{@$link}}" target="_blank" class="btn btn-secondary" download="" rel="noopener noreferrer">{{__('Baixar XML')}}</a> --}}
-                    <button type="button"  onclick="atualizarFechamento('{{$vt['id']}}','{{implode('_',App\Qlib\Qlib::lib_json_array($vt['guias']))}}')" class="btn btn-secondary">{{__('Baixar XML')}}</button>
+                    <button type="button"  onclick="atualizarFechamento('{{$vt['id']}}')" class="btn btn-secondary">{{__('Baixar XML')}}</button>
+                    <button type="button"  onclick="gerenciarLote('{{$vt['id']}}')" class="btn btn-secondary">{{__('Gerenciar Lote')}}</button>
                 </td>
             </tr>
             @endforeach

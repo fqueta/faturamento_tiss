@@ -181,13 +181,6 @@
             var checkbox = verificaCheckbox('.table .checkbox:checked');
             if(checkbox)
                 $('#facharLote').modal('show');
-            /*var btna = '<p><button type="button" onclick="executarFechamento(\''+objs+'\');" class="btn btn-primary">Fechar este lote</button></p>';
-            var msg = '<div class="row"><div id="modal-m" class="col-md-12 text-center"><p>Para fechar o lote informe um mês de referência e o tipo de ordenação.</p></div></div>';
-            alerta(msg,'modal-faturamento','Atenção','',true);*/
-            //$(btna).insertAfter('#modal-faturamento .modal-footer button');
-
-            //console.log(objs);
-
 
         }
         function executarFechamento(){
@@ -236,6 +229,38 @@
                 if(res.exec && res.geraGuia.link){
                     download(res.geraGuia.link);
                 }
+            });
+        }
+        function gerenciarLote(id_lote,ids){
+            if(typeof id_lote == undefined){
+                id_lote==null;
+            }
+            if(typeof ids == undefined){
+                var msg = '<div class="row"><div id="modal-m" class="col-md-12 text-center"><p>Guias Inválidas entre em contato com o suporte</p></div></div>';
+                alerta(msg,'modal-mens','Atenção','',true);
+                return;
+            }
+            //var ids = verificaCheckbox('.table .checkbox:checked');
+            var d = 'id_lote='+id_lote+'&acao=alt';
+            getAjax({
+                url:"/faturamentos/listar-lote/"+ids,
+                data: d,
+                type: 'GET'
+            },function(res){
+                $('#preload').fadeOut("fast");
+                var btnaremove = document.createElement('button');
+                btnaremove.innerHTML = 'Remover Guia';
+                btnaremove.classList.add("btn","btn-primary");
+                btnaremove.setAttribute("onclick","lib_removerGuiasLote('"+id_lote+"');");
+                // btnaremove.classList;
+                var msg = '<div class="row"><div id="modal-m" class="col-md-12 text-center"><h4>Guias do lote</h4></div></div>';
+                msg += lib_listaGuiasLote(res.lista);
+                alerta(msg,'modal-ger-lote','Gerenciar Lote '+id_lote,'modal-xl',true);
+                $(btnaremove).insertAfter('#modal-ger-lote .modal-footer button');
+                // console.log(res);
+                // if(res.exec && res.geraGuia.link){
+                //     download(res.geraGuia.link);
+                // }
             });
         }
         $(function(){

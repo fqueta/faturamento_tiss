@@ -6,13 +6,16 @@
     'botao_fechar'=>true,
     'tam'=>'modal-lg',
 ]])
+@php
+    $version = App\Qlib\Qlib::qoption('version')?:'1.0.0';
+@endphp
 <script src="{{url('/')}}/js/jquery.maskMoney.min.js"></script>
 <script src="{{url('/')}}/js/jquery.validate.min.js"></script>
 <script src="{{url('/')}}/js/jquery-ui.min.js"></script>
 <script src="{{url('/')}}/js/jquery.inputmask.bundle.min.js"></script>
 <script src="{{url('/')}}/vendor/summernote/summernote.min.js"></script>
 <script src="{{url('/')}}/vendor/venobox/venobox.min.js"></script>
-<script src=" {{url('/')}}/js/lib.js"></script>
+<script src=" {{url('/')}}/js/lib.js?ver={{$version}}"></script>
 <script>
     $(function(){
         $('.dataTable').DataTable({
