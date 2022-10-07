@@ -113,7 +113,7 @@
                         <span>
                             @php
                                 $situacao = 'SEM LOTE';
-                                if($val->id_lote){
+                                if($val->id_lote && $val->lote=='s'){
                                     $situacao = 'LOTE N° '.$val->id_lote;
                                 }
                                 echo $situacao;
