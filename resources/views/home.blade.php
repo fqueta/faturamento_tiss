@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Data Brasil - Painel')
+@section('title', 'Faturamento Tiss - Painel')
 
 @section('content_header')
 <div class="row mb-2">
