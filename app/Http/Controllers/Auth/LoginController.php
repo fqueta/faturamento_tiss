@@ -31,6 +31,13 @@ class LoginController extends Controller
     protected function redirectTo()
     {
         $ret = Qlib::redirectLogin();
+        //REGISTRAR EVENTO
+        $regev = Qlib::regEvent(['action'=>'login','tab'=>'user','config'=>[
+                'obs'=>'Usuario logado',
+                'link'=>$ret,
+                ]
+        ]);
+
         return $ret;
     }
     /**

@@ -41,10 +41,11 @@ class UserController extends Controller
         $seg2 = request()->segment(2);
     }
     public function credenciais(){
-		$this->access_token = 'NWM5OGMyZGRiOTAzMS41ZmQwZGQyNTUzZGI0LjQx';
+		// $this->access_token = 'NWM5OGMyZGRiOTAzMS41ZmQwZGQyNTUzZGI0LjQx'; //luhmina
+		$this->access_token = 'NWVjOGVkZjI2OTQ2Yy42MDRmMzc0ZTg5ZGZmLjgz'; //luhmina
 		$this->url 		 	= 'https://api.ctloja.com.br/v1';
-		$this->tk_conta	 	= '62c4423f4a61f';
-		//$this->tk_conta	 	= '60b77bc73e7c0';
+		// $this->tk_conta	 	= '62c4423f4a61f'; //luhmina
+		$this->tk_conta	 	= '6357c27e9cbc9';
 	}
     public function queryUsers($get=false,$config=false)
     {

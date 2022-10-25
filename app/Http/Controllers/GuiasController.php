@@ -638,7 +638,7 @@ class GuiasController extends Controller
         ];
         $campos = $this->campos();
         $regev = Qlib::regEvent(['action'=>'create','tab'=>'guias','config'=>[
-            'obs'=>'Abriou tela de cadastro',
+            'obs'=>'Abriu tela de cadastro',
             'link'=>$this->routa,
             ]
         ]);
