@@ -519,7 +519,8 @@
                         <td class="celula_item" align="center" width="60">Valor Total</td>
                     </tr>
                     @php
-                        $linhasProced=10;
+                        $min_proced_imprime = App\Qlib\Qlib::qoption('min_proced_imprime');
+                        $linhasProced= $min_proced_imprime?$min_proced_imprime:3;
                         $tipo=1;
                         $lin=0;
                         if(isset($dados['config']['procedimento'])){
