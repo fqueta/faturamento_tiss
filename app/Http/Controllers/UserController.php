@@ -368,6 +368,7 @@ class UserController extends Controller
         $cont = false;
         //if($token_conta){
             $verifica_fatura = $this->verifica_faturas(array('token_conta'=>$token_conta));
+            $verifica_fatura['acao'] = isset($verifica_fatura['acao'])?$verifica_fatura['acao']:false;
             if(isset($_GET['teste'])){
                 Qlib::lib_print($verifica_fatura);
             }
