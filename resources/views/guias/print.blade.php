@@ -529,7 +529,13 @@
                                 $linhasProced=$procedi;
                                 $tipo=2;
                             }
+                            if(!isset($dados['config']['procedimento'][0]) && $procedi>0){
+                                $tipo=2;
+
+                            }
                         }
+                        // dump($tipo,$linhasProced,$procedi);
+                        // dump($dados['config']['procedimento']);
                         //dd($dados['config']['procedimento']);
                     @endphp
                     @if($tipo==1)
