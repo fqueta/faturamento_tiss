@@ -8,6 +8,7 @@ use App\Qlib\Qlib;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class TesteController extends Controller
 {
@@ -24,8 +25,9 @@ class TesteController extends Controller
         //$this->escutaSessao($request);
         //$request->session()->put('verifica_faturas.acao','liberar');
         //$request->session()->put('nome','Patricia');
-        $ac = new GeradorXmlController();
-        $ret = $ac->guiaResumoInternacao(['8'],8);
+        // $ac = new GeradorXmlController();
+        // $ret = $ac->guiaResumoInternacao(['8'],8);
+        $ret = Storage::disk('public')->put('meu_arquivo.txt', 'Conteúdo do arquivo meu teste');
         dd($ret);
         // $ret = (new FaturamentosController())->guiasLote(8);
         // dd($ret);
