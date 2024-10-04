@@ -19,7 +19,8 @@ class CobrancaController extends Controller
 
 	}
 	public function credenciais(){
-		$this->access_token = 'NWM5OGMyZGRiOTAzMS41ZmQwZGQyNTUzZGI0LjQx';
+		// $this->access_token = 'NWM5OGMyZGRiOTAzMS41ZmQwZGQyNTUzZGI0LjQx';
+		$this->access_token = 'NWM5OGMyZGRiOTAzMS42MDRmMzc0ZTg5ZGdmLjE2MA==';
 		$this->url 		 	= 'https://api.ctloja.com.br/v1';
 		$this->tk_conta	 	= '62c4423f4a61f';
 		//$this->tk_conta	 	= '60b77bc73e7c0';

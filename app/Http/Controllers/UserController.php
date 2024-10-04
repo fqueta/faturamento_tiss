@@ -42,7 +42,8 @@ class UserController extends Controller
     }
     public function credenciais(){
 		// $this->access_token = 'NWM5OGMyZGRiOTAzMS41ZmQwZGQyNTUzZGI0LjQx'; //luhmina
-		$this->access_token = 'NWVjOGVkZjI2OTQ2Yy42MDRmMzc0ZTg5ZGZmLjgz'; //luhmina
+		// $this->access_token = 'NWVjOGVkZjI2OTQ2Yy42MDRmMzc0ZTg5ZGZmLjgz'; //maisaqui1
+		$this->access_token = 'NWM5OGMyZGRiOTAzMS42MDRmMzc0ZTg5ZGdmLjE2MA=='; //maisaqui2
 		$this->url 		 	= 'https://api.ctloja.com.br/v1';
 		// $this->tk_conta	 	= '62c4423f4a61f'; //luhmina
 		$this->tk_conta	 	= '6357c27e9cbc9';

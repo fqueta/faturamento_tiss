@@ -694,7 +694,6 @@ class GeradorXmlController extends Controller
                     $ret['guias'] = Qlib::lib_array_json($idGuia);
                     $ret['numeroLote'] = $_XML['numeroLote'];
                     $ret['id_operadora'] = @$dadosGuia[0]['config']['op_id'];
-                    //dd($ret);
                     if($xml->save($file)){
                         $ret['exec']=true;
                     }
