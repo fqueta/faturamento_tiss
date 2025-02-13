@@ -42,19 +42,19 @@ class HomeController extends Controller
     public function index()
     {
         $this->authorize('ler', $this->routa);
-        $controlerFamilias = new FamiliaController(Auth::user());
-        $controlerMapas = new MapasController(Auth::user());
+        // $controlerFamilias = new FamiliaController(Auth::user());
+        // $controlerMapas = new MapasController(Auth::user());
         //$dadosFamilias = $controlerFamilias->queryFamilias();
         $dadosFamilias = false;
-        $id_quadra_home = Qlib::qoption('id_quadra_home')?Qlib::qoption('id_quadra_home'):@$_GET['id_qh'];
-        if($id_quadra_home){
-            $dadosMp = $controlerMapas->queryQuadras($id_quadra_home);
-        }else{
-            $dadosMp = false;
-        }
+        // $id_quadra_home = Qlib::qoption('id_quadra_home')?Qlib::qoption('id_quadra_home'):@$_GET['id_qh'];
+        // if($id_quadra_home){
+        //     $dadosMp = $controlerMapas->queryQuadras($id_quadra_home);
+        // }else{
+        //     $dadosMp = false;
+        // }
         $config = [
             'c_familias'=>$dadosFamilias,
-            'mapa'=>$dadosMp,
+            // 'mapa'=>$dadosMp,
         ];
         //REGISTRAR EVENTO DE LOGIN
         $regev = Qlib::regEvent(['action'=>'index','tab'=>'painel','config'=>[

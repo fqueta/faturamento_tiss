@@ -46,7 +46,7 @@ class UserController extends Controller
 		$this->access_token = 'NWM5OGMyZGRiOTAzMS42MDRmMzc0ZTg5ZGdmLjE2MA=='; //maisaqui2
 		$this->url 		 	= 'https://api.ctloja.com.br/v1';
 		// $this->tk_conta	 	= '62c4423f4a61f'; //luhmina
-		$this->tk_conta	 	= '6357c27e9cbc9';
+		$this->tk_conta	 	= '67ae208f4f80a';
 	}
     public function queryUsers($get=false,$config=false)
     {
